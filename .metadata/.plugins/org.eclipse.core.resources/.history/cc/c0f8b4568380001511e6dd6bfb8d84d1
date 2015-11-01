@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream.GetField;
-import java.nio.channels.ReadPendingException;
 import java.util.Date;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -35,7 +34,6 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.es.SpanishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.DoubleField;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.StringField;
@@ -228,9 +226,9 @@ public class IndexFiles {
 					// encoding.
 					// If that's not the case searching for special characters
 					// will fail.
-					// doc.add(new TextField("contents", new BufferedReader(
-					// new InputStreamReader(fis, "UTF-8"))));
-
+					//doc.add(new TextField("contents", new BufferedReader(
+					//		new InputStreamReader(fis, "UTF-8"))));
+					
 					insertIndexTag("title", file, doc, true);
 					insertIndexTag("identifier", file, doc, false);
 					insertIndexTag("subject", file, doc, true);
@@ -240,8 +238,6 @@ public class IndexFiles {
 					insertIndexTag("publisher", file, doc, true);
 					insertIndexTag("format", file, doc, false);
 					insertIndexTag("language", file, doc, false);
-					readPosition(doc, file, true);
-					readPosition(doc, file, false);
 
 					if (writer.getConfig().getOpenMode() == OpenMode.CREATE) {
 						// New index, so we just add the document (no old
@@ -258,6 +254,7 @@ public class IndexFiles {
 						writer.updateDocument(new Term("path", file.getPath()),
 								doc);
 					}
+					
 
 				} finally {
 					fis.close();
@@ -296,57 +293,10 @@ public class IndexFiles {
 				if (condition != null && condition.getFirstChild() != null) {
 					text = condition.getFirstChild().getNodeValue();
 					if (isText)
-						doc.add(new TextField(tag, text, Field.Store.YES));
+						doc.add(new TextField(tag, text, Store.YES));
 					else
-						doc.add(new StringField(tag, text, Field.Store.YES));
+						doc.add(new StringField(tag, text, Store.YES));
 				}
-			}
-
-			return true;
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			return false;
-		}
-	}
-
-	private static Boolean readPosition(Document doc, File file, boolean lower) {
-		// create a new DocumentBuilderFactory
-		double[] result = new double[2];
-		int pos = 0;
-
-		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
-
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			InputStream in = new FileInputStream(file);
-			InputSource inputSource = new InputSource(new InputStreamReader(in));
-			org.w3c.dom.Document docu = builder.parse(inputSource);
-			NodeList conditionList;
-			if (lower)
-				conditionList = docu.getElementsByTagName("ows:LowerCorner");
-			else
-				conditionList = docu.getElementsByTagName("ows:UpperCorner");
-
-			for (int k = 0; k < conditionList.getLength(); ++k) {
-				String text = "";
-				Element condition = (Element) conditionList.item(k);
-				if (condition != null && condition.getFirstChild() != null) {
-					text = condition.getFirstChild().getNodeValue();
-				}
-				for (String s : text.split(" ")) {
-					result[pos] = Double.parseDouble(s);
-					pos++;
-				}
-			}
-
-			if (lower) {
-				doc.add(new DoubleField("west", result[0], Field.Store.YES));
-				doc.add(new DoubleField("south", result[1], Field.Store.YES));
-			} else {
-				doc.add(new DoubleField("east", result[0], Field.Store.YES));
-				doc.add(new DoubleField("north", result[1], Field.Store.YES));
 			}
 
 			return true;

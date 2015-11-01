@@ -35,7 +35,6 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.es.SpanishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.DoubleField;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.StringField;
@@ -240,8 +239,15 @@ public class IndexFiles {
 					insertIndexTag("publisher", file, doc, true);
 					insertIndexTag("format", file, doc, false);
 					insertIndexTag("language", file, doc, false);
-					readPosition(doc, file, true);
-					readPosition(doc, file, false);
+					double[] lowerPositions = readPosition(doc, file, true);
+					double[] upperPositions = readPosition(doc,file,false);
+					for(double d: lowerPositions){
+						System.out.print(d);
+					}
+					for(double d: upperPositions){
+						System.out.print(d);
+					}
+					System.out.println();
 
 					if (writer.getConfig().getOpenMode() == OpenMode.CREATE) {
 						// New index, so we just add the document (no old
@@ -296,9 +302,9 @@ public class IndexFiles {
 				if (condition != null && condition.getFirstChild() != null) {
 					text = condition.getFirstChild().getNodeValue();
 					if (isText)
-						doc.add(new TextField(tag, text, Field.Store.YES));
+						doc.add(new TextField(tag, text, Store.YES));
 					else
-						doc.add(new StringField(tag, text, Field.Store.YES));
+						doc.add(new StringField(tag, text, Store.YES));
 				}
 			}
 
@@ -310,11 +316,11 @@ public class IndexFiles {
 		}
 	}
 
-	private static Boolean readPosition(Document doc, File file, boolean lower) {
+	private static double[] readPosition(Document doc, File file, boolean lower) {
 		// create a new DocumentBuilderFactory
 		double[] result = new double[2];
 		int pos = 0;
-
+		
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory
 					.newInstance();
@@ -334,26 +340,18 @@ public class IndexFiles {
 				Element condition = (Element) conditionList.item(k);
 				if (condition != null && condition.getFirstChild() != null) {
 					text = condition.getFirstChild().getNodeValue();
+					System.out.println(text);
 				}
 				for (String s : text.split(" ")) {
 					result[pos] = Double.parseDouble(s);
 					pos++;
 				}
 			}
-
-			if (lower) {
-				doc.add(new DoubleField("west", result[0], Field.Store.YES));
-				doc.add(new DoubleField("south", result[1], Field.Store.YES));
-			} else {
-				doc.add(new DoubleField("east", result[0], Field.Store.YES));
-				doc.add(new DoubleField("north", result[1], Field.Store.YES));
-			}
-
-			return true;
+			return result;
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			return false;
+			return result;
 		}
 	}
 

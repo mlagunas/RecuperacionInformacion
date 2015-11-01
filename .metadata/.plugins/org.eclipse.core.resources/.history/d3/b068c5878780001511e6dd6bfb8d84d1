@@ -243,6 +243,8 @@ public class IndexFiles {
 					readPosition(doc, file, true);
 					readPosition(doc, file, false);
 
+					System.out.println();
+
 					if (writer.getConfig().getOpenMode() == OpenMode.CREATE) {
 						// New index, so we just add the document (no old
 						// document can be there):
@@ -296,9 +298,9 @@ public class IndexFiles {
 				if (condition != null && condition.getFirstChild() != null) {
 					text = condition.getFirstChild().getNodeValue();
 					if (isText)
-						doc.add(new TextField(tag, text, Field.Store.YES));
+						doc.add(new TextField(tag, text, Store.YES));
 					else
-						doc.add(new StringField(tag, text, Field.Store.YES));
+						doc.add(new StringField(tag, text, Store.YES));
 				}
 			}
 
@@ -342,11 +344,11 @@ public class IndexFiles {
 			}
 
 			if (lower) {
-				doc.add(new DoubleField("west", result[0], Field.Store.YES));
-				doc.add(new DoubleField("south", result[1], Field.Store.YES));
+				doc.add(new DoubleField("west", result[0], Store.YES));
+				doc.add(new DoubleField("south", result[1], Store.YES));
 			} else {
-				doc.add(new DoubleField("east", result[0], Field.Store.YES));
-				doc.add(new DoubleField("north", result[1], Field.Store.YES));
+				doc.add(new DoubleField("east", result[0], Store.YES));
+				doc.add(new DoubleField("north", result[1], Store.YES));
 			}
 
 			return true;
