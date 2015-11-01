@@ -1,4 +1,4 @@
-package practica1;
+package trabajo;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
