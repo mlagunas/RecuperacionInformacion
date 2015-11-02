@@ -22,18 +22,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Date;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.es.SpanishAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
@@ -53,7 +56,7 @@ public static void main(String[] args) throws Exception {
       System.exit(0);
     }
 
-    String index = "indexTrabajo";
+    String index = "index";
     String infoNeeds = null;
     String queryString = null;
     int hitsPerPage = 10;
@@ -100,7 +103,57 @@ public static void main(String[] args) throws Exception {
         break;
       }
       
+      String author="";
+      String tipo="";
+      boolean authorFound=false;
+      String[] palabras=line.split(" ");
+      
+      for(int j=0;j<palabras.length;j++){
+    	  //CREATOR
+          if(palabras[j].equalsIgnoreCase("autor") || palabras[j].equalsIgnoreCase("director") || palabras[j].equalsIgnoreCase("coautor")){
+        	  int h=j;
+        	  while(!authorFound && h<palabras.length && h<j+6){
+            	  if(Character.isUpperCase(palabras[h].charAt(0))){
+            		  author=palabras[h]; 	
+            		  authorFound=true;
+            	  }
+        		  h++;
+        	  }
+          }
+          //IDENTIFIER
+          if(palabras[j].equalsIgnoreCase("TFG") || palabras[j].equalsIgnoreCase("PFC") 
+        		  || palabras[j].equalsIgnoreCase("TFM") || palabras[j].equalsIgnoreCase("Tesis") ){
+        	  tipo=palabras[j];
+          }
+          //DATE
+          if(isNumber(palabras[j]) && palabras[j].length()==4){
+        
+          }
+          
+      }
+      
+      /*
+       * Creamos Queries booleanas en caso de que hayamos detectado algun autor o tipo de trabajo  
+       * y las ponemos como "must".
+       */
+      BooleanQuery bool = new BooleanQuery();
+      if(!author.equals("")){
+    	  Term t=new Term("creator",author);
+          TermQuery termQuery = new TermQuery(t);
+          bool.add(termQuery,BooleanClause.Occur.MUST);
+      }
+      if(!tipo.equals("")){
+    	  Term t=new Term("identifier",tipo);
+          TermQuery termQuery = new TermQuery(t);
+          bool.add(termQuery,BooleanClause.Occur.MUST);
+      }
+        
+      System.out.println("creator: "+author);
+      System.out.println("ID: "+tipo);
+
+      
       Query query = parser.parse(line);
+      System.out.println(query);
       PhraseQuery pQuery=new PhraseQuery();
       
 //      System.out.println("Searching for: " + query.toString(field));
@@ -224,4 +277,23 @@ public static void main(String[] args) throws Exception {
       }
     }
   }
+  public static boolean isNumber(String string) {
+	    if (string == null || string.isEmpty()) {
+	        return false;
+	    }
+	    int i = 0;
+	    if (string.charAt(0) == '-') {
+	        if (string.length() > 1) {
+	            i++;
+	        } else {
+	            return false;
+	        }
+	    }
+	    for (; i < string.length(); i++) {
+	        if (!Character.isDigit(string.charAt(i))) {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
 }
