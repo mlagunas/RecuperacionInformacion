@@ -231,11 +231,11 @@ public class IndexFiles {
 
 					insertIndexTag("title", file, doc, true);
 					insertIndexTag("identifier", file, doc, false);
+					insertIndexTag("language", file, doc, true);
 					insertIndexTag("description", file, doc, true);
 					insertIndexTag("creator", file, doc, true);
 					insertIndexTag("publisher", file, doc, true);
 					insertIndexTag("date", file, doc, false);
-					insertIndexTag("language", file, doc, false);
 
 					if (writer.getConfig().getOpenMode() == OpenMode.CREATE) {
 						// New index, so we just add the document (no old
@@ -304,7 +304,7 @@ public class IndexFiles {
 		}
 	}
 
-	private static Boolean readPosition(Document doc, File file, boolean lower) {
+	/*private static Boolean readPosition(Document doc, File file, boolean lower) {
 		// create a new DocumentBuilderFactory
 		double[] result = new double[2];
 		int pos = 0;
@@ -352,6 +352,6 @@ public class IndexFiles {
 			ex.printStackTrace();
 			return false;
 		}
-	}
+	}*/
 
 }

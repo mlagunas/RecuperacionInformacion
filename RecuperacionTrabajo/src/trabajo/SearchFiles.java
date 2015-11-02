@@ -46,8 +46,6 @@ import org.apache.lucene.util.Version;
 /** Simple command-line based search demo. */
 public class SearchFiles {
 
-  private SearchFiles() {}
-
   /** Simple command-line based search demo. */
   @SuppressWarnings("deprecation")
 public static void main(String[] args) throws Exception {
@@ -78,7 +76,7 @@ public static void main(String[] args) throws Exception {
     
     IndexReader reader = DirectoryReader.open(FSDirectory.open(new File(index)));
     IndexSearcher searcher = new IndexSearcher(reader);
-	Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_44);
+	Analyzer analyzer = new SpanishAnalyzer(Version.LUCENE_44);
 
     BufferedReader in = null;
     if (infoNeeds != null) {
@@ -140,7 +138,7 @@ public static void main(String[] args) throws Exception {
        */
       BooleanQuery bool = new BooleanQuery();
       if(!author.equals("")){
-    	  Term t=new Term("creator",author);
+    	  Term t=new Term("creator",author.toLowerCase());
           TermQuery termQuery = new TermQuery(t);
           bool.add(termQuery,BooleanClause.Occur.MUST);
       }
@@ -154,15 +152,15 @@ public static void main(String[] args) throws Exception {
       System.out.println("ID: "+tipo);
 
       Query query = parser.parse(line);
+      System.out.println(line);
+      System.out.println(query);
       
       /*
        * Query de la frase entera en campos "title" y "description"
        * y nivel de ocurrencia "SHOULD"
        */
-      bool.add(query, BooleanClause.Occur.SHOULD); 
-      
-//      System.out.println("Searching for: " + query.toString(field));
-            
+      bool.add(query, BooleanClause.Occur.MUST); 
+                  
 //      if (repeat > 0) {                           // repeat & time as benchmark
 //        Date start = new Date();
 //        for (int i = 0; i < repeat; i++) {
@@ -172,6 +170,7 @@ public static void main(String[] args) throws Exception {
 //        System.out.println("Time: "+(end.getTime()-start.getTime())+"ms");
 //      }
 
+      System.out.println("Query: "+bool);
       doPagingSearch(in, searcher, bool, hitsPerPage, infoNeeds == null && queryString == null);
 
       if (queryString != null) {
@@ -221,7 +220,7 @@ public static void main(String[] args) throws Exception {
       end = Math.min(hits.length, start + hitsPerPage);
       
       for (int i = start; i < end; i++) {
-          System.out.println(searcher.explain(query, hits[i].doc));
+//          System.out.println(searcher.explain(query, hits[i].doc));
 
 //        if (false) {                              // output raw format
 //          System.out.println("doc="+hits[i].doc+" score="+hits[i].score);
