@@ -231,15 +231,11 @@ public class IndexFiles {
 
 					insertIndexTag("title", file, doc, true);
 					insertIndexTag("identifier", file, doc, false);
-					insertIndexTag("subject", file, doc, true);
-					insertIndexTag("type", file, doc, false);
 					insertIndexTag("description", file, doc, true);
 					insertIndexTag("creator", file, doc, true);
 					insertIndexTag("publisher", file, doc, true);
-					insertIndexTag("format", file, doc, false);
+					insertIndexTag("date", file, doc, false);
 					insertIndexTag("language", file, doc, false);
-					readPosition(doc, file, true);
-					readPosition(doc, file, false);
 
 					if (writer.getConfig().getOpenMode() == OpenMode.CREATE) {
 						// New index, so we just add the document (no old

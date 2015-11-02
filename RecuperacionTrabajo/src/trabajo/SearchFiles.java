@@ -25,10 +25,12 @@ import java.io.InputStreamReader;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.es.SpanishAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
@@ -76,7 +78,7 @@ public static void main(String[] args) throws Exception {
     
     IndexReader reader = DirectoryReader.open(FSDirectory.open(new File(index)));
     IndexSearcher searcher = new IndexSearcher(reader);
-	Analyzer analyzer = new SpanishAnalyzer(Version.LUCENE_44);
+	Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_44);
 
     BufferedReader in = null;
     if (infoNeeds != null) {
@@ -85,7 +87,7 @@ public static void main(String[] args) throws Exception {
       in = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
     }
     
-    QueryParser parser = new QueryParser(Version.LUCENE_44, "contents", analyzer);
+    QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_44, new String[] { "title", "description" }, analyzer);
     
     while (true) {
       if (infoNeeds == null && queryString == null) {                        // prompt the user
@@ -134,7 +136,7 @@ public static void main(String[] args) throws Exception {
       
       /*
        * Creamos Queries booleanas en caso de que hayamos detectado algun autor o tipo de trabajo  
-       * y las ponemos como "must".
+       * y las ponemos con nivel de ocurrencia "MUST"
        */
       BooleanQuery bool = new BooleanQuery();
       if(!author.equals("")){
@@ -151,10 +153,13 @@ public static void main(String[] args) throws Exception {
       System.out.println("creator: "+author);
       System.out.println("ID: "+tipo);
 
-      
       Query query = parser.parse(line);
-      System.out.println(query);
-      PhraseQuery pQuery=new PhraseQuery();
+      
+      /*
+       * Query de la frase entera en campos "title" y "description"
+       * y nivel de ocurrencia "SHOULD"
+       */
+      bool.add(query, BooleanClause.Occur.SHOULD); 
       
 //      System.out.println("Searching for: " + query.toString(field));
             
@@ -167,7 +172,7 @@ public static void main(String[] args) throws Exception {
 //        System.out.println("Time: "+(end.getTime()-start.getTime())+"ms");
 //      }
 
-      doPagingSearch(in, searcher, query, hitsPerPage, infoNeeds == null && queryString == null);
+      doPagingSearch(in, searcher, bool, hitsPerPage, infoNeeds == null && queryString == null);
 
       if (queryString != null) {
         break;
@@ -218,10 +223,10 @@ public static void main(String[] args) throws Exception {
       for (int i = start; i < end; i++) {
           System.out.println(searcher.explain(query, hits[i].doc));
 
-        if (true) {                              // output raw format
-          System.out.println("doc="+hits[i].doc+" score="+hits[i].score);
-          continue;
-        }
+//        if (false) {                              // output raw format
+//          System.out.println("doc="+hits[i].doc+" score="+hits[i].score);
+//          continue;
+//        }
 
         Document doc = searcher.doc(hits[i].doc);
         String path = doc.get("path");
