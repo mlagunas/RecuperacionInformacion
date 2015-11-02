@@ -31,6 +31,7 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
@@ -46,17 +47,14 @@ public class SearchFiles {
   @SuppressWarnings("deprecation")
 public static void main(String[] args) throws Exception {
     String usage =
-      "Usage:\tjava org.apache.lucene.demo.SearchFiles [-index dir] [-field f] [-repeat n] [-queries file] [-query string] [-raw] [-paging hitsPerPage]\n\nSee http://lucene.apache.org/core/4_1_0/demo/ for details.";
+      "Usage:\tjava org.apache.lucene.trabajo.SearchFiles -index <indexPath> -infoNeeds <infoNeedsFile> -output <resultsFile>\n\n";
     if (args.length > 0 && ("-h".equals(args[0]) || "-help".equals(args[0]))) {
       System.out.println(usage);
       System.exit(0);
     }
 
-    String index = "index";
-    String field = "contents";
-    String queries = null;
-    int repeat = 0;
-    boolean raw = false;
+    String index = "indexTrabajo";
+    String infoNeeds = null;
     String queryString = null;
     int hitsPerPage = 10;
     
@@ -64,26 +62,11 @@ public static void main(String[] args) throws Exception {
       if ("-index".equals(args[i])) {
         index = args[i+1];
         i++;
-      } else if ("-field".equals(args[i])) {
-        field = args[i+1];
+      if ("-infoNeeds".equals(args[i])) {
+        infoNeeds = args[i+1];
         i++;
-      } else if ("-queries".equals(args[i])) {
-        queries = args[i+1];
-        i++;
-      } else if ("-query".equals(args[i])) {
+      } else if ("-output".equals(args[i])) {
         queryString = args[i+1];
-        i++;
-      } else if ("-repeat".equals(args[i])) {
-        repeat = Integer.parseInt(args[i+1]);
-        i++;
-      } else if ("-raw".equals(args[i])) {
-        raw = true;
-      } else if ("-paging".equals(args[i])) {
-        hitsPerPage = Integer.parseInt(args[i+1]);
-        if (hitsPerPage <= 0) {
-          System.err.println("There must be at least 1 hit per page.");
-          System.exit(1);
-        }
         i++;
       }
     }
@@ -93,14 +76,16 @@ public static void main(String[] args) throws Exception {
 	Analyzer analyzer = new SpanishAnalyzer(Version.LUCENE_44);
 
     BufferedReader in = null;
-    if (queries != null) {
-      in = new BufferedReader(new InputStreamReader(new FileInputStream(queries), "UTF-8"));
+    if (infoNeeds != null) {
+      in = new BufferedReader(new InputStreamReader(new FileInputStream(infoNeeds), "UTF-8"));
     } else {
       in = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
     }
-    QueryParser parser = new QueryParser(Version.LUCENE_44, field, analyzer);
+    
+    QueryParser parser = new QueryParser(Version.LUCENE_44, "contents", analyzer);
+    
     while (true) {
-      if (queries == null && queryString == null) {                        // prompt the user
+      if (infoNeeds == null && queryString == null) {                        // prompt the user
         System.out.println("Enter query: ");
       }
 
@@ -116,24 +101,27 @@ public static void main(String[] args) throws Exception {
       }
       
       Query query = parser.parse(line);
-      System.out.println("Searching for: " + query.toString(field));
+      PhraseQuery pQuery=new PhraseQuery();
+      
+//      System.out.println("Searching for: " + query.toString(field));
             
-      if (repeat > 0) {                           // repeat & time as benchmark
-        Date start = new Date();
-        for (int i = 0; i < repeat; i++) {
-          searcher.search(query, 100);
-        }
-        Date end = new Date();
-        System.out.println("Time: "+(end.getTime()-start.getTime())+"ms");
-      }
+//      if (repeat > 0) {                           // repeat & time as benchmark
+//        Date start = new Date();
+//        for (int i = 0; i < repeat; i++) {
+//          searcher.search(query, 100);
+//        }
+//        Date end = new Date();
+//        System.out.println("Time: "+(end.getTime()-start.getTime())+"ms");
+//      }
 
-      doPagingSearch(in, searcher, query, hitsPerPage, raw, queries == null && queryString == null);
+      doPagingSearch(in, searcher, query, hitsPerPage, infoNeeds == null && queryString == null);
 
       if (queryString != null) {
         break;
       }
     }
     reader.close();
+    }
   }
 
   /**
@@ -147,7 +135,7 @@ public static void main(String[] args) throws Exception {
    * 
    */
   public static void doPagingSearch(BufferedReader in, IndexSearcher searcher, Query query, 
-                                     int hitsPerPage, boolean raw, boolean interactive) throws IOException {
+                                     int hitsPerPage, boolean interactive) throws IOException {
  
     // Collect enough docs to show 5 pages
     TopDocs results = searcher.search(query, 5 * hitsPerPage);
@@ -177,7 +165,7 @@ public static void main(String[] args) throws Exception {
       for (int i = start; i < end; i++) {
           System.out.println(searcher.explain(query, hits[i].doc));
 
-        if (raw) {                              // output raw format
+        if (true) {                              // output raw format
           System.out.println("doc="+hits[i].doc+" score="+hits[i].score);
           continue;
         }
