@@ -21,3 +21,6 @@ hs_err_pid*
 /.metadata/*
 /RemoteSystemsTempFiles
 /RemoteSystemsTempFiles/*
+/RecuperacionPracticas/.classpath
+/RecuperacionTrabajo/.classpath
+.classpath
