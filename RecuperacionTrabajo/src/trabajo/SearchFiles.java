@@ -22,17 +22,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Date;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.es.SpanishAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
@@ -40,23 +46,18 @@ import org.apache.lucene.util.Version;
 /** Simple command-line based search demo. */
 public class SearchFiles {
 
-  private SearchFiles() {}
-
   /** Simple command-line based search demo. */
   @SuppressWarnings("deprecation")
 public static void main(String[] args) throws Exception {
     String usage =
-      "Usage:\tjava org.apache.lucene.demo.SearchFiles [-index dir] [-field f] [-repeat n] [-queries file] [-query string] [-raw] [-paging hitsPerPage]\n\nSee http://lucene.apache.org/core/4_1_0/demo/ for details.";
+      "Usage:\tjava org.apache.lucene.trabajo.SearchFiles -index <indexPath> -infoNeeds <infoNeedsFile> -output <resultsFile>\n\n";
     if (args.length > 0 && ("-h".equals(args[0]) || "-help".equals(args[0]))) {
       System.out.println(usage);
       System.exit(0);
     }
 
     String index = "index";
-    String field = "contents";
-    String queries = null;
-    int repeat = 0;
-    boolean raw = false;
+    String infoNeeds = null;
     String queryString = null;
     int hitsPerPage = 10;
     
@@ -64,26 +65,11 @@ public static void main(String[] args) throws Exception {
       if ("-index".equals(args[i])) {
         index = args[i+1];
         i++;
-      } else if ("-field".equals(args[i])) {
-        field = args[i+1];
+      if ("-infoNeeds".equals(args[i])) {
+        infoNeeds = args[i+1];
         i++;
-      } else if ("-queries".equals(args[i])) {
-        queries = args[i+1];
-        i++;
-      } else if ("-query".equals(args[i])) {
+      } else if ("-output".equals(args[i])) {
         queryString = args[i+1];
-        i++;
-      } else if ("-repeat".equals(args[i])) {
-        repeat = Integer.parseInt(args[i+1]);
-        i++;
-      } else if ("-raw".equals(args[i])) {
-        raw = true;
-      } else if ("-paging".equals(args[i])) {
-        hitsPerPage = Integer.parseInt(args[i+1]);
-        if (hitsPerPage <= 0) {
-          System.err.println("There must be at least 1 hit per page.");
-          System.exit(1);
-        }
         i++;
       }
     }
@@ -93,14 +79,16 @@ public static void main(String[] args) throws Exception {
 	Analyzer analyzer = new SpanishAnalyzer(Version.LUCENE_44);
 
     BufferedReader in = null;
-    if (queries != null) {
-      in = new BufferedReader(new InputStreamReader(new FileInputStream(queries), "UTF-8"));
+    if (infoNeeds != null) {
+      in = new BufferedReader(new InputStreamReader(new FileInputStream(infoNeeds), "UTF-8"));
     } else {
       in = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
     }
-    QueryParser parser = new QueryParser(Version.LUCENE_44, field, analyzer);
+    
+    QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_44, new String[] { "title", "description" }, analyzer);
+    
     while (true) {
-      if (queries == null && queryString == null) {                        // prompt the user
+      if (infoNeeds == null && queryString == null) {                        // prompt the user
         System.out.println("Enter query: ");
       }
 
@@ -115,25 +103,82 @@ public static void main(String[] args) throws Exception {
         break;
       }
       
-      Query query = parser.parse(line);
-      System.out.println("Searching for: " + query.toString(field));
-            
-      if (repeat > 0) {                           // repeat & time as benchmark
-        Date start = new Date();
-        for (int i = 0; i < repeat; i++) {
-          searcher.search(query, 100);
-        }
-        Date end = new Date();
-        System.out.println("Time: "+(end.getTime()-start.getTime())+"ms");
+      String author="";
+      String tipo="";
+      boolean authorFound=false;
+      String[] palabras=line.split(" ");
+      
+      for(int j=0;j<palabras.length;j++){
+    	  //CREATOR
+          if(palabras[j].equalsIgnoreCase("autor") || palabras[j].equalsIgnoreCase("director") || palabras[j].equalsIgnoreCase("coautor")){
+        	  int h=j;
+        	  while(!authorFound && h<palabras.length && h<j+6){
+            	  if(Character.isUpperCase(palabras[h].charAt(0))){
+            		  author=palabras[h]; 	
+            		  authorFound=true;
+            	  }
+        		  h++;
+        	  }
+          }
+          //IDENTIFIER
+          if(palabras[j].equalsIgnoreCase("TFG") || palabras[j].equalsIgnoreCase("PFC") 
+        		  || palabras[j].equalsIgnoreCase("TFM") || palabras[j].equalsIgnoreCase("Tesis") ){
+        	  tipo=palabras[j];
+          }
+          //DATE
+          if(isNumber(palabras[j]) && palabras[j].length()==4){
+        
+          }
+          
       }
+      
+      /*
+       * Creamos Queries booleanas en caso de que hayamos detectado algun autor o tipo de trabajo  
+       * y las ponemos con nivel de ocurrencia "MUST"
+       */
+      BooleanQuery bool = new BooleanQuery();
+      if(!author.equals("")){
+    	  Term t=new Term("creator",author.toLowerCase());
+          TermQuery termQuery = new TermQuery(t);
+          bool.add(termQuery,BooleanClause.Occur.MUST);
+      }
+      if(!tipo.equals("")){
+    	  Term t=new Term("identifier",tipo);
+          TermQuery termQuery = new TermQuery(t);
+          bool.add(termQuery,BooleanClause.Occur.MUST);
+      }
+        
+      System.out.println("creator: "+author);
+      System.out.println("ID: "+tipo);
 
-      doPagingSearch(in, searcher, query, hitsPerPage, raw, queries == null && queryString == null);
+      Query query = parser.parse(line);
+      System.out.println(line);
+      System.out.println(query);
+      
+      /*
+       * Query de la frase entera en campos "title" y "description"
+       * y nivel de ocurrencia "SHOULD"
+       */
+      bool.add(query, BooleanClause.Occur.MUST); 
+                  
+//      if (repeat > 0) {                           // repeat & time as benchmark
+//        Date start = new Date();
+//        for (int i = 0; i < repeat; i++) {
+//          searcher.search(query, 100);
+//        }
+//        Date end = new Date();
+//        System.out.println("Time: "+(end.getTime()-start.getTime())+"ms");
+//      }
+
+      System.out.println("Query: "+bool);
+      doPagingSearch(in, searcher, bool, hitsPerPage, infoNeeds == null && queryString == null);
 
       if (queryString != null) {
         break;
       }
     }
     reader.close();
+    }
   }
 
   /**
@@ -147,7 +192,7 @@ public static void main(String[] args) throws Exception {
    * 
    */
   public static void doPagingSearch(BufferedReader in, IndexSearcher searcher, Query query, 
-                                     int hitsPerPage, boolean raw, boolean interactive) throws IOException {
+                                     int hitsPerPage, boolean interactive) throws IOException {
  
     // Collect enough docs to show 5 pages
     TopDocs results = searcher.search(query, 5 * hitsPerPage);
@@ -175,12 +220,12 @@ public static void main(String[] args) throws Exception {
       end = Math.min(hits.length, start + hitsPerPage);
       
       for (int i = start; i < end; i++) {
-          System.out.println(searcher.explain(query, hits[i].doc));
+//          System.out.println(searcher.explain(query, hits[i].doc));
 
-        if (raw) {                              // output raw format
-          System.out.println("doc="+hits[i].doc+" score="+hits[i].score);
-          continue;
-        }
+//        if (false) {                              // output raw format
+//          System.out.println("doc="+hits[i].doc+" score="+hits[i].score);
+//          continue;
+//        }
 
         Document doc = searcher.doc(hits[i].doc);
         String path = doc.get("path");
@@ -236,4 +281,23 @@ public static void main(String[] args) throws Exception {
       }
     }
   }
+  public static boolean isNumber(String string) {
+	    if (string == null || string.isEmpty()) {
+	        return false;
+	    }
+	    int i = 0;
+	    if (string.charAt(0) == '-') {
+	        if (string.length() > 1) {
+	            i++;
+	        } else {
+	            return false;
+	        }
+	    }
+	    for (; i < string.length(); i++) {
+	        if (!Character.isDigit(string.charAt(i))) {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
 }

@@ -12,7 +12,11 @@
 hs_err_pid*
 
 /RecuperacionPracticas/lib/*
+/RecuperacionPracticas/bin/*
+/RecuperacionTrabajo/bin/*
 /RecuperacionPracticas/index/*
+/RecuperacionTrabajo/index/*
+/RecuperacionTrabajo/src/recordsdc/*
 /.metadata
 /.metadata/*
 /RemoteSystemsTempFiles
