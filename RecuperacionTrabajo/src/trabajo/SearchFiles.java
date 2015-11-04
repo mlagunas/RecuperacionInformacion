@@ -90,7 +90,7 @@ public class SearchFiles {
 			}
 
 			QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_44,
-					new String[] {"description" }, analyzer);
+					new String[] { "description", "title" }, analyzer);
 
 			while (true) {
 				if (infoNeeds == null && queryString == null) { // prompt the
@@ -109,34 +109,26 @@ public class SearchFiles {
 					break;
 				}
 
-				String author = "";
-				String tipo = "";
-				String date="";
-				
-				boolean authorFound = false;
+				ArrayList<String> author = new ArrayList<String>();
+				ArrayList<String> tipo = new ArrayList<String>();
+				ArrayList<String> date = new ArrayList<String>();
 				Dictionare d = new Dictionare();
+				if(line.endsWith(".")){
+					line = line.substring(0, line.length()-1);
+				}
 				String[] palabras = line.split(" ");
-
 				for (int j = 0; j < palabras.length; j++) {
 					// CREATOR
-					if (d.map.get("author").contains(palabras[j])) {
-						int h = j;
-						while (!authorFound && h < palabras.length && h < j + 6) {
-							if (Character.isUpperCase(palabras[h].charAt(0))) {
-								author = palabras[h];
-								authorFound = true;
-							}
-							h++;
-						}
+					if (d.map.get("author").containsKey(palabras[j])) {
+						author.add(palabras[j]);
 					}
 					// IDENTIFIER
-					if (d.map.get("identifier").contains(palabras[j])) {
-						tipo = palabras[j];
+					if (d.map.get("identifier").containsKey(palabras[j])) {
+						tipo.add(palabras[j]);
 					}
 					// DATE
 					if (isValidDate(palabras[j])) {
-						// TODO posible desambiguacion en las DATE
-						date= palabras[j];
+						date.add(palabras[j]);
 					}
 
 				}
@@ -148,18 +140,18 @@ public class SearchFiles {
 				 */
 				BooleanQuery bool = new BooleanQuery();
 				if (!author.isEmpty()) {
-					Term t = new Term("creator", author.toLowerCase());
+					Term t = new Term("creator", arrayToQuery(author));
 					TermQuery termQuery = new TermQuery(t);
 					bool.add(termQuery, BooleanClause.Occur.SHOULD);
 				}
 				if (!tipo.isEmpty()) {
-					Term t = new Term("identifier", tipo);
+					Term t = new Term("identifier", arrayToQuery(tipo));
 					TermQuery termQuery = new TermQuery(t);
 					bool.add(termQuery, BooleanClause.Occur.SHOULD);
 				}
-				
+
 				if (!date.isEmpty()) {
-					Term t = new Term("date", date);
+					Term t = new Term("date", arrayToQuery(date));
 					TermQuery termQuery = new TermQuery(t);
 					bool.add(termQuery, BooleanClause.Occur.SHOULD);
 				}
@@ -169,7 +161,7 @@ public class SearchFiles {
 
 				Query query = parser.parse(line);
 				System.out.println(line);
-				System.out.println(query);
+				// System.out.println(query);
 
 				/*
 				 * Query de la frase entera en campos "title" y "description" y
@@ -186,7 +178,7 @@ public class SearchFiles {
 				// System.out.println("Time: "+(end.getTime()-start.getTime())+"ms");
 				// }
 
-				System.out.println("Query: " + bool);
+				// System.out.println("Query: " + bool);
 				doPagingSearch(in, searcher, bool, hitsPerPage,
 						infoNeeds == null && queryString == null);
 
@@ -248,6 +240,14 @@ public class SearchFiles {
 		return daysInMonth;
 	}
 
+	private static String arrayToQuery(ArrayList<String> array){
+		String result = "";
+		for(String s: array){
+			result += s.toLowerCase();
+		}
+		return result;
+	}
+	
 	/**
 	 * This demonstrates a typical paging search scenario, where the search
 	 * engine presents pages of size n to the user. The user can then go to the
