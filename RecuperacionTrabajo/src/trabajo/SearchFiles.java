@@ -36,6 +36,7 @@ import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -92,6 +93,8 @@ public class SearchFiles {
 			QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_44,
 					new String[] { "description", "title" }, analyzer);
 
+			QueryParser lineParser = new QueryParser(Version.LUCENE_44, "title", analyzer);
+			
 			while (true) {
 				if (infoNeeds == null && queryString == null) { // prompt the
 																// user
@@ -108,15 +111,20 @@ public class SearchFiles {
 				if (line.length() == 0) {
 					break;
 				}
-
+				
+				String lineParsed= lineParser.parse(line).toString("title");
+				
 				ArrayList<String> author = new ArrayList<String>();
 				ArrayList<String> tipo = new ArrayList<String>();
 				ArrayList<String> date = new ArrayList<String>();
+				ArrayList<String> interval = new ArrayList<String>();
+				
 				Dictionare d = new Dictionare();
 				if(line.endsWith(".")){
 					line = line.substring(0, line.length()-1);
 				}
 				String[] palabras = line.split(" ");
+				System.out.println(line);
 				for (int j = 0; j < palabras.length; j++) {
 					// CREATOR
 					if (d.map.get("author").containsKey(palabras[j])) {
@@ -128,6 +136,12 @@ public class SearchFiles {
 					}
 					// DATE
 					if (isValidDate(palabras[j])) {
+						for (int h=j+1;h<j+4;h++){ //Mira las proximas 3 palabras y si son fechas, pues intervalo
+							if(isValidDate(palabras[h])){
+								interval.add(palabras[j]);
+								interval.add(palabras[h]);
+							}
+						}
 						date.add(palabras[j]);
 					}
 
@@ -156,12 +170,19 @@ public class SearchFiles {
 					bool.add(termQuery, BooleanClause.Occur.SHOULD);
 				}
 
+				if(!interval.isEmpty()){
+					for(i=0;i<interval.size();i+=2){
+						NumericRangeQuery<Integer> intervalQuery = NumericRangeQuery.newIntRange("date", Integer.parseInt(interval.get(i)), Integer.parseInt(interval.get(i+1)), true, true);
+						bool.add(intervalQuery,BooleanClause.Occur.SHOULD);
+					}
+					
+				}
 				System.out.println("creator: " + author);
 				System.out.println("ID: " + tipo);
-
+				System.out.println("Date: "+date);
+				
 				Query query = parser.parse(line);
-				System.out.println(line);
-				// System.out.println(query);
+				System.out.println(query);
 
 				/*
 				 * Query de la frase entera en campos "title" y "description" y
