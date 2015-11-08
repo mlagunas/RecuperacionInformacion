@@ -20,14 +20,23 @@ package trabajo;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.es.SpanishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
@@ -44,8 +53,19 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /** Simple command-line based search demo. */
+/**
+ * Run configurations arguments -> -index index -infoNeeds src/info_needs.xml
+ * -output src/output.xml
+ * 
+ * @author Manuel
+ *
+ */
 public class SearchFiles {
 
 	/** Simple command-line based search demo. */
@@ -67,42 +87,43 @@ public class SearchFiles {
 			if ("-index".equals(args[i])) {
 				index = args[i + 1];
 				i++;
-				if ("-infoNeeds".equals(args[i])) {
-					infoNeeds = args[i + 1];
-					i++;
-				} else if ("-output".equals(args[i])) {
-					queryString = args[i + 1];
-					i++;
-				}
+			} else if ("-infoNeeds".equals(args[i])) {
+				infoNeeds = args[i + 1];
+				i++;
+			} else if ("-output".equals(args[i])) {
+				queryString = args[i + 1];
+				i++;
 			}
 
-			IndexReader reader = DirectoryReader.open(FSDirectory
-					.open(new File(index)));
-			IndexSearcher searcher = new IndexSearcher(reader);
-			Analyzer analyzer = new SpanishAnalyzer(Version.LUCENE_44);
+		}
 
-			BufferedReader in = null;
-			if (infoNeeds != null) {
-				in = new BufferedReader(new InputStreamReader(
-						new FileInputStream(infoNeeds), "UTF-8"));
-			} else {
-				in = new BufferedReader(new InputStreamReader(System.in,
-						"UTF-8"));
-			}
+		IndexReader reader = DirectoryReader.open(FSDirectory.open(new File(
+				index)));
+		IndexSearcher searcher = new IndexSearcher(reader);
+		Analyzer analyzer = new SpanishAnalyzer(Version.LUCENE_44);
 
-			QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_44,
-					new String[] { "description", "title" }, analyzer);
+		BufferedReader in = null;
+		if (infoNeeds != null) {
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(
+					infoNeeds), "UTF-8"));
+		} else {
+			in = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
+		}
 
-			QueryParser lineParser = new QueryParser(Version.LUCENE_44, "title", analyzer);
-			
+		QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_44,
+				new String[] { "description", "title" }, analyzer);
+
+		QueryParser lineParser = new QueryParser(Version.LUCENE_44, "title",
+				analyzer);
+		ArrayList<String> aux = getNeeds(infoNeeds);
+		for (String need : aux) {
 			while (true) {
 				if (infoNeeds == null && queryString == null) { // prompt the
 																// user
 					System.out.println("Enter query: ");
 				}
 
-				String line = queryString != null ? queryString : in.readLine();
-
+				String line = need;
 				if (line == null || line.length() == -1) {
 					break;
 				}
@@ -111,19 +132,21 @@ public class SearchFiles {
 				if (line.length() == 0) {
 					break;
 				}
-				
-				String lineParsed= lineParser.parse(line).toString("title");
-				
+
+				// String lineParsed = lineParser.parse(line).toString("title");
+
 				ArrayList<String> author = new ArrayList<String>();
 				ArrayList<String> tipo = new ArrayList<String>();
 				ArrayList<String> date = new ArrayList<String>();
 				ArrayList<String> interval = new ArrayList<String>();
-				
+
 				Dictionare d = new Dictionare();
-				if(line.endsWith(".")){
-					line = line.substring(0, line.length()-1);
+				if (line.endsWith(".")) {
+					line = line.substring(0, line.length() - 1);
 				}
-				String[] palabras = line.split(" ");
+				//Separa la cadena comparando con la expresion regular de manera que optimice
+				//diferentes tipos de busquedas futuras
+				String[] palabras = line.split("[^a-zA-Z0-9·ÈÌÛ˙¡…Õ”⁄¸‹Ò]+");
 				System.out.println(line);
 				for (int j = 0; j < palabras.length; j++) {
 					// CREATOR
@@ -136,13 +159,23 @@ public class SearchFiles {
 					}
 					// DATE
 					if (isValidDate(palabras[j])) {
-						for (int h=j+1;h<j+4;h++){ //Mira las proximas 3 palabras y si son fechas, pues intervalo
-							if(isValidDate(palabras[h])){
+						int nIntervalo = j + 4;
+						if (j + 4 > palabras.length) {
+							nIntervalo = palabras.length - j;
+						}
+						for (int h = j + 1; h < nIntervalo; h++) { // Mira las
+																	// siguientes
+																	// fechas en
+																	// busca
+																	// de
+																	// intervalos
+							if (isValidDate(palabras[h])) {
 								interval.add(palabras[j]);
 								interval.add(palabras[h]);
 							}
 						}
 						date.add(palabras[j]);
+
 					}
 
 				}
@@ -170,17 +203,21 @@ public class SearchFiles {
 					bool.add(termQuery, BooleanClause.Occur.SHOULD);
 				}
 
-				if(!interval.isEmpty()){
-					for(i=0;i<interval.size();i+=2){
-						NumericRangeQuery<Integer> intervalQuery = NumericRangeQuery.newIntRange("date", Integer.parseInt(interval.get(i)), Integer.parseInt(interval.get(i+1)), true, true);
-						bool.add(intervalQuery,BooleanClause.Occur.SHOULD);
+				if (!interval.isEmpty()) {
+					for (int i = 0; i < interval.size(); i += 2) {
+						NumericRangeQuery<Integer> intervalQuery = NumericRangeQuery
+								.newIntRange("date",
+										Integer.parseInt(interval.get(i)),
+										Integer.parseInt(interval.get(i + 1)),
+										true, true);
+						bool.add(intervalQuery, BooleanClause.Occur.SHOULD);
 					}
-					
+
 				}
 				System.out.println("creator: " + author);
 				System.out.println("ID: " + tipo);
-				System.out.println("Date: "+date);
-				
+				System.out.println("Date: " + date);
+
 				Query query = parser.parse(line);
 				System.out.println(query);
 
@@ -189,17 +226,6 @@ public class SearchFiles {
 				 * nivel de ocurrencia "SHOULD"
 				 */
 				bool.add(query, BooleanClause.Occur.SHOULD);
-
-				// if (repeat > 0) { // repeat & time as benchmark
-				// Date start = new Date();
-				// for (int i = 0; i < repeat; i++) {
-				// searcher.search(query, 100);
-				// }
-				// Date end = new Date();
-				// System.out.println("Time: "+(end.getTime()-start.getTime())+"ms");
-				// }
-
-				// System.out.println("Query: " + bool);
 				doPagingSearch(in, searcher, bool, hitsPerPage,
 						infoNeeds == null && queryString == null);
 
@@ -207,32 +233,86 @@ public class SearchFiles {
 					break;
 				}
 			}
-			reader.close();
+		}
+		reader.close();
+	}
+
+	private static ArrayList<String> getNeeds(String infoNeeds) {
+		ArrayList<String> result = new ArrayList<String>();
+		try {
+
+			DocumentBuilderFactory factory = DocumentBuilderFactory
+					.newInstance();
+			DocumentBuilder builder;
+
+			builder = factory.newDocumentBuilder();
+
+			InputSource inputSource = new InputSource(new InputStreamReader(
+					new FileInputStream(infoNeeds), "UTF-8"));
+			org.w3c.dom.Document docu = builder.parse(inputSource);
+			NodeList conditionList = docu.getElementsByTagName("text");
+
+			for (int k = 0; k < conditionList.getLength(); ++k) {
+				String text = "";
+				Element condition = (Element) conditionList.item(k);
+				if (condition != null && condition.getFirstChild() != null) {
+					text = condition.getFirstChild().getNodeValue();
+					System.out.println(text);
+					result.add(text);
+				}
+			}
+			return result;
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+			return result;
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return result;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return result;
+		} catch (SAXException e) {
+			e.printStackTrace();
+			return result;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return result;
 		}
 	}
 
 	public static boolean isValidDate(String dateString) {
-		if (dateString == null || dateString.length() != "yyyyMMdd".length()) {
+		if (dateString == null
+				|| (dateString.length() != "yyyyMMdd".length() && dateString
+						.length() != "yyyy".length())) {
 			return false;
 		}
+		if (dateString.length() != "yyyy".length()) {
+			int date;
+			try {
+				date = Integer.parseInt(dateString);
+			} catch (NumberFormatException e) {
+				return false;
+			}
 
-		int date;
-		try {
-			date = Integer.parseInt(dateString);
-		} catch (NumberFormatException e) {
-			return false;
+			int year = date / 10000;
+			int month = (date % 10000) / 100;
+			int day = date % 100;
+
+			boolean yearOk = (year >= 1581) && (year <= 2500);
+			boolean monthOk = (month >= 1) && (month <= 12);
+			boolean dayOk = (day >= 1) && (day <= daysInMonth(year, month));
+
+			return (yearOk && monthOk && dayOk);
+		} else {
+			int year;
+			try {
+				year = Integer.parseInt(dateString);
+			} catch (NumberFormatException e) {
+				return false;
+			}
+			boolean yearOk = (year >= 1581) && (year <= 2500);
+			return (yearOk && dateString.length() == 4);
 		}
-
-		int year = date / 10000;
-		int month = (date % 10000) / 100;
-		int day = date % 100;
-
-		// leap years calculation not valid before 1581
-		boolean yearOk = (year >= 1581) && (year <= 2500);
-		boolean monthOk = (month >= 1) && (month <= 12);
-		boolean dayOk = (day >= 1) && (day <= daysInMonth(year, month));
-
-		return ((yearOk && monthOk && dayOk) || (yearOk && dateString.length() == 4));
 	}
 
 	private static int daysInMonth(int year, int month) {
@@ -261,14 +341,14 @@ public class SearchFiles {
 		return daysInMonth;
 	}
 
-	private static String arrayToQuery(ArrayList<String> array){
+	private static String arrayToQuery(ArrayList<String> array) {
 		String result = "";
-		for(String s: array){
+		for (String s : array) {
 			result += s.toLowerCase();
 		}
 		return result;
 	}
-	
+
 	/**
 	 * This demonstrates a typical paging search scenario, where the search
 	 * engine presents pages of size n to the user. The user can then go to the
@@ -313,7 +393,7 @@ public class SearchFiles {
 			end = Math.min(hits.length, start + hitsPerPage);
 
 			for (int i = start; i < end; i++) {
-				System.out.println(searcher.explain(query, hits[i].doc));
+				// System.out.println(searcher.explain(query, hits[i].doc));
 
 				// if (false) { // output raw format
 				// System.out.println("doc="+hits[i].doc+" score="+hits[i].score);

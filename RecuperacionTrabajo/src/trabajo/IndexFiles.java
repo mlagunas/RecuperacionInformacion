@@ -304,54 +304,6 @@ public class IndexFiles {
 		}
 	}
 
-	/*private static Boolean readPosition(Document doc, File file, boolean lower) {
-		// create a new DocumentBuilderFactory
-		double[] result = new double[2];
-		int pos = 0;
-		Boolean found = false;
 
-		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
-
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			InputStream in = new FileInputStream(file);
-			InputSource inputSource = new InputSource(new InputStreamReader(in));
-			org.w3c.dom.Document docu = builder.parse(inputSource);
-			NodeList conditionList;
-			if (lower)
-				conditionList = docu.getElementsByTagName("ows:LowerCorner");
-			else
-				conditionList = docu.getElementsByTagName("ows:UpperCorner");
-
-			for (int k = 0; k < conditionList.getLength(); ++k) {
-				String text = "";
-				Element condition = (Element) conditionList.item(k);
-				if (condition != null && condition.getFirstChild() != null) {
-					text = condition.getFirstChild().getNodeValue();
-					found = true;
-				}
-				for (String s : text.split(" ")) {
-					result[pos] = Double.parseDouble(s);
-					pos++;
-				}
-			}
-			if (found) {
-				if (lower) {
-					doc.add(new DoubleField("west", result[0], Field.Store.YES));
-					doc.add(new DoubleField("south", result[1], Field.Store.YES));
-				} else {
-					doc.add(new DoubleField("east", result[0], Field.Store.YES));
-					doc.add(new DoubleField("north", result[1], Field.Store.YES));
-				}
-			}
-
-			return true;
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			return false;
-		}
-	}*/
 
 }

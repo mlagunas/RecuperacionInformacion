@@ -46,6 +46,9 @@ public class Dictionare {
 		identifiers.put("TFG",1);
 		identifiers.put("TFM",2);
 		identifiers.put("PFC",3);
+		identifiers.put("trabajo de fin de grado",4);
+		identifiers.put("trabajo de fin de master",5);
+		identifiers.put("proyecto de fin de carrera",6);
 		map.put("identifier",identifiers);
 	}
 
