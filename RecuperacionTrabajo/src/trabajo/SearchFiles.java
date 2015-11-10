@@ -51,6 +51,8 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.similarities.BM25Similarity;
+import org.apache.lucene.search.similarities.TFIDFSimilarity;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.w3c.dom.Element;
@@ -214,9 +216,6 @@ public class SearchFiles {
 					}
 
 				}
-				System.out.println("creator: " + author);
-				System.out.println("ID: " + tipo);
-				System.out.println("Date: " + date);
 
 				Query query = parser.parse(line);
 				System.out.println(query);
@@ -257,7 +256,6 @@ public class SearchFiles {
 				Element condition = (Element) conditionList.item(k);
 				if (condition != null && condition.getFirstChild() != null) {
 					text = condition.getFirstChild().getNodeValue();
-					System.out.println(text);
 					result.add(text);
 				}
 			}
@@ -363,7 +361,10 @@ public class SearchFiles {
 	public static void doPagingSearch(BufferedReader in,
 			IndexSearcher searcher, Query query, int hitsPerPage,
 			boolean interactive) throws IOException {
-
+		
+		//Cambio en el tipo de ranking
+		searcher.setSimilarity(new BM25Similarity());
+		
 		// Collect enough docs to show 5 pages
 		TopDocs results = searcher.search(query, 5 * hitsPerPage);
 		ScoreDoc[] hits = results.scoreDocs;

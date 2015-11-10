@@ -1,4 +1,4 @@
-package practica1;
+package practica1_2;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
