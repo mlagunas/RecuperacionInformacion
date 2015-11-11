@@ -79,7 +79,7 @@ public class SearchFiles {
 		String index = "index";
 		String infoNeeds = null;
 		String output = null;
-		int hitsPerPage = 100;
+		int hitsPerPage = 100000;
 
 		for (int i = 0; i < args.length; i++) {
 			if ("-index".equals(args[i])) {
@@ -424,12 +424,6 @@ public class SearchFiles {
 						.println("Only results 1 - " + hits.length + " of "
 								+ numTotalHits
 								+ " total matching documents collected.");
-				System.out.println("Collect more (y/n) ?");
-				String line = in.readLine();
-				if (line.length() == 0 || line.charAt(0) == 'n') {
-					break;
-				}
-
 				hits = searcher.search(query, numTotalHits).scoreDocs;
 			}
 
