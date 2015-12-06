@@ -18,9 +18,11 @@ package trabajo;
  */
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -32,11 +34,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.es.SpanishAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.StringField;
-import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
@@ -46,13 +44,11 @@ import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.NumericRangeQuery;
-import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.similarities.BM25Similarity;
-import org.apache.lucene.search.similarities.TFIDFSimilarity;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.w3c.dom.Element;
@@ -82,8 +78,8 @@ public class SearchFiles {
 
 		String index = "index";
 		String infoNeeds = null;
-		String queryString = null;
-		int hitsPerPage = 10;
+		String output = null;
+		int hitsPerPage = 100000;
 
 		for (int i = 0; i < args.length; i++) {
 			if ("-index".equals(args[i])) {
@@ -93,18 +89,19 @@ public class SearchFiles {
 				infoNeeds = args[i + 1];
 				i++;
 			} else if ("-output".equals(args[i])) {
-				queryString = args[i + 1];
+				output = args[i + 1];
 				i++;
 			}
 
 		}
-
 		IndexReader reader = DirectoryReader.open(FSDirectory.open(new File(
 				index)));
 		IndexSearcher searcher = new IndexSearcher(reader);
 		Analyzer analyzer = new SpanishAnalyzer(Version.LUCENE_44);
 
 		BufferedReader in = null;
+		FileWriter bw = new FileWriter(output);
+		
 		if (infoNeeds != null) {
 			in = new BufferedReader(new InputStreamReader(new FileInputStream(
 					infoNeeds), "UTF-8"));
@@ -118,9 +115,13 @@ public class SearchFiles {
 		QueryParser lineParser = new QueryParser(Version.LUCENE_44, "title",
 				analyzer);
 		ArrayList<String> aux = getNeeds(infoNeeds);
+		ArrayList<String> ids = getIds(infoNeeds);
+		int numNeed=0;
 		for (String need : aux) {
+			String id=ids.get(numNeed);
+			numNeed++;
 			while (true) {
-				if (infoNeeds == null && queryString == null) { // prompt the
+				if (infoNeeds == null && output == null) { // prompt the
 																// user
 					System.out.println("Enter query: ");
 				}
@@ -204,7 +205,7 @@ public class SearchFiles {
 					TermQuery termQuery = new TermQuery(t);
 					bool.add(termQuery, BooleanClause.Occur.SHOULD);
 				}
-
+				
 				if (!interval.isEmpty()) {
 					for (int i = 0; i < interval.size(); i += 2) {
 						NumericRangeQuery<Integer> intervalQuery = NumericRangeQuery
@@ -216,9 +217,7 @@ public class SearchFiles {
 					}
 
 				}
-
 				Query query = parser.parse(line);
-				System.out.println(query);
 
 				/*
 				 * Query de la frase entera en campos "title" y "description" y
@@ -226,14 +225,58 @@ public class SearchFiles {
 				 */
 				bool.add(query, BooleanClause.Occur.SHOULD);
 				doPagingSearch(in, searcher, bool, hitsPerPage,
-						infoNeeds == null && queryString == null);
+						infoNeeds == null && output == null,bw,id);
 
-				if (queryString != null) {
+				if (output != null) {
 					break;
 				}
 			}
 		}
 		reader.close();
+		bw.close();
+	}
+
+	private static ArrayList<String> getIds(String infoNeeds) {
+		ArrayList<String> result = new ArrayList<String>();
+		try {
+
+			DocumentBuilderFactory factory = DocumentBuilderFactory
+					.newInstance();
+			DocumentBuilder builder;
+
+			builder = factory.newDocumentBuilder();
+
+			InputSource inputSource = new InputSource(new InputStreamReader(
+					new FileInputStream(infoNeeds), "UTF-8"));
+			org.w3c.dom.Document docu = builder.parse(inputSource);
+			NodeList conditionList = docu.getElementsByTagName("identifier");
+
+			for (int k = 0; k < conditionList.getLength(); ++k) {
+				String text = "";
+				Element condition = (Element) conditionList.item(k);
+				if (condition != null && condition.getFirstChild() != null) {
+					text = condition.getFirstChild().getNodeValue();
+					System.out.println(text);
+					result.add(text);
+				}
+			}
+			return result;
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+			return result;
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return result;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return result;
+		} catch (SAXException e) {
+			e.printStackTrace();
+			return result;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return result;
+		}
 	}
 
 	private static ArrayList<String> getNeeds(String infoNeeds) {
@@ -256,6 +299,7 @@ public class SearchFiles {
 				Element condition = (Element) conditionList.item(k);
 				if (condition != null && condition.getFirstChild() != null) {
 					text = condition.getFirstChild().getNodeValue();
+					System.out.println(text);
 					result.add(text);
 				}
 			}
@@ -360,11 +404,9 @@ public class SearchFiles {
 	 */
 	public static void doPagingSearch(BufferedReader in,
 			IndexSearcher searcher, Query query, int hitsPerPage,
-			boolean interactive) throws IOException {
-		
-		//Cambio en el tipo de ranking
+			boolean interactive,FileWriter bw, String id) throws IOException {
+
 		searcher.setSimilarity(new BM25Similarity());
-		
 		// Collect enough docs to show 5 pages
 		TopDocs results = searcher.search(query, 5 * hitsPerPage);
 		ScoreDoc[] hits = results.scoreDocs;
@@ -373,7 +415,7 @@ public class SearchFiles {
 		System.out.println(numTotalHits + " total matching documents");
 
 		int start = 0;
-		int end = Math.min(numTotalHits, hitsPerPage);
+		int end = numTotalHits;
 
 		while (true) {
 
@@ -382,12 +424,6 @@ public class SearchFiles {
 						.println("Only results 1 - " + hits.length + " of "
 								+ numTotalHits
 								+ " total matching documents collected.");
-				System.out.println("Collect more (y/n) ?");
-				String line = in.readLine();
-				if (line.length() == 0 || line.charAt(0) == 'n') {
-					break;
-				}
-
 				hits = searcher.search(query, numTotalHits).scoreDocs;
 			}
 
@@ -404,7 +440,8 @@ public class SearchFiles {
 				Document doc = searcher.doc(hits[i].doc);
 				String path = doc.get("path");
 				if (path != null) {
-					System.out.println((i + 1) + ". " + path);
+					System.out.println(id+"\t"+path.substring(22, path.length()));
+					bw.write(id+"\t"+path.substring(22, path.length())+"\n");
 				} else {
 					System.out.println((i + 1) + ". "
 							+ "No path for this document");
