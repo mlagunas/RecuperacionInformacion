@@ -17,13 +17,18 @@ package trabajo;
  * limitations under the License.
  */
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -67,10 +72,14 @@ public class IndexFiles {
 				+ "in INDEX_PATH that can be searched with SearchFiles";
 		String indexPath = "index";
 		String docsPath = null;
+		String dumpPath = null;
 		boolean create = true;
 		for (int i = 0; i < args.length; i++) {
 			if ("-index".equals(args[i])) {
 				indexPath = args[i + 1];
+				i++;
+			} else if ("-dump".equals(args[i])) {
+				dumpPath = args[i + 1];
 				i++;
 			} else if ("-docs".equals(args[i])) {
 				docsPath = args[i + 1];
@@ -80,12 +89,12 @@ public class IndexFiles {
 			}
 		}
 
-		if (docsPath == null) {
+		if (dumpPath == null) {
 			System.err.println("Usage: " + usage);
 			System.exit(1);
 		}
 
-		final File docDir = new File(docsPath);
+		final File docDir = new File(dumpPath);
 		if (!docDir.exists() || !docDir.canRead()) {
 			System.out
 					.println("Document directory '"
@@ -122,7 +131,7 @@ public class IndexFiles {
 			// iwc.setRAMBufferSizeMB(256.0);
 
 			IndexWriter writer = new IndexWriter(dir, iwc);
-			indexDocs(writer, docDir);
+			indexDump(writer, new File(dumpPath));
 
 			// NOTE: if you want to maximize search performance,
 			// you can optionally call forceMerge here. This can be
@@ -142,6 +151,80 @@ public class IndexFiles {
 			System.out.println(" caught a " + e.getClass()
 					+ "\n with message: " + e.getMessage());
 		}
+	}
+
+	static Boolean finFile = false;
+
+	/**
+	 * Dado un fichero, con un formato especifico devuelve el contenido de una
+	 * etiqueta dada.
+	 * 
+	 * @param br
+	 * @param tag
+	 * @return
+	 * @throws IOException
+	 */
+	private static String obtenerEtiquetas(BufferedReader br, String tag)
+			throws IOException {
+		String result = "";
+		for (String line; (line = br.readLine()) != null;) {
+			Scanner s = new Scanner(line);
+			if (s.next().matches(tag)) {
+				if (s.hasNext())
+					result += s.nextLine();
+				while ((line = br.readLine()) != null) {
+					s = new Scanner(line);
+					if (s.hasNext()) {
+						String t = s.next();
+						if (!t.matches("[a-zA-Z]+:")
+								&& !t.matches("[a-zA-Z]+::")) {
+							result += line;
+						} else
+							break;
+
+					} else
+						result += line;
+				}
+				break;
+			}
+			s.close();
+		}
+		if (br.readLine() == null)
+			finFile = true;
+
+		return result;
+	}
+
+	/**
+	 * Realiza la indexacion de documentos para un archivo dump generado a
+	 * partir de nutch
+	 * 
+	 * @param writer
+	 * @param file
+	 * @throws IOException
+	 */
+	static void indexDump(IndexWriter writer, File file) throws IOException {
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+			while (!finFile) {
+				Document doc = new Document();
+				Field pathField = new StringField("path", obtenerEtiquetas(br,
+						"URL::"), Field.Store.YES);
+				doc.add(pathField);
+				String contenido = obtenerEtiquetas(br, "Content:");
+				System.out.println(contenido);
+				insertIndexTag("title", contenido, doc, true);
+				insertIndexTag("identifier", contenido, doc, false);
+				insertIndexTag("language", contenido, doc, true);
+				insertIndexTag("description", contenido, doc, true);
+				insertIndexTag("creator", contenido, doc, true);
+				insertIndexTag("publisher", contenido, doc, true);
+				insertIndexTag("date", contenido, doc, false);
+				System.out.println("adding ");
+				writer.addDocument(doc);
+			}
+		}
+		// make a new, empty document
+
 	}
 
 	/**
@@ -304,6 +387,49 @@ public class IndexFiles {
 		}
 	}
 
+	/**
+	 * 
+	 * 
+	 * @param tag
+	 *            - Etiqueta a buscar dentro del xml
+	 * @param file
+	 *            - Fichero xml a parsear para buscar el contenido de las
+	 *            etiquetas
+	 * @return devuelve una nodelist con todos los elementos encontrados en file
+	 *         parseandoloe y buscando los campos con el tag dado.
+	 */
+	private static boolean insertIndexTag(String tag, String s, Document doc,
+			boolean isText) {
+		try {
+			// create a new DocumentBuilderFactory
+			DocumentBuilderFactory factory = DocumentBuilderFactory
+					.newInstance();
 
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			InputStream in = new ByteArrayInputStream(
+					s.getBytes(StandardCharsets.UTF_8));
+			InputSource inputSource = new InputSource(new InputStreamReader(in));
+			org.w3c.dom.Document docu = builder.parse(inputSource);
+			NodeList conditionList = docu.getElementsByTagName("dc:" + tag);
+
+			for (int k = 0; k < conditionList.getLength(); ++k) {
+				String text = "";
+				Element condition = (Element) conditionList.item(k);
+				if (condition != null && condition.getFirstChild() != null) {
+					text = condition.getFirstChild().getNodeValue();
+					if (isText)
+						doc.add(new TextField(tag, text, Field.Store.YES));
+					else
+						doc.add(new StringField(tag, text, Field.Store.YES));
+				}
+			}
+
+			return true;
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return false;
+		}
+	}
 
 }
