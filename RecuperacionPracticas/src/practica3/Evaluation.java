@@ -1,17 +1,20 @@
 package practica3;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 public class Evaluation {
 
 	// Path a los ficheros que usamos
-	private static final String QRELS = "src/practica3/qrels.txt";
-	private static final String RESULT = "src/practica3/results.txt";
+	private static final String QRELS = "src/practica3/files/qrels.txt";
+	private static final String RESULT = "src/practica3/files/results.txt";
 
 	// Arraylist con los documentos Relevantes(R) y no relevantes(NR)
 	private static HashMap<String, ArrayList<String>> qrelsR = new HashMap<String, ArrayList<String>>();
@@ -22,7 +25,6 @@ public class Evaluation {
 
 	public static void main(String[] args) {
 		readFiles();
-
 	}
 
 	public static double precision(int need,
@@ -58,6 +60,17 @@ public class Evaluation {
 											// [0,..,k]
 		return nR / k;
 	}
+	
+	public static double kRecall(int k, int need,
+			HashMap<String, ArrayList<String>> rel,
+			HashMap<String, ArrayList<String>> recu) {
+		int nR = cuentaDeIntersección(rel.get(need), (ArrayList<String>) recu
+				.get(need).subList(0, k));// Numero de relevantes en coleccion
+											// [0,..,k]
+		int nRTotal = rel.get(need).size();// num Relevantes
+
+		return nR / nRTotal;
+	}
 
 	public static double averagePrecision(int need,
 			HashMap<String, ArrayList<String>> rel,
@@ -72,13 +85,31 @@ public class Evaluation {
 		}
 		return precisionFinal/cuentaDeIntersección(relevantes,recuperados);
 	}
+	
+	public static TreeMap<Double,Double> recall_precision(int need,
+			HashMap<String, ArrayList<String>> rel,
+			HashMap<String, ArrayList<String>> recu) {
+		ArrayList<String> recuperados = recu.get(need);
+		ArrayList<String> relevantes = rel.get(need);
+		TreeMap<Double,Double> points = new TreeMap<Double, Double>();
+		for(int i = 0; i < recuperados.size();i++){
+			if(relevantes.contains(recuperados.get(i))){
+				double precision=kPrecision(i, need, rel, recu);
+				double recall=kRecall(i, need, rel, recu);
+				points.put(precision, recall);
+			}
+		}
+		for(Entry<Double, Double> entry : points.entrySet()) {
+			  Double key = entry.getKey();
+			  Double value = entry.getValue();
 
-	public static double recallPrecision() {
-		return 0.0;
+			  System.out.println(key + " => " + value);
+			}
+		return points;
 	}
 
-	public static double interpolatedRecallPrecision() {
-		return 0.0;
+	public static HashMap<Double,Double>  interpolatedRecallPrecision() {
+		return null;
 	}
 
 	private static void readFiles() {
@@ -89,7 +120,7 @@ public class Evaluation {
 			ArrayList<String> nR = new ArrayList<String>();
 
 			// Iterar en el fichero
-			for (String line : Files.readAllLines(Paths.get(QRELS))) {
+			for (String line : Files.readAllLines(Paths.get(QRELS), Charset.defaultCharset())) {
 				Scanner s = new Scanner(line);
 
 				// INFO_NEED, DOC_ID, RELEVANCY
@@ -113,7 +144,7 @@ public class Evaluation {
 			lastNeed = "";
 			ArrayList<String> ids = new ArrayList<String>();
 
-			for (String line : Files.readAllLines(Paths.get(RESULT))) {
+			for (String line : Files.readAllLines(Paths.get(RESULT),Charset.defaultCharset())) {
 				Scanner s = new Scanner(line);
 				// INFO_NEED, DOC_ID
 				String need = s.next(), id = s.next();
