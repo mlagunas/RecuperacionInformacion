@@ -107,13 +107,13 @@ public class Evaluation {
 			HashMap<String, List<String>> recu) {
 		List<String> recuperados = recu.get(need);
 		List<String> relevantes = rel.get(need);
-		int precisionFinal = 0;
+		double precisionFinal = 0;
 		for (int i = 0; i < recuperados.size(); i++) {
 			if (relevantes.contains(recuperados.get(i))) {
-				precisionFinal += kPrecision(i, need, rel, recu);
+				precisionFinal += kPrecision(i+1, need, rel, recu);
 			}
 		}
-		return precisionFinal / cuentaDeIntersección(relevantes, recuperados);
+		return (precisionFinal / cuentaDeIntersección(relevantes, recuperados));
 	}
 
 	public static TreeMap<Double, Double> recall_precision(String need,
