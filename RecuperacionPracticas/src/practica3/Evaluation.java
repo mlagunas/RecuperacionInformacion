@@ -10,8 +10,8 @@ import java.util.Scanner;
 public class Evaluation {
 
 	// Path a los ficheros que usamos
-	private static final String QRELS = "src/practica3/qrels.txt";
-	private static final String RESULT = "src/practica3/results.txt";
+	private static final String QRELS = "src/practica3/files/qrels.txt";
+	private static final String RESULT = "src/practica3/files/results.txt";
 
 	// Arraylist con los documentos Relevantes(R) y no relevantes(NR)
 	private static HashMap<String, ArrayList<String>> qrelsR = new HashMap<String, ArrayList<String>>();
@@ -22,7 +22,7 @@ public class Evaluation {
 
 	public static void main(String[] args) {
 		readFiles();
-
+		System.out.println(precision(1, qrelsR, resultRead));
 	}
 
 	public static double precision(int need,
@@ -65,12 +65,12 @@ public class Evaluation {
 		ArrayList<String> recuperados = recu.get(need);
 		ArrayList<String> relevantes = rel.get(need);
 		int precisionFinal = 0;
-		for(int i = 0; i < recuperados.size();i++){
-			if(relevantes.contains(recuperados.get(i))){
+		for (int i = 0; i < recuperados.size(); i++) {
+			if (relevantes.contains(recuperados.get(i))) {
 				precisionFinal += kPrecision(i, need, rel, recu);
 			}
 		}
-		return precisionFinal/cuentaDeIntersección(relevantes,recuperados);
+		return precisionFinal / cuentaDeIntersección(relevantes, recuperados);
 	}
 
 	public static double recallPrecision() {
@@ -81,10 +81,13 @@ public class Evaluation {
 		return 0.0;
 	}
 
+	/*
+	 * METODOS PRIVADOS
+	 */
 	private static void readFiles() {
 		try {
 			// Estructuras auxiliares para guardar informacion
-			String lastNeed = "";
+			String lastNeed = null;
 			ArrayList<String> R = new ArrayList<String>();
 			ArrayList<String> nR = new ArrayList<String>();
 
@@ -93,39 +96,49 @@ public class Evaluation {
 				Scanner s = new Scanner(line);
 
 				// INFO_NEED, DOC_ID, RELEVANCY
-				String need = s.next(), id = s.next(), relevancy = s.next();
+				String need = s.next();
+				String id = s.next();
+				String relevancy = s.next();
 				// Si la necesidad cambia -> almacenar ids de relevantes y no
 				// relevantes
-				if (lastNeed != need) {
+				if (lastNeed != null && !lastNeed.equals(need)) {
 					qrelsR.put(lastNeed, R);
 					qrelsNR.put(lastNeed, nR);
-					R.clear();
+					R = new ArrayList<String>();
+					nR = new ArrayList<String>();
 					lastNeed = need;
 				} else {
 					// Almacenar en el hashTable segun relevancia
-					if (relevancy == "1")
+					if (relevancy.equals("1"))
 						R.add(id);
 					else
 						nR.add(id);
+					lastNeed = need;
 				}
 				s.close();
 			}
-			lastNeed = "";
+			qrelsR.put(lastNeed, R);
+			qrelsNR.put(lastNeed, nR);
+
+			lastNeed = null;
 			ArrayList<String> ids = new ArrayList<String>();
 
 			for (String line : Files.readAllLines(Paths.get(RESULT))) {
 				Scanner s = new Scanner(line);
 				// INFO_NEED, DOC_ID
-				String need = s.next(), id = s.next();
-				if (lastNeed != need) {
+				String need = s.next();
+				String id = s.next();
+				if (lastNeed != null && !lastNeed.equals(need)) {
 					resultRead.put(lastNeed, ids);
-					ids.clear();
+					ids = new ArrayList<String>();
 					lastNeed = need;
 				} else {
 					ids.add(id);
+					lastNeed = need;
 				}
 				s.close();
 			}
+			resultRead.put(lastNeed, ids);
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
