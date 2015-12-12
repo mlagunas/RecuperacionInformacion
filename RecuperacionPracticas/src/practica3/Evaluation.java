@@ -25,17 +25,17 @@ public class Evaluation {
 
 	public static void main(String[] args) {
 		readFiles();
-		System.out.println(precision(1, qrelsR, resultRead));
+		System.out.println(precision("1", qrelsR, resultRead));
 
 	}
 
-	public static double precision(int need,
+	public static double precision(String need,
 			HashMap<String, ArrayList<String>> rel,
 			HashMap<String, ArrayList<String>> recu) {
 		int nRR = cuentaDeIntersección(rel.get(need), recu.get(need)); // num
 																		// Relevantes
 		// Recuperados
-		int docR = recu.get(need).size(); // doc Recuperados
+		double docR = recu.get(need).size(); // doc Recuperados
 		return nRR / docR;
 	}
 
