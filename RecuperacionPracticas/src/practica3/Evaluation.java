@@ -89,8 +89,8 @@ public class Evaluation {
 	}
 
 	public static double F1(double precision, double recall, double beta) {
-		return ((beta * beta + 1) * precision * recall)
-				/ ((beta * beta) * precision + recall);
+		return round(((beta * beta + 1) * precision * recall)
+				/ ((beta * beta) * precision + recall),3);
 	}
 
 	public static double kPrecision(int k, String need,
