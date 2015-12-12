@@ -1,6 +1,8 @@
 package trabajo;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -28,7 +30,7 @@ public class Dictionare {
 		Hashtable<String, Integer> nameEntities = new Hashtable<String,Integer>();
 		try {
 			int i = 0;
-			for (String line : Files.readAllLines(Paths.get("files/names.txt"))) {
+			for (String line : Files.readAllLines(Paths.get("files/names.txt"),StandardCharsets.UTF_8)) {
 			    nameEntities.put(line.trim(),i);
 			    i++;
 			}
