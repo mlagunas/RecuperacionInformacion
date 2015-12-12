@@ -1,6 +1,8 @@
 package practica3;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -100,7 +102,7 @@ public class Evaluation {
 												// en
 												// coleccion
 												// [0,..,k]
-		return nR / k;
+		return round(nR / k,3);
 	}
 
 	public static double kRecall(int k, String need,
@@ -113,7 +115,7 @@ public class Evaluation {
 																	// coleccion
 																	// [0,..,k]
 		int nRTotal = rel.get(need).size();// num Relevantes
-		return nR / nRTotal;
+		return round(nR / nRTotal,3);
 	}
 
 	public static double averagePrecision(String need,
@@ -152,37 +154,21 @@ public class Evaluation {
 		
 		TreeMap<Double,Double> recall_precision= recall_precision(need,rel,recu);
 		TreeMap<Double, Double> points = new TreeMap<Double, Double>();
-		for(double i=0.0;i<=1;i+=0.1){
-			double maxValue=0.0;
+		for(double i=0.0;i<=1.0;i+=0.1){
+			double maxValue=-1;
 			for (Entry<Double, Double> entry : recall_precision.entrySet()){
 				double value = entry.getValue();
 				if(entry!=null && entry.getKey()>=i && value>maxValue){
 					maxValue=value;
 				}
 			}
-			points.put(i, maxValue);
+			if(maxValue!=-1){
+				points.put(round(i,1), maxValue);
+			}
 		}
 		return points;	
 	}
-	
-	public static double maxPrecision(String need,HashMap<String, List<String>> rel,
-			HashMap<String, List<String>> recu,int inicio, int fin){
-		double max=0.0;
-		List<String> recuperados = recu.get(need);
-		List<String> relevantes = rel.get(need);
-		for(int i=inicio;i<fin;i++){
-			if (relevantes.contains(recuperados.get(i))) {
-				double precision = kPrecision(i+1,need , rel, recu);
-				if(precision>max){
-					max=precision;
-				}
-			}
 
-			
-		}
-		return max;
-		
-	}
 
 	/*
 	 * METODOS PRIVADOS
@@ -260,5 +246,12 @@ public class Evaluation {
 			}
 		}
 		return count;
+	}
+	public static double round(double value, int places) {
+	    if (places < 0) throw new IllegalArgumentException();
+
+	    BigDecimal bd = new BigDecimal(value);
+	    bd = bd.setScale(places, RoundingMode.HALF_UP);
+	    return bd.doubleValue();
 	}
 }
