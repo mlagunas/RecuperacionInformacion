@@ -25,14 +25,14 @@ public class Evaluation {
 
 	public static void main(String[] args) {
 		readFiles();
-		System.out.println(precision("1", qrelsR, resultRead));
+		System.out.println("precision " + precision("1", qrelsR, resultRead));
 
 	}
 
 	public static double precision(String need,
 			HashMap<String, ArrayList<String>> rel,
 			HashMap<String, ArrayList<String>> recu) {
-		int nRR = cuentaDeIntersección(rel.get(need), recu.get(need)); // num
+		double nRR = cuentaDeIntersección(rel.get(need), recu.get(need)); // num
 																		// Relevantes
 		// Recuperados
 		double docR = recu.get(need).size(); // doc Recuperados
@@ -42,10 +42,10 @@ public class Evaluation {
 	public static double recall(int need,
 			HashMap<String, ArrayList<String>> rel,
 			HashMap<String, ArrayList<String>> recu) {
-		int nRR = cuentaDeIntersección(rel.get(need), recu.get(need)); // num
+		double nRR = cuentaDeIntersección(rel.get(need), recu.get(need)); // num
 																		// Relevantes
 		// Recuperados
-		int nR = rel.get(need).size();// num Relevantes
+		double nR = rel.get(need).size();// num Relevantes
 		return nRR / nR;
 	}
 
@@ -57,7 +57,7 @@ public class Evaluation {
 	public static double kPrecision(int k, int need,
 			HashMap<String, ArrayList<String>> rel,
 			HashMap<String, ArrayList<String>> recu) {
-		int nR = cuentaDeIntersección(rel.get(need), (ArrayList<String>) recu
+		double nR = cuentaDeIntersección(rel.get(need), (ArrayList<String>) recu
 				.get(need).subList(0, k));// Numero de relevantes en coleccion
 											// [0,..,k]
 		return nR / k;
@@ -66,7 +66,7 @@ public class Evaluation {
 	public static double kRecall(int k, int need,
 			HashMap<String, ArrayList<String>> rel,
 			HashMap<String, ArrayList<String>> recu) {
-		int nR = cuentaDeIntersección(rel.get(need), (ArrayList<String>) recu
+		double nR = cuentaDeIntersección(rel.get(need), (ArrayList<String>) recu
 				.get(need).subList(0, k));// Numero de relevantes en coleccion
 											// [0,..,k]
 		int nRTotal = rel.get(need).size();// num Relevantes
@@ -181,9 +181,9 @@ public class Evaluation {
 		}
 	}
 
-	private static int cuentaDeIntersección(ArrayList<String> rel,
+	private static double cuentaDeIntersección(ArrayList<String> rel,
 			ArrayList<String> recu) {
-		int count = 0;
+		double count = 0;
 		for (String id : rel) {
 			if (recu.contains(id)) {
 				count++;
