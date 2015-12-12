@@ -35,6 +35,7 @@ public class Evaluation {
 			double prec_10 = kPrecision(10, need, qrelsR, docRecup);
 			double averagePrec = averagePrecision(need, qrelsR, docRecup);
 			TreeMap<Double, Double> points=recall_precision(need,qrelsR,docRecup);
+			TreeMap<Double, Double> points_interpolated=interpolated_recall_precision(need,qrelsR,docRecup);
 
 			System.out.println("NECESIDAD : " + need +"\n" +
 							   "=====================");
@@ -51,7 +52,13 @@ public class Evaluation {
 
 				System.out.println(key + "	" + value);
 			}
+			System.out.println("Interpolated_recall_precision");
+			for (Entry<Double, Double> entry : points_interpolated.entrySet()) {
+				Double key = entry.getKey();
+				Double value = entry.getValue();
 
+				System.out.println(key + "	" + value);
+			}
 			System.out.println();
 
 		}
@@ -106,7 +113,6 @@ public class Evaluation {
 																	// coleccion
 																	// [0,..,k]
 		int nRTotal = rel.get(need).size();// num Relevantes
-		System.out.println(nR+"  "+nRTotal);
 		return nR / nRTotal;
 	}
 
@@ -140,8 +146,42 @@ public class Evaluation {
 		return points;
 	}
 
-	public static HashMap<Double, Double> interpolatedRecallPrecision() {
-		return null;
+	public static TreeMap<Double, Double> interpolated_recall_precision(String need,
+			HashMap<String, List<String>> rel,
+			HashMap<String, List<String>> recu) {
+		
+		TreeMap<Double,Double> recall_precision= recall_precision(need,rel,recu);
+		TreeMap<Double, Double> points = new TreeMap<Double, Double>();
+		for(double i=0.0;i<=1;i+=0.1){
+			double maxValue=0.0;
+			for (Entry<Double, Double> entry : recall_precision.entrySet()){
+				double value = entry.getValue();
+				if(entry!=null && entry.getKey()>=i && value>maxValue){
+					maxValue=value;
+				}
+			}
+			points.put(i, maxValue);
+		}
+		return points;	
+	}
+	
+	public static double maxPrecision(String need,HashMap<String, List<String>> rel,
+			HashMap<String, List<String>> recu,int inicio, int fin){
+		double max=0.0;
+		List<String> recuperados = recu.get(need);
+		List<String> relevantes = rel.get(need);
+		for(int i=inicio;i<fin;i++){
+			if (relevantes.contains(recuperados.get(i))) {
+				double precision = kPrecision(i+1,need , rel, recu);
+				if(precision>max){
+					max=precision;
+				}
+			}
+
+			
+		}
+		return max;
+		
 	}
 
 	/*
