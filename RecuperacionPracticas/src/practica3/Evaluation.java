@@ -106,7 +106,7 @@ public class Evaluation {
 																	// coleccion
 																	// [0,..,k]
 		int nRTotal = rel.get(need).size();// num Relevantes
-
+		System.out.println(nR+"  "+nRTotal);
 		return nR / nRTotal;
 	}
 
@@ -134,7 +134,7 @@ public class Evaluation {
 			if (relevantes.contains(recuperados.get(i))) {
 				double precision = kPrecision(i+1, need, rel, recu);
 				double recall = kRecall(i+1, need, rel, recu);
-				points.put(precision, recall);
+				points.put(recall, precision);
 			}
 		}
 		return points;
