@@ -34,6 +34,7 @@ public class Evaluation {
 			double f1 = F1(precision, recall, beta);
 			double prec_10 = kPrecision(10, need, qrelsR, docRecup);
 			double averagePrec = averagePrecision(need, qrelsR, docRecup);
+			TreeMap<Double, Double> points=recall_precision(need,qrelsR,docRecup);
 
 			System.out.println("NECESIDAD : " + need +"\n" +
 							   "=====================");
@@ -43,6 +44,13 @@ public class Evaluation {
 			System.out.println("F1 " + f1);
 			System.out.println("Precision@10 " + prec_10);
 			System.out.println("Average precision " + averagePrec);
+			System.out.println("Recall_precision");
+			for (Entry<Double, Double> entry : points.entrySet()) {
+				Double key = entry.getKey();
+				Double value = entry.getValue();
+
+				System.out.println(key + "	" + value);
+			}
 
 			System.out.println();
 
@@ -124,16 +132,10 @@ public class Evaluation {
 		TreeMap<Double, Double> points = new TreeMap<Double, Double>();
 		for (int i = 0; i < recuperados.size(); i++) {
 			if (relevantes.contains(recuperados.get(i))) {
-				double precision = kPrecision(i, need, rel, recu);
-				double recall = kRecall(i, need, rel, recu);
+				double precision = kPrecision(i+1, need, rel, recu);
+				double recall = kRecall(i+1, need, rel, recu);
 				points.put(precision, recall);
 			}
-		}
-		for (Entry<Double, Double> entry : points.entrySet()) {
-			Double key = entry.getKey();
-			Double value = entry.getValue();
-
-			System.out.println(key + " => " + value);
 		}
 		return points;
 	}
