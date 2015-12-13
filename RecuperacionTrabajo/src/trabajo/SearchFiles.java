@@ -79,7 +79,7 @@ public class SearchFiles {
 		String index = "index";
 		String infoNeeds = null;
 		String output = null;
-		int hitsPerPage = 100000;
+		int hitsPerPage = 50;
 
 		for (int i = 0; i < args.length; i++) {
 			if ("-index".equals(args[i])) {
