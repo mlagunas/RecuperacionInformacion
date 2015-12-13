@@ -186,7 +186,7 @@ public class SearchFiles {
 				/*
 				 * Creamos Queries booleanas en caso de que hayamos detectado
 				 * algun autor o tipo de trabajo y las ponemos con nivel de
-				 * ocurrencia "MUST"
+				 * ocurrencia "SHOULD"
 				 */
 				BooleanQuery bool = new BooleanQuery();
 				if (!author.isEmpty()) {
