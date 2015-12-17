@@ -16,8 +16,8 @@ import java.util.TreeMap;
 public class Evaluation {
 
 	// Path a los ficheros que usamos
-	private static final String QRELS = "src/practica3/files/qrels.txt";
-	private static final String RESULT = "src/practica3/files/results.txt";
+	private static final String QRELS_DEFAULT = "src/practica3/files/qrels.txt";
+	private static final String RESULT_DEFUALT = "src/practica3/files/results.txt";
 	private static final double BETA = 1;
 
 	// List con los documentos Relevantes(R) y no relevantes(NR)
@@ -32,18 +32,31 @@ public class Evaluation {
 	private static TreeMap<Double, Double> interpolatedTotal = new TreeMap<Double, Double>();
 	private static double maximumLength = Double.MAX_VALUE;
 
+	private static String qrels;
+	private static String result;
+
+	public Evaluation(String qrelsPath, String resultPath) {
+		qrels = qrelsPath;
+		result = resultPath;
+	}
+
+	public Evaluation() {
+		qrels = QRELS_DEFAULT;
+		result = RESULT_DEFUALT;
+	}
+
 	/**
 	 * main de ejemplo para la practica3
 	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		readFiles();
+		Evaluation e = new Evaluation();
+		e.readFiles();
 		for (String need : qrelsR.keySet()) {
-
-			calculateAndWrite(need);
+			e.calculateAndWrite(need);
 		}
-		calculateAndWrite("-1");
+		e.calculateAndWrite("-1");
 	}
 
 	/**
@@ -263,7 +276,7 @@ public class Evaluation {
 	 * Metodo encargado de dadas dos direcciones de ficheros rellenar
 	 * respectivos HashMap con su información a cerca de los ficheros
 	 */
-	private static void readFiles() {
+	private void readFiles() {
 		try {
 			// Estructuras auxiliares para guardar informacion
 			String lastNeed = null;
@@ -271,7 +284,7 @@ public class Evaluation {
 			List<String> nR = new ArrayList<String>();
 
 			// Iterar en el fichero
-			for (String line : Files.readAllLines(Paths.get(QRELS),
+			for (String line : Files.readAllLines(Paths.get(qrels),
 					Charset.defaultCharset())) {
 				Scanner s = new Scanner(line);
 
@@ -303,7 +316,7 @@ public class Evaluation {
 			lastNeed = null;
 			List<String> ids = new ArrayList<String>();
 
-			for (String line : Files.readAllLines(Paths.get(RESULT),
+			for (String line : Files.readAllLines(Paths.get(result),
 					Charset.defaultCharset())) {
 				Scanner s = new Scanner(line);
 				// INFO_NEED, DOC_ID
@@ -353,7 +366,7 @@ public class Evaluation {
 	 * 
 	 * @param need
 	 */
-	private static void calculateAndWrite(String need) {
+	private void calculateAndWrite(String need) {
 		double precision;
 		double recall;
 		double f1;
@@ -424,7 +437,6 @@ public class Evaluation {
 						(interpolatedTotal.containsKey(key)) ? value
 								+ interpolatedTotal.get(key) : value);
 
-			
 		}
 		System.out.println();
 	}
