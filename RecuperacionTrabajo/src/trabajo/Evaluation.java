@@ -1,4 +1,4 @@
-package practica3;
+package trabajo;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -16,8 +16,8 @@ import java.util.TreeMap;
 public class Evaluation {
 
 	// Path a los ficheros que usamos
-	private static final String QRELS = "src/practica3/files/qrels.txt";
-	private static final String RESULT = "src/practica3/files/results.txt";
+	private static final String QRELS = "src/zaguanRels.txt";
+	private static final String RESULT = "src/equipo02.txt";
 
 	private static final double beta = 1;
 
