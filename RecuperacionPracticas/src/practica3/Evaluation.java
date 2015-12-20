@@ -35,11 +35,19 @@ public class Evaluation {
 	private static String qrels;
 	private static String result;
 
+	/**
+	 * Constructor del metodo con dos rutas a documentos evaluados y a los documentos recuperados
+	 * @param qrelsPath
+	 * @param resultPath
+	 */
 	public Evaluation(String qrelsPath, String resultPath) {
 		qrels = qrelsPath;
 		result = resultPath;
 	}
 
+	/**
+	 * Constructor vacio
+	 */
 	public Evaluation() {
 		qrels = QRELS_DEFAULT;
 		result = RESULT_DEFUALT;
@@ -346,13 +354,14 @@ public class Evaluation {
 			f1 = resultados[2] / divisor;
 			prec_10 = resultados[3] / divisor;
 			averagePrec = resultados[4] / divisor;
+			points_interpolated = new TreeMap<Double, Double>();
 			for (Entry<Double, Double> entry : interpolatedTotal.entrySet()) {
 				Double key = entry.getKey();
 				Double value = round(entry.getValue() / divisor, 3);
 				if (key <= maximumLength)
-					interpolatedTotal.put(key, value);
+					points_interpolated.put(key, value);
 			}
-			points_interpolated = interpolatedTotal;
+			;
 
 		} else {
 			System.out.println("NECESIDAD : " + need + "\n"
@@ -389,13 +398,14 @@ public class Evaluation {
 				System.out.println(key + "	" + value);
 			}
 		System.out.println("Interpolated_recall_precision");
+		maximumLength = (points_interpolated.lastKey() <= maximumLength) ? points_interpolated
+				.lastKey() : maximumLength;
 		for (Entry<Double, Double> entry : points_interpolated.entrySet()) {
 			Double key = entry.getKey();
 			Double value = entry.getValue();
 			System.out.println(key + "	" + value);
-			maximumLength = (points_interpolated.lastKey() < maximumLength) ? points_interpolated
-					.lastKey() : maximumLength;
-			if (key <= maximumLength)
+			
+			if (!need.equals("-1") && key <= maximumLength)
 				interpolatedTotal.put(key,
 						(interpolatedTotal.containsKey(key)) ? value
 								+ interpolatedTotal.get(key) : value);
