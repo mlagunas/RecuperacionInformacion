@@ -35,11 +35,19 @@ public class Evaluation {
 	private static String qrels;
 	private static String result;
 
+	/**
+	 * Constructor del metodo con dos rutas a documentos evaluados y a los documentos recuperados
+	 * @param qrelsPath
+	 * @param resultPath
+	 */
 	public Evaluation(String qrelsPath, String resultPath) {
 		qrels = qrelsPath;
 		result = resultPath;
 	}
 
+	/**
+	 * Constructor vacio
+	 */
 	public Evaluation() {
 		qrels = QRELS_DEFAULT;
 		result = RESULT_DEFUALT;
@@ -70,26 +78,12 @@ public class Evaluation {
 	public static double precision(String need,
 			HashMap<String, List<String>> rel,
 			HashMap<String, List<String>> recu) {
-		List<String> recuperados = new ArrayList<String>();
-		List<String> relevantes = new ArrayList<String>();
 
-		if (need.equals("-1")) {
-			for (String n : rel.keySet()) {
-				relevantes.addAll(rel.get(n));
-			}
-
-			for (String n : recu.keySet()) {
-				recuperados.addAll(recu.get(n));
-			}
-		} else {
-			relevantes.addAll(rel.get(need));
-			recuperados.addAll(recu.get(need));
-		}
 		// numRelevantesRecuperados
-		double nRR = cuentaDeIntersección(relevantes, recuperados);
+		double nRR = cuentaDeIntersección(rel.get(need), recu.get(need));
 
 		// Recuperados
-		double docR = recuperados.size(); // doc Recuperados
+		double docR = recu.get(need).size(); // doc Recuperados
 		return nRR / docR;
 	}
 
@@ -103,24 +97,10 @@ public class Evaluation {
 	 */
 	public static double recall(String need, HashMap<String, List<String>> rel,
 			HashMap<String, List<String>> recu) {
-		List<String> recuperados = new ArrayList<String>();
-		List<String> relevantes = new ArrayList<String>();
 
-		if (need.equals("-1")) {
-			for (String n : rel.keySet()) {
-				relevantes.addAll(rel.get(n));
-			}
-
-			for (String n : recu.keySet()) {
-				recuperados.addAll(recu.get(n));
-			}
-		} else {
-			relevantes.addAll(rel.get(need));
-			recuperados.addAll(recu.get(need));
-		}
 		// num Relevantes Recuperados
-		double nRR = cuentaDeIntersección(relevantes, recuperados);
-		double nR = relevantes.size();// num Relevantes
+		double nRR = cuentaDeIntersección(rel.get(need), recu.get(need));
+		double nR = rel.get(need).size();// num Relevantes
 		return nRR / nR;
 	}
 
@@ -195,19 +175,15 @@ public class Evaluation {
 	public static double averagePrecision(String need,
 			HashMap<String, List<String>> rel,
 			HashMap<String, List<String>> recu) {
-		List<String> recuperados = new ArrayList<String>();
-		List<String> relevantes = new ArrayList<String>();
-
-		relevantes.addAll(rel.get(need));
-		recuperados.addAll(recu.get(need));
 
 		double precisionFinal = 0;
-		for (int i = 0; i < recuperados.size(); i++) {
-			if (relevantes.contains(recuperados.get(i))) {
+		for (int i = 0; i < recu.get(need).size(); i++) {
+			if (rel.get(need).contains(recu.get(need).get(i))) {
 				precisionFinal += kPrecision(i + 1, need, rel, recu);
 			}
 		}
-		return (precisionFinal / cuentaDeIntersección(relevantes, recuperados));
+		return (precisionFinal / cuentaDeIntersección(rel.get(need),
+				recu.get(need)));
 	}
 
 	/**
@@ -221,15 +197,10 @@ public class Evaluation {
 	public static TreeMap<Double, Double> recall_precision(String need,
 			HashMap<String, List<String>> rel,
 			HashMap<String, List<String>> recu) {
-		List<String> recuperados = new ArrayList<String>();
-		List<String> relevantes = new ArrayList<String>();
-
-		relevantes.addAll(rel.get(need));
-		recuperados.addAll(recu.get(need));
 
 		TreeMap<Double, Double> points = new TreeMap<Double, Double>();
-		for (int i = 0; i < recuperados.size(); i++) {
-			if (relevantes.contains(recuperados.get(i))) {
+		for (int i = 0; i < recu.get(need).size(); i++) {
+			if (rel.get(need).contains(recu.get(need).get(i))) {
 				double precision = kPrecision(i + 1, need, rel, recu);
 				double recall = kRecall(i + 1, need, rel, recu);
 				points.put(recall, precision);
@@ -335,6 +306,7 @@ public class Evaluation {
 			docRecup.put(lastNeed, ids);
 
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -382,13 +354,14 @@ public class Evaluation {
 			f1 = resultados[2] / divisor;
 			prec_10 = resultados[3] / divisor;
 			averagePrec = resultados[4] / divisor;
+			points_interpolated = new TreeMap<Double, Double>();
 			for (Entry<Double, Double> entry : interpolatedTotal.entrySet()) {
 				Double key = entry.getKey();
 				Double value = round(entry.getValue() / divisor, 3);
 				if (key <= maximumLength)
-					interpolatedTotal.put(key, value);
+					points_interpolated.put(key, value);
 			}
-			points_interpolated = interpolatedTotal;
+			;
 
 		} else {
 			System.out.println("NECESIDAD : " + need + "\n"
@@ -425,13 +398,14 @@ public class Evaluation {
 				System.out.println(key + "	" + value);
 			}
 		System.out.println("Interpolated_recall_precision");
+		maximumLength = (points_interpolated.lastKey() <= maximumLength) ? points_interpolated
+				.lastKey() : maximumLength;
 		for (Entry<Double, Double> entry : points_interpolated.entrySet()) {
 			Double key = entry.getKey();
 			Double value = entry.getValue();
 			System.out.println(key + "	" + value);
-			maximumLength = (points_interpolated.lastKey() < maximumLength) ? points_interpolated
-					.lastKey() : maximumLength;
-			if (key <= maximumLength)
+			
+			if (!need.equals("-1") && key <= maximumLength)
 				interpolatedTotal.put(key,
 						(interpolatedTotal.containsKey(key)) ? value
 								+ interpolatedTotal.get(key) : value);
