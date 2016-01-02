@@ -63,12 +63,51 @@ public class CreacionRDF_Trabajo {
         Property publisher= model.createProperty("http://purl.org/dc/elements/1.1/publisher");
         Property format= model.createProperty("http://purl.org/dc/elements/1.1/format");
         Property language= model.createProperty("http://purl.org/dc/elements/1.1/language");
+        
+        String skos = "http://www.w3.org/2004/02/skos/core#";
+        model.setNsPrefix( "skos", skos );
 
         
-        Resource trabajo = model.createResource();
+        Resource skosConcept = model.createResource(skos+"Concept" );
+        Resource conceptScheme = model.createResource(skos+ "ConceptScheme");
+        Property prefLabel = model.createProperty( skos + "prefLabel");
+    	Property altLabel = model.createProperty( skos + "altLabel");
+    	Property broader = model.createProperty( skos + "broader"); //PERTENECE A (SUBCLASE DE)
+    	Property narrower = model.createProperty( skos + "narrower"); //SUPERCLASE  DE
+    	Property related = model.createProperty( skos + "related");
+    	Property inScheme = model.createProperty( skos + "inScheme");
+    	Property definition = model.createProperty( skos + "definition");
+
+        Resource scheme=model.createResource();
+        model.add(scheme,type,conceptScheme);
+        model.add(scheme,title,"Tipos de trabajos");
+        
+        Resource trabajo = model.createResource().addProperty(type, skosConcept)
+        		.addProperty(inScheme, scheme)
+        		.addProperty(prefLabel, "Trabajo");
+        
+        Resource TFG = model.createResource().addProperty(type, skosConcept)
+        		.addProperty(inScheme, scheme)
+        		.addProperty(prefLabel, "TFG")
+        		.addProperty(altLabel, "Trabajo Fin de Grado")
+        		.addProperty(broader, trabajo);
+        
+        Resource TFM = model.createResource().addProperty(type, skosConcept)
+        		.addProperty(inScheme, scheme)
+        		.addProperty(prefLabel, "TFM")
+        		.addProperty(altLabel, "Trabajo Fin de Master")
+        		.addProperty(broader, trabajo);
+        
+        Resource PFC = model.createResource().addProperty(type, skosConcept)
+        		.addProperty(inScheme, scheme)
+        		.addProperty(prefLabel, "PFC")
+        		.addProperty(altLabel, "Proyecto Fin de Carrera")
+        		.addProperty(broader, trabajo);
         
         Resource t1=model.createResource(trabajoURI).addProperty(title, t)
         		.addProperty(creator, author).addProperty(typeOf, ty);
+        
+        model.add(t1,type,TFG);
         
         return model;
 	}
