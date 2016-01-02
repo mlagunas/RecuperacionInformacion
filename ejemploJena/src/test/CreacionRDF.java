@@ -50,16 +50,15 @@ public class CreacionRDF {
         String personURI2   = "http://somewhere/HanSolo";
         String givenName2    = "Han";
         String familyName2   = "Solo";
-        String fullName2     = givenName + " " + familyName;
+        String fullName2     = givenName2 + " " + familyName2;
         
         String personURI3    = "http://somewhere/ShoHai";
         String givenName3    = "Sho";
         String familyName3   = "Hai";
-        String fullName3     = givenName + " " + familyName;
+        String fullName3     = givenName3 + " " + familyName3;
 
         // crea un modelo vacio
         Model model = ModelFactory.createDefaultModel();
-        Resource namespace=model.createResource("http://xmlns.com/foaf/0.1/");
 
         Property type = model.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
         Resource person = model.createResource("http://xmlns.com/foaf/0.1/person");
@@ -78,11 +77,11 @@ public class CreacionRDF {
         model.add(johnSmith,type,person);
         
         Resource hanSolo  = model.createResource(personURI2)
-                .addProperty(VCARD.FN, fullName2);
-//                .addProperty(VCARD.N, 
-//                         model.createResource()
-//                              .addProperty(VCARD.Given, givenName)
-//                              .addProperty(VCARD.Family, familyName));
+                .addProperty(VCARD.FN, fullName2)
+                .addProperty(VCARD.N, 
+                         model.createResource()
+                              .addProperty(VCARD.Given, givenName2)
+                              .addProperty(VCARD.Family, familyName));
            
            model.add(hanSolo,type,person);
            
@@ -98,7 +97,7 @@ public class CreacionRDF {
              model.add(shoHai,knows,hanSolo);
              model.add(johnSmith,knows,shoHai);
              model.add(hanSolo,knows,johnSmith);
-             
+                          
         return model;
 	}
 	

@@ -62,7 +62,8 @@ public class AccesoRDF {
 		ResIterator ri = model.listSubjectsWithProperty(prop);
 		while (ri.hasNext()) {
 			Resource r = ri.next();
-			System.out.println(r.getURI());
+			System.out.println("URI: "+r.getURI());
+			System.out.println("Resource: "+r.toString());
 		}
 
 		System.out.println("----------------------------------------");
