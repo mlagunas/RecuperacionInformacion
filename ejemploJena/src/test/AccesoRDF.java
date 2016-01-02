@@ -1,5 +1,7 @@
 package test;
 
+import java.util.ArrayList;
+
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -79,6 +81,28 @@ public class AccesoRDF {
 						+ st.getPredicate().getURI() + " - "
 						+ st.getLiteral().toString());
 			}
+		}
+		
+		System.out.println("----------------------------------------");
+
+		// Mostrar recursos que concidan con al menos una propiedad del recurso
+		 res = model.getResource("http://dig.csail.mit.edu/2008/webdav/timbl/foaf.rdf");
+		it = res.listProperties();
+		ArrayList<Resource> resList = new ArrayList<Resource>();
+		
+		while (it.hasNext()) {
+			Statement st = it.next();
+			ResIterator resIt =model.listResourcesWithProperty(st.getPredicate());
+			while(resIt.hasNext()){
+				Resource resource = resIt.next();
+				if (!resList.contains(resource)){
+					resList.add(resource);
+				}
+			}
+		}
+		
+		for(Resource r : resList){
+			System.out.println(r.toString());			
 		}
 	}
 

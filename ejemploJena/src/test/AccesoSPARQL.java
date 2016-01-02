@@ -78,6 +78,50 @@ public class AccesoSPARQL {
 		qexec.close() ;
 		resultModel.write(System.out);
 		
+		System.out.println("----------------------------------------");
+
+		//Consulta pregunta 1 p5
+		 queryString = "SELECT ?literal WHERE { ?x ?y ?literal.FILTER regex(?literal, 'Berners-Lee' )}";
+		
+
+		//ejecutamos la consulta y obtenemos los resultados
+		   query = QueryFactory.create(queryString) ;
+		   qexec = QueryExecutionFactory.create(query, model) ;
+		  try {
+		    ResultSet results = qexec.execSelect() ;
+		    for ( ; results.hasNext() ; )
+		    {
+		      QuerySolution soln = results.nextSolution() ;
+		      RDFNode z = soln.get("literal") ; 
+		      
+		      System.out.println(z.toString());
+		    }
+		  } finally { qexec.close() ; }
+		
+		System.out.println("----------------------------------------");
+		
+		//Consulta pregunta 2 p5
+		 queryString = "PREFIX dc: <http://purl.org/dc/elements/1.1/> SELECT ?title WHERE { ?title dc:creator 'http://www.w3.org/People/Berners-Lee/card#i'}";
+		
+
+		//ejecutamos la consulta y obtenemos los resultados
+		   query = QueryFactory.create(queryString) ;
+		   qexec = QueryExecutionFactory.create(query, model) ;
+		  try {
+		    ResultSet results = qexec.execSelect() ;
+		    for ( ; results.hasNext() ; )
+		    {
+		      QuerySolution soln = results.nextSolution() ;
+		      
+		      Resource z = soln.getResource("title") ; 
+		      
+		      System.out.println(z.toString());
+		    }
+		  } finally { qexec.close() ; }
+		
+		System.out.println("----------------------------------------");
+		
+		
 	}
 	
 }
