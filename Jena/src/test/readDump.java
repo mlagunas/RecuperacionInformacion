@@ -21,24 +21,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.rdf.model.AnonId;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.RDFVisitor;
-import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 import com.hp.hpl.jena.util.iterator.Filter;
 import com.hp.hpl.jena.vocabulary.DC;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -79,7 +68,10 @@ public class readDump {
 	public static Model createRDF() {
 		Model model = ModelFactory.createDefaultModel();
 
-		for (int i = 1; i < title.size(); i++) {
+		//String skos = "http://www.w3.org/2004/02/skos/core#";
+        model.setNsPrefix( "foaf", FOAF.NS );
+        
+		for (int i = 1; i < 20; i++) {
 			if (identifier.get(i)==null){
 				continue;
 			}
@@ -103,76 +95,54 @@ public class readDump {
 			 */
 			Resource org = null;
 			List<Resource> l = model
-					.listResourcesWithProperty(RDF.type, FOAF.Organization)
-					.filterKeep(new Filter<Resource>() {
-						@Override
-						public boolean accept(Resource arg0) {
-							return arg0.hasProperty(FOAF.name, publi);
-						}
+					.listResourcesWithProperty(FOAF.name, publi).toList();
 
-					}).toList();
-			boolean hasIt = false;
-			Resource resOrg=null;
-			for (Resource r : l) {
-				AnonId aId = r.getId();
-				if (aId.getLabelString().equals("Organization")) {
-					hasIt = true;
-					resOrg=r;
-					break;
-				}
-			}
-			if (hasIt) {
-				org=resOrg;
-			} else
-				org = model.createResource(new AnonId("Organization"))
+			if(l.isEmpty()){
+				org = model.createResource()
 						.addProperty(FOAF.name, publi)
 						.addProperty(RDF.type, FOAF.Organization);
-
-			/*
-			 * AUTHOR ADDED TO THE RDF SCHEME
-			 */
-			Resource auth = null;
-			hasIt = false;
-			l = model.listResourcesWithProperty(RDF.type, FOAF.Person)
-					.filterKeep(new Filter<Resource>() {
-						@Override
-						public boolean accept(Resource arg0) {
-							return arg0.hasProperty(VCARD.FN, creat.get(0));
-						}
-
-					}).toList();
-			
-			Resource resCreat=null;
-			for (Resource r : l) {
-				AnonId aId = r.getId();
-				if (aId.getLabelString().equals("Creator")) {
-					hasIt = true;
-					resCreat=r;
-					break;
-				}
 			}
-			if (hasIt) {
-				auth=resCreat;
-			} else
-				auth = model.createResource(new AnonId("Creator"))
-						// CAMBIAR ESTA PUESTO CREATOR GET 0
-						.addProperty(VCARD.FN, creat.get(0))
-						.addProperty(RDF.type, FOAF.Person);
+			else{
+				org=l.get(0);
+			}	
 
 			Literal year = model.createTypedLiteral(dat, XSDDatatype.XSDgYear);
 
 			Resource doc = model
 					.
 					// CAMBIAR ESTA PUESTO IDENTIFICADOR 0
-					createResource(id.get(0)).addProperty(DC.title, tit)
-					.addProperty(DC.creator, auth).addProperty(DC.type, "TFG")
-					.addProperty(DC.publisher, org).addProperty(DC.date, year)
+					createResource(id.get(0))
+					.addProperty(DC.title, tit)
+					.addProperty(DC.type, "TFG")
+					.addProperty(DC.publisher, org)
+					.addProperty(DC.date, year)
 					.addProperty(DC.language, lang)
-					.addProperty(DC.identifier, id.get(0))
 					.addProperty(DC.description, desc);
+			
+			for (int j=1;j<id.size();j++){
+				doc.addProperty(DC.identifier, id.get(j));
+			}
+			/*
+			 * AUTHOR ADDED TO THE RDF SCHEME
+			 */
+			for (int j=0; j<creat.size();j++){
+				Resource auth = null;
+				l = model.listResourcesWithProperty(VCARD.FN, creat.get(j)).toList();
+
+				if(l.isEmpty()){
+					auth = model.createResource()
+							.addProperty(VCARD.FN, creat.get(j))
+							.addProperty(RDF.type, FOAF.Person);
+				}
+				else{
+					auth=l.get(0);
+				}
+				doc.addProperty(DC.creator, auth);
+				
+			}
+			
 		}
 
-		System.out.println("model"+model);
 		return model;
 
 	}
@@ -279,7 +249,7 @@ public class readDump {
 				}	
 				i++;
 			}
-			System.out.println("TOTAL: "+i);
+			System.out.println("TOTAL: "+(i-2));
 		}
 	}
 
