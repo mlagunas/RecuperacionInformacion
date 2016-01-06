@@ -26,25 +26,24 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.vocabulary.DC;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.VCARD;
 
 public class CreacionRDF_Trabajo {
-
+	
 	/**
 	 * muestra un modelo de jena de ejemplo por pantalla
 	 */
-	public static void main(String args[]) {
-		Model model = CreacionRDF_Trabajo.generarEjemplo();
-		// write the model in the standar output
-		model.write(System.out);
-	}
-
+	public static void main (String args[]) {
+        Model model = CreacionRDF_Trabajo.generarEjemplo();
+        // write the model in the standar output
+        model.write(System.out); 
+    }
+	
 	/**
 	 * Genera un modelo de jena de ejemplo
 	 */
-	public static Model generarEjemplo() {
+	public static Model generarEjemplo(){
 		// definiciones
         String trabajoURI    = "https://zaguan.unizar.es/record/32726";
         String t    = "Web 2.0 y relaciones sociales";
@@ -134,4 +133,6 @@ public class CreacionRDF_Trabajo {
         
         return model;
 	}
+	
+	
 }

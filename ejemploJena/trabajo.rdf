@@ -1,0 +1,24 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:j.0="http://xmlns.com/foaf/0.1/"
+    xmlns:vcard="http://www.w3.org/2001/vcard-rdf/3.0#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/" > 
+  <rdf:Description rdf:about="https://zaguan.unizar.es/record/32726">
+    <dc:description>este trabajo es muy bonito y esta muy bien hecho</dc:description>
+    <dc:identifier>oai:zaguan.unizar.es:10004</dc:identifier>
+    <dc:language>spa</dc:language>
+    <dc:date rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">2015</dc:date>
+    <dc:publisher rdf:nodeID="A0"/>
+    <dc:type>TFG</dc:type>
+    <dc:creator rdf:nodeID="A1"/>
+    <dc:title>Web 2.0 y relaciones sociales</dc:title>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A0">
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/organization"/>
+    <j.0:name>Universidad de Zaragoza</j.0:name>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A1">
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/person"/>
+    <vcard:FN>Pepe pepito</vcard:FN>
+  </rdf:Description>
+</rdf:RDF>
