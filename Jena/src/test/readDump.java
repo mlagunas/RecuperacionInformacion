@@ -57,6 +57,16 @@ public class readDump {
 
 	public static void main(String args[]) {
 		readDump rd = new readDump("dump");
+		System.out.println(title.size());
+		System.out.println(language.size());
+		System.out.println(date.size());
+		System.out.println(publisher.size());
+		System.out.println(creator.size());
+		System.out.println(identifier.size());
+		System.out.println(description.size());
+
+
+
 		Model model = createRDF();
 		model.write(System.out);
 	}
@@ -88,15 +98,17 @@ public class readDump {
 
 					}).toList();
 			boolean hasIt = false;
+			Resource resOrg=null;
 			for (Resource r : l) {
 				AnonId aId = r.getId();
 				if (aId.getLabelString().equals("Organization")) {
 					hasIt = true;
+					resOrg=r;
 					break;
 				}
 			}
 			if (hasIt) {
-				// Linkearlo de alguna forma
+				org=resOrg;
 			} else
 				org = model.createResource(new AnonId("Organization"))
 						.addProperty(FOAF.name, publi)
@@ -107,36 +119,43 @@ public class readDump {
 			 */
 			Resource auth = null;
 			hasIt = false;
-			l = model.listResourcesWithProperty(VCARD.FN, creat)
+			l = model.listResourcesWithProperty(RDF.type, FOAF.Person)
 					.filterKeep(new Filter<Resource>() {
 						@Override
 						public boolean accept(Resource arg0) {
-							return arg0.hasProperty(RDF.type, FOAF.Person);
+							return arg0.hasProperty(VCARD.FN, creat);
 						}
 
 					}).toList();
+			Resource resCreat=null;
 			for (Resource r : l) {
 				AnonId aId = r.getId();
 				if (aId.getLabelString().equals("Creator")) {
 					hasIt = true;
+					resCreat=r;
 					break;
 				}
 			}
 			if (hasIt) {
-				// Linkearlo de alguna forma
+				auth=resCreat;
 			} else
-				auth = model.createResource("Creator")
+				auth = model.createResource(new AnonId("Creator"))
 						.addProperty(VCARD.FN, creat)
 						.addProperty(RDF.type, FOAF.Person);
 
 			Literal year = model.createTypedLiteral(dat, XSDDatatype.XSDgYear);
 
 			Resource doc = model.createResource(id).addProperty(DC.title, tit)
-					.addProperty(DC.creator, auth).addProperty(DC.type, "TFG")
-					.addProperty(DC.publisher, org).addProperty(DC.date, year)
+					.addProperty(DC.creator, auth)
+					.addProperty(DC.type, "TFG")
+					.addProperty(DC.date, year)
 					.addProperty(DC.language, lang)
 					.addProperty(DC.identifier, id)
 					.addProperty(DC.description, desc);
+			if(org!=null){
+				doc.addProperty(DC.publisher, org);
+			}
+					
 
 		}
 
