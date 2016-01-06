@@ -97,10 +97,10 @@ public class readDump {
 
 			Resource org = null;
 			Resource toSearch = ResourceFactory.createResource()
-					.addProperty(FOAF.name, publi)
+					.addProperty(DC.publisher, publi)
 					.addProperty(RDF.type, FOAF.Organization);
 			if (!model.containsResource(toSearch)) {
-				org = model.createResource().addProperty(FOAF.name, publi)
+				org = model.createResource().addProperty(DC.publisher, publi)
 						.addProperty(RDF.type, FOAF.Organization);
 			} else {
 				// linkear al recurso que ya esta en el modelo
@@ -141,11 +141,11 @@ public class readDump {
 	 */
 	public readDump(String dumpPath) {
 		this.dumpPath = dumpPath;
+		read();
 	}
 
 	public void read() {
 		try {
-			this.dumpPath = dumpPath;
 			if (dumpPath.isEmpty()) {
 				System.err.println("Usage: dumpPath must be a valid path");
 				System.exit(1);
