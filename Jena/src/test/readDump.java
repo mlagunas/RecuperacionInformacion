@@ -3,6 +3,8 @@ package test;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,13 +49,13 @@ public class readDump {
 	private static Boolean finFile = false;
 	private String dumpPath;
 
-	private static ArrayList<String> title = new ArrayList<String>();
-	private static ArrayList<String> identifier = new ArrayList<String>();
-	private static ArrayList<String> language = new ArrayList<String>();
-	private static ArrayList<String> description = new ArrayList<String>();
-	private static ArrayList<String> creator = new ArrayList<String>();
-	private static ArrayList<String> publisher = new ArrayList<String>();
-	private static ArrayList<String> date = new ArrayList<String>();
+	private static List<List<String>> title = new ArrayList<List<String>>();
+	private static List<List<String>> identifier = new ArrayList<List<String>>();
+	private static List<String> language = new ArrayList<String>();
+	private static List<String> description = new ArrayList<String>();
+	private static List<List<String>> creator = new ArrayList<List<String>>();
+	private static List<String> publisher = new ArrayList<String>();
+	private static List<String> date = new ArrayList<String>();
 
 	public static void main(String args[]) {
 		readDump rd = new readDump("dump");
@@ -65,24 +67,36 @@ public class readDump {
 		System.out.println(identifier.size());
 		System.out.println(description.size());
 
-
-
 		Model model = createRDF();
-		model.write(System.out);
+		try {
+			model.write(new FileOutputStream(new File("trabajo_docs.rdf")));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static Model createRDF() {
 		Model model = ModelFactory.createDefaultModel();
 
-		for (int i = 0; i < title.size(); i++) {
-
-			String tit = title.get(i);
-			String id = identifier.get(i);
-			String lang = language.get(i);
-			String desc = description.get(i);
-			String creat = creator.get(i);
+		for (int i = 1; i < title.size(); i++) {
+			if (identifier.get(i)==null){
+				continue;
+			}
+			String desc = "";
+			if(description.get(i)!=null){
+				desc = description.get(i);
+			}
+			List<String> id = identifier.get(i);
+			String tit = title.get(i).get(0);
+			String lang ="";
+			if(language.get(i)!=null){
+				lang=language.get(i);
+			}
+			List<String> creat = creator.get(i);
 			String publi = publisher.get(i);
 			String dat = date.get(i);
+		
 
 			/*
 			 * ORGANIZATION ADDED TO RDF SCHEME
@@ -123,10 +137,11 @@ public class readDump {
 					.filterKeep(new Filter<Resource>() {
 						@Override
 						public boolean accept(Resource arg0) {
-							return arg0.hasProperty(VCARD.FN, creat);
+							return arg0.hasProperty(VCARD.FN, creat.get(0));
 						}
 
 					}).toList();
+			
 			Resource resCreat=null;
 			for (Resource r : l) {
 				AnonId aId = r.getId();
@@ -140,25 +155,24 @@ public class readDump {
 				auth=resCreat;
 			} else
 				auth = model.createResource(new AnonId("Creator"))
-						.addProperty(VCARD.FN, creat)
+						// CAMBIAR ESTA PUESTO CREATOR GET 0
+						.addProperty(VCARD.FN, creat.get(0))
 						.addProperty(RDF.type, FOAF.Person);
 
 			Literal year = model.createTypedLiteral(dat, XSDDatatype.XSDgYear);
 
-			Resource doc = model.createResource(id).addProperty(DC.title, tit)
-					.addProperty(DC.creator, auth)
-					.addProperty(DC.type, "TFG")
-					.addProperty(DC.date, year)
+			Resource doc = model
+					.
+					// CAMBIAR ESTA PUESTO IDENTIFICADOR 0
+					createResource(id.get(0)).addProperty(DC.title, tit)
+					.addProperty(DC.creator, auth).addProperty(DC.type, "TFG")
+					.addProperty(DC.publisher, org).addProperty(DC.date, year)
 					.addProperty(DC.language, lang)
-					.addProperty(DC.identifier, id)
+					.addProperty(DC.identifier, id.get(0))
 					.addProperty(DC.description, desc);
-			if(org!=null){
-				doc.addProperty(DC.publisher, org);
-			}
-					
-
 		}
 
+		System.out.println("model"+model);
 		return model;
 
 	}
@@ -251,17 +265,21 @@ public class readDump {
 	 */
 	private static void indexDump(File file) throws IOException {
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+			int i = 0;
 			while (!finFile) {
 				String contenido = obtenerEtiquetas(br, "Content:");
-
-				insertIndexTag("title", contenido, title);
-				insertIndexTag("identifier", contenido, identifier);
-				insertIndexTag("language", contenido, language);
-				insertIndexTag("description", contenido, description);
-				insertIndexTag("creator", contenido, creator);
-				insertIndexTag("publisher", contenido, publisher);
-				insertIndexTag("date", contenido, date);
+				if (i>1){
+					insertIndexTag("title", contenido, title, true);
+					insertIndexTag("identifier", contenido, identifier, true);
+					insertIndexTag("language", contenido, language, false);
+					insertIndexTag("description", contenido, description, false);
+					insertIndexTag("creator", contenido, creator, true);
+					insertIndexTag("publisher", contenido, publisher, false);
+					insertIndexTag("date", contenido, date, false);	
+				}	
+				i++;
 			}
+			System.out.println("TOTAL: "+i);
 		}
 	}
 
@@ -276,8 +294,8 @@ public class readDump {
 	 * @return devuelve una nodelist con todos los elementos encontrados en file
 	 *         parseandoloe y buscando los campos con el tag dado.
 	 */
-	private static boolean insertIndexTag(String tag, String s,
-			ArrayList<String> array) {
+	private static boolean insertIndexTag(String tag, String s, List array,
+			Boolean LdeL) {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory
 					.newInstance();
@@ -289,16 +307,32 @@ public class readDump {
 			org.w3c.dom.Document docu = builder.parse(inputSource);
 			NodeList conditionList = docu.getElementsByTagName("dc:" + tag);
 
+			ArrayList<String> aux = new ArrayList<String>();
+			Boolean added = false;
 			for (int k = 0; k < conditionList.getLength(); ++k) {
 				Element condition = (Element) conditionList.item(k);
-				if (condition != null && condition.getFirstChild() != null)
-					array.add(condition.getFirstChild().getNodeValue());
-				else
-					array.add("");
+				if (condition != null && condition.getFirstChild() != null) {
+					if (LdeL)
+						aux.add(condition.getFirstChild().getNodeValue());
+					else{
+						added = true;
+						array.add( condition.getFirstChild().getNodeValue());
+
+					}
+				}
+
 			}
+			if (LdeL && !aux.isEmpty()){
+				added = true;
+				array.add(aux);
+			}
+			if(!added)
+				array.add(null);
+
 			return true;
 
 		} catch (Exception ex) {
+			array.add(null);
 			ex.printStackTrace();
 			return false;
 		}
