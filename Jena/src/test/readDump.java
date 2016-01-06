@@ -3,13 +3,13 @@ package test;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -19,15 +19,25 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
+import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.ontology.OntClass;
+import com.hp.hpl.jena.rdf.model.AnonId;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.RDFVisitor;
+import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+import com.hp.hpl.jena.util.iterator.ExtendedIterator;
+import com.hp.hpl.jena.util.iterator.Filter;
 import com.hp.hpl.jena.vocabulary.DC;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.VCARD;
@@ -47,43 +57,12 @@ public class readDump {
 
 	public static void main(String args[]) {
 		readDump rd = new readDump("dump");
-		for (String s : title) {
-			System.out.println(s);
-		}
 		Model model = createRDF();
 		model.write(System.out);
 	}
 
 	public static Model createRDF() {
 		Model model = ModelFactory.createDefaultModel();
-
-		Property type = model
-				.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-		Resource person = model
-				.createResource("http://xmlns.com/foaf/0.1/person");
-		// Creator hace referencia a un recurso organization
-		Resource organization = model
-				.createResource("http://xmlns.com/foaf/0.1/organization");
-		// Publisher hace referencia a un recurso organization
-		Resource agent = model
-				.createResource("http://xmlns.com/foaf/0.1/agent");
-
-		Property title_p = model
-				.createProperty("http://purl.org/dc/elements/1.1/title");
-		Property creator_p = model
-				.createProperty("http://purl.org/dc/elements/1.1/creator");
-		Property identifier_p = model
-				.createProperty("http://purl.org/dc/elements/1.1/identifier");
-		Property typeOf_p = model
-				.createProperty("http://purl.org/dc/elements/1.1/type");
-		Property description_p = model
-				.createProperty("http://purl.org/dc/elements/1.1/description");
-		Property publisher_p = model
-				.createProperty("http://purl.org/dc/elements/1.1/publisher");
-		Property language_p = model
-				.createProperty("http://purl.org/dc/elements/1.1/language");
-		Property date_p = model
-				.createProperty("http://purl.org/dc/elements/1.1/date");
 
 		for (int i = 0; i < title.size(); i++) {
 
@@ -95,31 +74,64 @@ public class readDump {
 			String publi = publisher.get(i);
 			String dat = date.get(i);
 
+			/*
+			 * ORGANIZATION ADDED TO RDF SCHEME
+			 */
 			Resource org = null;
-			Resource toSearch = ResourceFactory.createResource()
-					.addProperty(DC.publisher, publi)
-					.addProperty(RDF.type, FOAF.Organization);
-			if (!model.containsResource(toSearch)) {
-				org = model.createResource().addProperty(DC.publisher, publi)
+			List<Resource> l = model
+					.listResourcesWithProperty(RDF.type, FOAF.Organization)
+					.filterKeep(new Filter<Resource>() {
+						@Override
+						public boolean accept(Resource arg0) {
+							return arg0.hasProperty(FOAF.name, publi);
+						}
+
+					}).toList();
+			boolean hasIt = false;
+			for (Resource r : l) {
+				AnonId aId = r.getId();
+				if (aId.getLabelString().equals("Organization")) {
+					hasIt = true;
+					break;
+				}
+			}
+			if (hasIt) {
+				// Linkearlo de alguna forma
+			} else
+				org = model.createResource(new AnonId("Organization"))
+						.addProperty(FOAF.name, publi)
 						.addProperty(RDF.type, FOAF.Organization);
-			} else {
-				// linkear al recurso que ya esta en el modelo
-			}
 
+			/*
+			 * AUTHOR ADDED TO THE RDF SCHEME
+			 */
 			Resource auth = null;
-			toSearch = ResourceFactory.createResource()
-					.addProperty(VCARD.FN, creat).addProperty(RDF.type, FOAF.Person);
+			hasIt = false;
+			l = model.listResourcesWithProperty(VCARD.FN, creat)
+					.filterKeep(new Filter<Resource>() {
+						@Override
+						public boolean accept(Resource arg0) {
+							return arg0.hasProperty(RDF.type, FOAF.Person);
+						}
 
-			if (!model.containsResource(toSearch)) {
-				auth = model.createResource().addProperty(VCARD.FN, creat)
-						.addProperty(RDF.type, FOAF.Person);
-			} else {
-				// linkear al recurso que ya esta en el modelo
+					}).toList();
+			for (Resource r : l) {
+				AnonId aId = r.getId();
+				if (aId.getLabelString().equals("Creator")) {
+					hasIt = true;
+					break;
+				}
 			}
+			if (hasIt) {
+				// Linkearlo de alguna forma
+			} else
+				auth = model.createResource("Creator")
+						.addProperty(VCARD.FN, creat)
+						.addProperty(RDF.type, FOAF.Person);
 
 			Literal year = model.createTypedLiteral(dat, XSDDatatype.XSDgYear);
 
-			Resource doc = model.createResource(id).addProperty(title_p, tit)
+			Resource doc = model.createResource(id).addProperty(DC.title, tit)
 					.addProperty(DC.creator, auth).addProperty(DC.type, "TFG")
 					.addProperty(DC.publisher, org).addProperty(DC.date, year)
 					.addProperty(DC.language, lang)
@@ -144,6 +156,11 @@ public class readDump {
 		read();
 	}
 
+	/**
+	 * Inicia el proceso en el cual se volcara en contenido de un fichero dump
+	 * en diferentes ArrayList de acuerdo al etiquetado que se identifique
+	 * dentro de dicho archivo
+	 */
 	public void read() {
 		try {
 			if (dumpPath.isEmpty()) {
