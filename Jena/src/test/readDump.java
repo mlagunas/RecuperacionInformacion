@@ -64,7 +64,6 @@ public class readDump {
 			System.out.println("Getting data from dump...");
 			indexDump(docDir);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
