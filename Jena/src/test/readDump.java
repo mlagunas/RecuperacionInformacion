@@ -28,6 +28,7 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+import com.hp.hpl.jena.vocabulary.DC;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.VCARD;
 
@@ -49,83 +50,86 @@ public class readDump {
 		for (String s : title) {
 			System.out.println(s);
 		}
-		Model model=createRDF();
+		Model model = createRDF();
 		model.write(System.out);
 	}
-	
-	public static  Model createRDF(){
-		 Model model = ModelFactory.createDefaultModel();
 
-	    Property type = model.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-	    Resource person = model.createResource("http://xmlns.com/foaf/0.1/person");
-	    //Creator hace referencia a un recurso organization
-	    Resource organization = model.createResource("http://xmlns.com/foaf/0.1/organization");
-	    // Publisher hace referencia a un recurso organization
-	    Resource agent = model.createResource("http://xmlns.com/foaf/0.1/agent");
-		
-		
-		Property title_p= model.createProperty("http://purl.org/dc/elements/1.1/title");
-        Property creator_p= model.createProperty("http://purl.org/dc/elements/1.1/creator");
-        Property identifier_p= model.createProperty("http://purl.org/dc/elements/1.1/identifier");
-        Property typeOf_p= model.createProperty("http://purl.org/dc/elements/1.1/type");
-        Property description_p= model.createProperty("http://purl.org/dc/elements/1.1/description");
-        Property publisher_p= model.createProperty("http://purl.org/dc/elements/1.1/publisher");
-        Property language_p= model.createProperty("http://purl.org/dc/elements/1.1/language");
-        Property date_p =model.createProperty("http://purl.org/dc/elements/1.1/date");
-        
-		for (int i=0;i<title.size();i++){
-			
-			String tit=title.get(i);
-			String id=identifier.get(i);
-			String lang=language.get(i);
-			String desc=description.get(i);
-			String creat=creator.get(i);
-			String publi=publisher.get(i);
-			String dat=date.get(i);
-			
-			Resource org=null;
+	public static Model createRDF() {
+		Model model = ModelFactory.createDefaultModel();
+
+		Property type = model
+				.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+		Resource person = model
+				.createResource("http://xmlns.com/foaf/0.1/person");
+		// Creator hace referencia a un recurso organization
+		Resource organization = model
+				.createResource("http://xmlns.com/foaf/0.1/organization");
+		// Publisher hace referencia a un recurso organization
+		Resource agent = model
+				.createResource("http://xmlns.com/foaf/0.1/agent");
+
+		Property title_p = model
+				.createProperty("http://purl.org/dc/elements/1.1/title");
+		Property creator_p = model
+				.createProperty("http://purl.org/dc/elements/1.1/creator");
+		Property identifier_p = model
+				.createProperty("http://purl.org/dc/elements/1.1/identifier");
+		Property typeOf_p = model
+				.createProperty("http://purl.org/dc/elements/1.1/type");
+		Property description_p = model
+				.createProperty("http://purl.org/dc/elements/1.1/description");
+		Property publisher_p = model
+				.createProperty("http://purl.org/dc/elements/1.1/publisher");
+		Property language_p = model
+				.createProperty("http://purl.org/dc/elements/1.1/language");
+		Property date_p = model
+				.createProperty("http://purl.org/dc/elements/1.1/date");
+
+		for (int i = 0; i < title.size(); i++) {
+
+			String tit = title.get(i);
+			String id = identifier.get(i);
+			String lang = language.get(i);
+			String desc = description.get(i);
+			String creat = creator.get(i);
+			String publi = publisher.get(i);
+			String dat = date.get(i);
+
+			Resource org = null;
 			Resource toSearch = ResourceFactory.createResource()
-	        		.addProperty(FOAF.name, publi)
-	        		.addProperty(RDF.type, organization);
-			if(!model.containsResource(toSearch)){
-					org = model.createResource()
-		        		.addProperty(FOAF.name, publi)
-		        		.addProperty(RDF.type, organization);
-			}
-			else{
-				//linkear al recurso que ya esta en el modelo
+					.addProperty(FOAF.name, publi)
+					.addProperty(RDF.type, FOAF.Organization);
+			if (!model.containsResource(toSearch)) {
+				org = model.createResource().addProperty(FOAF.name, publi)
+						.addProperty(RDF.type, FOAF.Organization);
+			} else {
+				// linkear al recurso que ya esta en el modelo
 			}
 
-			Resource auth=null;
-	        toSearch =ResourceFactory.createResource()
-	        		.addProperty(VCARD.FN, creat)
-	        		.addProperty(RDF.type, person);
-	        
-			if(!model.containsResource(toSearch)){
-			     auth =model.createResource()
-			        		.addProperty(VCARD.FN, creat)
-			        		.addProperty(RDF.type, person);
-			}
-			else{
-				//linkear al recurso que ya esta en el modelo
+			Resource auth = null;
+			toSearch = ResourceFactory.createResource()
+					.addProperty(VCARD.FN, creat).addProperty(RDF.type, FOAF.Person);
+
+			if (!model.containsResource(toSearch)) {
+				auth = model.createResource().addProperty(VCARD.FN, creat)
+						.addProperty(RDF.type, FOAF.Person);
+			} else {
+				// linkear al recurso que ya esta en el modelo
 			}
 
-	        Literal year = model.createTypedLiteral(dat, XSDDatatype.XSDgYear);
+			Literal year = model.createTypedLiteral(dat, XSDDatatype.XSDgYear);
 
-	        Resource doc=model.createResource(id)
-	        		.addProperty(title_p, tit)
-	        		.addProperty(creator_p, auth)
-	        		.addProperty(typeOf_p, "TFG")
-	        		.addProperty(publisher_p, org)
-	        		.addProperty(date_p, year)
-	        		.addProperty(language_p, lang)
-	        		.addProperty(identifier_p, id)
-	        		.addProperty(description_p, desc);
-	        
+			Resource doc = model.createResource(id).addProperty(title_p, tit)
+					.addProperty(DC.creator, auth).addProperty(DC.type, "TFG")
+					.addProperty(DC.publisher, org).addProperty(DC.date, year)
+					.addProperty(DC.language, lang)
+					.addProperty(DC.identifier, id)
+					.addProperty(DC.description, desc);
+
 		}
-		
+
 		return model;
-		
+
 	}
 
 	/**
@@ -136,10 +140,10 @@ public class readDump {
 	 * @param dumpPath
 	 */
 	public readDump(String dumpPath) {
-		this.dumpPath=dumpPath;
+		this.dumpPath = dumpPath;
 	}
-	
-	public void read(){
+
+	public void read() {
 		try {
 			this.dumpPath = dumpPath;
 			if (dumpPath.isEmpty()) {
@@ -160,6 +164,7 @@ public class readDump {
 			e.printStackTrace();
 		}
 	}
+
 	/**
 	 * Dado un fichero, con un formato especifico devuelve el contenido de una
 	 * etiqueta dada.
