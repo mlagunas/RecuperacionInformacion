@@ -238,9 +238,7 @@ public class readDump {
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 			int i = 0;
 			while (!finFile) {
-
 				String contenido = obtenerEtiquetas(br, "Content:");
-
 				insertIndexTag("title", contenido, title, false);
 				insertIndexTag("identifier", contenido, identifier, true);
 				insertIndexTag("language", contenido, language, false);
@@ -285,25 +283,22 @@ public class readDump {
 				if (condition != null && condition.getFirstChild() != null) {
 					if (LdeL)
 						aux.add(condition.getFirstChild().getNodeValue());
-					else{
+					else {
 						added = true;
-						array.add( condition.getFirstChild().getNodeValue());
-
+						array.add(condition.getFirstChild().getNodeValue());
 					}
 				}
-
 			}
-			if (LdeL && !aux.isEmpty()){
+			if (LdeL && !aux.isEmpty()) {
 				added = true;
 				array.add(aux);
 			}
-			if(!added)
-				array.add(null);
-
+			if (!added)
+				array.add("");
 			return true;
 
 		} catch (Exception ex) {
-			array.add(null);
+			array.add("");
 			ex.printStackTrace();
 			return false;
 		}
