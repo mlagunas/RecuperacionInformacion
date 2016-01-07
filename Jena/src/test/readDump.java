@@ -9,6 +9,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +49,7 @@ public class readDump {
 	private static List<String> date = new ArrayList<String>();
 
 	public static void main(String args[]) {
-		readDump rd = new readDump("dump");
+		new readDump("dump");
 		System.out.println(title.size());
 		System.out.println(language.size());
 		System.out.println(date.size());
@@ -58,8 +60,9 @@ public class readDump {
 
 		Model model = createRDF();
 		try {
-			model.write(new FileOutputStream(new File("trabajo_docs.rdf")));
-		} catch (FileNotFoundException e) {
+			model.write(new OutputStreamWriter(new FileOutputStream(new File(
+					"trabajo_docs.rdf")), "UTF-8"));
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -68,27 +71,26 @@ public class readDump {
 	public static Model createRDF() {
 		Model model = ModelFactory.createDefaultModel();
 
-		//String skos = "http://www.w3.org/2004/02/skos/core#";
-        model.setNsPrefix( "foaf", FOAF.NS );
-        
-		for (int i = 1; i < 20; i++) {
-			if (identifier.get(i)==null){
+		// String skos = "http://www.w3.org/2004/02/skos/core#";
+		model.setNsPrefix("foaf", FOAF.NS);
+
+		for (int i = 1; i < title.size(); i++) {
+			if (identifier.get(i) == null) {
 				continue;
 			}
 			String desc = "";
-			if(description.get(i)!=null){
+			if (description.get(i) != null) {
 				desc = description.get(i);
 			}
 			List<String> id = identifier.get(i);
 			String tit = title.get(i).get(0);
-			String lang ="";
-			if(language.get(i)!=null){
-				lang=language.get(i);
+			String lang = "";
+			if (language.get(i) != null) {
+				lang = language.get(i);
 			}
 			List<String> creat = creator.get(i);
 			String publi = publisher.get(i);
 			String dat = date.get(i);
-		
 
 			/*
 			 * ORGANIZATION ADDED TO RDF SCHEME
@@ -97,50 +99,59 @@ public class readDump {
 			List<Resource> l = model
 					.listResourcesWithProperty(FOAF.name, publi).toList();
 
-			if(l.isEmpty()){
-				org = model.createResource()
-						.addProperty(FOAF.name, publi)
+			if (l.isEmpty()) {
+				org = model.createResource().addProperty(FOAF.name, publi)
 						.addProperty(RDF.type, FOAF.Organization);
+			} else {
+				org = l.get(0);
 			}
-			else{
-				org=l.get(0);
-			}	
 
 			Literal year = model.createTypedLiteral(dat, XSDDatatype.XSDgYear);
 
 			Resource doc = model
-					.
-					// CAMBIAR ESTA PUESTO IDENTIFICADOR 0
-					createResource(id.get(0))
-					.addProperty(DC.title, tit)
-					.addProperty(DC.type, "TFG")
-					.addProperty(DC.publisher, org)
-					.addProperty(DC.date, year)
+					// Added URI identificator(0) = URL to Zaguan
+					.createResource(id.get(0)).addProperty(DC.title, tit)
+					.addProperty(DC.publisher, org).addProperty(DC.date, year)
 					.addProperty(DC.language, lang)
 					.addProperty(DC.description, desc);
-			
-			for (int j=1;j<id.size();j++){
-				doc.addProperty(DC.identifier, id.get(j));
+			// Identeificacion del segundo identificador
+			if (id.size() >= 2 && id.get(1) != null && !id.get(1).isEmpty()) {
+				String[] splitted = id.get(1).split("-");
+				if (splitted.length >= 3) {
+					String type = " ";
+					for (int x = 0; x <splitted.length-2;x++)
+						type += splitted[x]+" ";
+					type.trim();
+					doc.addProperty(DC.type, type);
+					doc.addProperty(DC.identifier, id.get(1));
+				} 
+					doc.addProperty(DC.identifier, id.get(1));
 			}
+			if (id.size() >= 3) {
+				for (int j = 2; j < id.size(); j++) {
+					doc.addProperty(DC.identifier, id.get(j));
+				}
+			}
+
 			/*
 			 * AUTHOR ADDED TO THE RDF SCHEME
 			 */
-			for (int j=0; j<creat.size();j++){
+			for (int j = 0; j < creat.size(); j++) {
 				Resource auth = null;
-				l = model.listResourcesWithProperty(VCARD.FN, creat.get(j)).toList();
+				l = model.listResourcesWithProperty(VCARD.FN, creat.get(j))
+						.toList();
 
-				if(l.isEmpty()){
+				if (l.isEmpty()) {
 					auth = model.createResource()
 							.addProperty(VCARD.FN, creat.get(j))
 							.addProperty(RDF.type, FOAF.Person);
-				}
-				else{
-					auth=l.get(0);
+				} else {
+					auth = l.get(0);
 				}
 				doc.addProperty(DC.creator, auth);
-				
+
 			}
-			
+
 		}
 
 		return model;
@@ -238,18 +249,18 @@ public class readDump {
 			int i = 0;
 			while (!finFile) {
 				String contenido = obtenerEtiquetas(br, "Content:");
-				if (i>1){
+				if (i > 1) {
 					insertIndexTag("title", contenido, title, true);
 					insertIndexTag("identifier", contenido, identifier, true);
 					insertIndexTag("language", contenido, language, false);
 					insertIndexTag("description", contenido, description, false);
 					insertIndexTag("creator", contenido, creator, true);
 					insertIndexTag("publisher", contenido, publisher, false);
-					insertIndexTag("date", contenido, date, false);	
-				}	
+					insertIndexTag("date", contenido, date, false);
+				}
 				i++;
 			}
-			System.out.println("TOTAL: "+(i-2));
+			System.out.println("TOTAL: " + (i - 2));
 		}
 	}
 
@@ -284,25 +295,28 @@ public class readDump {
 				if (condition != null && condition.getFirstChild() != null) {
 					if (LdeL)
 						aux.add(condition.getFirstChild().getNodeValue());
-					else{
+					else {
 						added = true;
-						array.add( condition.getFirstChild().getNodeValue());
-
+						array.add(condition.getFirstChild().getNodeValue());
 					}
 				}
-
 			}
-			if (LdeL && !aux.isEmpty()){
+			if (LdeL && !aux.isEmpty()) {
 				added = true;
 				array.add(aux);
 			}
-			if(!added)
-				array.add(null);
-
+			if (!added)
+				if (!LdeL)
+					array.add("");
+				else
+					array.add(null);
 			return true;
 
 		} catch (Exception ex) {
-			array.add(null);
+			if (LdeL)
+				array.add(null);
+			else
+				array.add("");
 			ex.printStackTrace();
 			return false;
 		}
