@@ -3,6 +3,8 @@ package test;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,24 +21,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.rdf.model.AnonId;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.RDFVisitor;
-import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 import com.hp.hpl.jena.util.iterator.Filter;
 import com.hp.hpl.jena.vocabulary.DC;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -47,7 +38,7 @@ public class readDump {
 	private static Boolean finFile = false;
 	private String dumpPath;
 
-	private static List<String> title = new ArrayList<String>();
+	private static List<List<String>> title = new ArrayList<List<String>>();
 	private static List<List<String>> identifier = new ArrayList<List<String>>();
 	private static List<String> language = new ArrayList<String>();
 	private static List<String> description = new ArrayList<String>();
@@ -57,91 +48,99 @@ public class readDump {
 
 	public static void main(String args[]) {
 		readDump rd = new readDump("dump");
+		System.out.println(title.size());
+		System.out.println(language.size());
+		System.out.println(date.size());
+		System.out.println(publisher.size());
+		System.out.println(creator.size());
+		System.out.println(identifier.size());
+		System.out.println(description.size());
+
 		Model model = createRDF();
-		model.write(System.out);
+		try {
+			model.write(new FileOutputStream(new File("trabajo_docs.rdf")));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static Model createRDF() {
 		Model model = ModelFactory.createDefaultModel();
 
-		for (int i = 0; i < title.size(); i++) {
-
-			String tit = title.get(i);
+		//String skos = "http://www.w3.org/2004/02/skos/core#";
+        model.setNsPrefix( "foaf", FOAF.NS );
+        
+		for (int i = 1; i < 20; i++) {
+			if (identifier.get(i)==null){
+				continue;
+			}
+			String desc = "";
+			if(description.get(i)!=null){
+				desc = description.get(i);
+			}
 			List<String> id = identifier.get(i);
-			String lang = language.get(i);
-			String desc = description.get(i);
+			String tit = title.get(i).get(0);
+			String lang ="";
+			if(language.get(i)!=null){
+				lang=language.get(i);
+			}
 			List<String> creat = creator.get(i);
 			String publi = publisher.get(i);
 			String dat = date.get(i);
+		
 
 			/*
 			 * ORGANIZATION ADDED TO RDF SCHEME
 			 */
 			Resource org = null;
 			List<Resource> l = model
-					.listResourcesWithProperty(RDF.type, FOAF.Organization)
-					.filterKeep(new Filter<Resource>() {
-						@Override
-						public boolean accept(Resource arg0) {
-							return arg0.hasProperty(FOAF.name, publi);
-						}
+					.listResourcesWithProperty(FOAF.name, publi).toList();
 
-					}).toList();
-			boolean hasIt = false;
-			for (Resource r : l) {
-				AnonId aId = r.getId();
-				if (aId.getLabelString().equals("Organization")) {
-					hasIt = true;
-					break;
-				}
-			}
-			if (hasIt) {
-				// Linkearlo de alguna forma
-			} else
-				org = model.createResource(new AnonId("Organization"))
+			if(l.isEmpty()){
+				org = model.createResource()
 						.addProperty(FOAF.name, publi)
 						.addProperty(RDF.type, FOAF.Organization);
-
-			/*
-			 * AUTHOR ADDED TO THE RDF SCHEME
-			 */
-			Resource auth = null;
-			hasIt = false;
-			l = model.listResourcesWithProperty(VCARD.FN, creat)
-					.filterKeep(new Filter<Resource>() {
-						@Override
-						public boolean accept(Resource arg0) {
-							return arg0.hasProperty(RDF.type, FOAF.Person);
-						}
-
-					}).toList();
-			for (Resource r : l) {
-				AnonId aId = r.getId();
-				if (aId.getLabelString().equals("Creator")) {
-					hasIt = true;
-					break;
-				}
 			}
-			if (hasIt) {
-				// Linkearlo de alguna forma
-			} else
-				auth = model.createResource("Creator")
-						// CAMBIAR ESTA PUESTO CREATOR GET 0
-						.addProperty(VCARD.FN, creat.get(0))
-						.addProperty(RDF.type, FOAF.Person);
+			else{
+				org=l.get(0);
+			}	
 
 			Literal year = model.createTypedLiteral(dat, XSDDatatype.XSDgYear);
 
 			Resource doc = model
 					.
 					// CAMBIAR ESTA PUESTO IDENTIFICADOR 0
-					createResource(id.get(0)).addProperty(DC.title, tit)
-					.addProperty(DC.creator, auth).addProperty(DC.type, "TFG")
-					.addProperty(DC.publisher, org).addProperty(DC.date, year)
+					createResource(id.get(0))
+					.addProperty(DC.title, tit)
+					.addProperty(DC.type, "TFG")
+					.addProperty(DC.publisher, org)
+					.addProperty(DC.date, year)
 					.addProperty(DC.language, lang)
-					.addProperty(DC.identifier, id.get(0))
 					.addProperty(DC.description, desc);
+			
+			for (int j=1;j<id.size();j++){
+				doc.addProperty(DC.identifier, id.get(j));
+			}
+			/*
+			 * AUTHOR ADDED TO THE RDF SCHEME
+			 */
+			for (int j=0; j<creat.size();j++){
+				Resource auth = null;
+				l = model.listResourcesWithProperty(VCARD.FN, creat.get(j)).toList();
 
+				if(l.isEmpty()){
+					auth = model.createResource()
+							.addProperty(VCARD.FN, creat.get(j))
+							.addProperty(RDF.type, FOAF.Person);
+				}
+				else{
+					auth=l.get(0);
+				}
+				doc.addProperty(DC.creator, auth);
+				
+			}
+			
 		}
 
 		return model;
@@ -239,6 +238,7 @@ public class readDump {
 			int i = 0;
 			while (!finFile) {
 				String contenido = obtenerEtiquetas(br, "Content:");
+<<<<<<< HEAD
 				insertIndexTag("title", contenido, title, false);
 				insertIndexTag("identifier", contenido, identifier, true);
 				insertIndexTag("language", contenido, language, false);
@@ -246,9 +246,20 @@ public class readDump {
 				insertIndexTag("creator", contenido, creator, true);
 				insertIndexTag("publisher", contenido, publisher, false);
 				insertIndexTag("date", contenido, date, false);
+=======
+				if (i>1){
+					insertIndexTag("title", contenido, title, true);
+					insertIndexTag("identifier", contenido, identifier, true);
+					insertIndexTag("language", contenido, language, false);
+					insertIndexTag("description", contenido, description, false);
+					insertIndexTag("creator", contenido, creator, true);
+					insertIndexTag("publisher", contenido, publisher, false);
+					insertIndexTag("date", contenido, date, false);	
+				}	
+>>>>>>> 3c374fbc0d78e6dc99c98b10a6e9682bcce4a518
 				i++;
 			}
-			System.out.println(i);
+			System.out.println("TOTAL: "+(i-2));
 		}
 	}
 
