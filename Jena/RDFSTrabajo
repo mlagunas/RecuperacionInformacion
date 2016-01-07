@@ -123,25 +123,45 @@ dmrec:TFM
 
 dmrec:creator
     dcterms:description "Examples of a Creator include a person."@en ;
-    dcterms:hasVersion <http://dublincore.org/usage/terms/history/#creatorT-002> ;
-    dcterms:issued "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
-    dcterms:modified "2010-10-11"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:issued "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
     a rdf:Property ;
     rdfs:comment "An entity primarily responsible for making the resource."@en ;
-    rdfs:isDefinedBy <http://purl.org/dc/terms/> ;
+    rdfs:isDefinedBy <http://www.recInfo.org/dm/> ;
     rdfs:label "Creator"@en ;
-    rdfs:range foaf:Person .
+    rdfs:domain dmrec:document;
+    rdfs:range dmrec:person .
     
-foaf:Person
+dmrec:person
 	dcterms:description "The Person class represents people. Something is a Person if it is a person."@en ;
-    dcterms:hasVersion <http://dublincore.org/usage/terms/history/#creatorT-002> ;
-    dcterms:issued "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
-    dcterms:modified "2010-10-11"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:issued "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
     a rdf:Class;
     rdfs:comment "Person."@en ;
-    rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
+    rdfs:isDefinedBy <http://www.recInfo.org/dm/> ;
     rdfs:label "Person"@en ;
     rdfs:subClassOf foaf:Agent .
+    
+dmrec:publisher
+    dcterms:description "Examples of a Publisher include a person, an organization, or a service."@en ;
+    dcterms:issued "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdf:Property ;
+    rdfs:comment "An entity responsible for making the resource available."@en ;
+    rdfs:isDefinedBy <http://www.recInfo.org/dm/> ;
+    rdfs:label "Publisher"@en ;
+    rdfs:range dmrec:organization .
+
+dmrec:organization
+	dcterms:description "The Organization class represents a kind of Agent corresponding to social instititutions such as companies, societies etc."@en ;
+    dcterms:issued "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdf:Class;
+    rdfs:comment "Organization."@en ;
+    rdfs:isDefinedBy <http://www.recInfo.org/dm/> ;
+    rdfs:label "Organization"@en ;
+    rdfs:subClassOf foaf:Agent .
+	
 	
     
 
