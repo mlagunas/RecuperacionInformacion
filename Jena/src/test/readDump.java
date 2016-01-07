@@ -49,7 +49,7 @@ public class readDump {
 	private static List<String> date = new ArrayList<String>();
 
 	public static void main(String args[]) {
-		readDump rd = new readDump("dump");
+		new readDump("dump");
 		System.out.println(title.size());
 		System.out.println(language.size());
 		System.out.println(date.size());
@@ -117,14 +117,18 @@ public class readDump {
 			// Identeificacion del segundo identificador
 			if (id.size() >= 2 && id.get(1) != null && !id.get(1).isEmpty()) {
 				String[] splitted = id.get(1).split("-");
-				if (splitted.length == 3) {
-					doc.addProperty(DC.type, splitted[1]);
+				if (splitted.length >= 3) {
+					String type = " ";
+					for (int x = 0; x <splitted.length-2;x++)
+						type += splitted[x]+" ";
+					type.trim();
+					doc.addProperty(DC.type, type);
 					doc.addProperty(DC.identifier, id.get(1));
-				} else
+				} 
 					doc.addProperty(DC.identifier, id.get(1));
 			}
 			if (id.size() >= 3) {
-				for(int j = 2; j<id.size();j++){
+				for (int j = 2; j < id.size(); j++) {
 					doc.addProperty(DC.identifier, id.get(j));
 				}
 			}
@@ -302,11 +306,17 @@ public class readDump {
 				array.add(aux);
 			}
 			if (!added)
-				array.add("");
+				if (!LdeL)
+					array.add("");
+				else
+					array.add(null);
 			return true;
 
 		} catch (Exception ex) {
-			array.add("");
+			if (LdeL)
+				array.add(null);
+			else
+				array.add("");
 			ex.printStackTrace();
 			return false;
 		}
