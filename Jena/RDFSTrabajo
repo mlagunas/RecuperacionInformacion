@@ -1,7 +1,5 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-@prefix dcam: <http://purl.org/dc/dcam/> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dmrec: <http://www.recInfo.org/dm/> .
@@ -9,8 +7,8 @@
 
 <http://purl.org/dc/terms/>
     dcterms:modified "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
-    dcterms:publisher <http://purl.org/dc/aboutdcmi#DCMI> ;
-    dcterms:title "Recuperacion Trabajo - Terms"@spa .
+    dcterms:publisher <ttp://www.recInfo.org/dm/aboutdmrec#DMREC> ;
+    dcterms:title "Recuperacion de Información Trabajo - Terms"@spa .
    
 dcterms:identifier
     dcterms:description "Recommended best practice is to identify the resource by means of a string conforming to a formal identification system. "@en ;
@@ -68,8 +66,7 @@ dcterms:language
     rdfs:isDefinedBy <http://purl.org/dc/terms/> ;
     rdfs:label "Language"@en ;
     rdfs:range dcterms:LinguisticSystem ;
-    rdfs:subPropertyOf <http://purl.org/dc/elements/1.1/language> ;
-    a rdfs:Class .
+    rdfs:subPropertyOf <http://purl.org/dc/elements/1.1/language> .
     
 dmrec:document
     dcterms:description "Documents of Zaguan repository"@en ;
@@ -88,7 +85,7 @@ dmrec:TFG
     a rdfs:Class ;
     rdfs:comment "TFG."@en ;
     rdfs:isDefinedBy <http://www.recInfo.org/dm/> ;
-    rdfs:label "TFG Class"@en ;
+    rdfs:label "TFG Clas s"@en ;
     rdfs:subClassOf dmrec:document .
   
 dmrec:PFC
@@ -150,6 +147,7 @@ dmrec:publisher
     rdfs:comment "An entity responsible for making the resource available."@en ;
     rdfs:isDefinedBy <http://www.recInfo.org/dm/> ;
     rdfs:label "Publisher"@en ;
+    rdfs:domain dmrec:document;
     rdfs:range dmrec:organization .
 
 dmrec:organization
@@ -162,7 +160,16 @@ dmrec:organization
     rdfs:label "Organization"@en ;
     rdfs:subClassOf foaf:Agent .
 	
-	
+dmrec:keyword
+    dcterms:description "Keyword of the document."@en ;
+    dcterms:issued "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdf:Property ;
+    rdfs:comment "Keyword related with the queries of the project work."@en ;
+    rdfs:isDefinedBy <http://www.recInfo.org/dm/> ;
+    rdfs:label "Keyword"@en ;
+    rdfs:domain dmrec:document;
+    rdfs:range skos:Concept .
     
 
     
