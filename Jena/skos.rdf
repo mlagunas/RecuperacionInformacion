@@ -1,0 +1,161 @@
+<skos:ConceptScheme rdf:about="http://example.com/RI">
+        <dc:title>Recuperador semantico</dc:title>
+        <dc:description>Modelo terminologico del recuperador semantico</dc:description>
+    </skos:ConceptScheme>
+
+    <!-- DUDAS: 
+            RELACIONES BIDIRECCIONALES? 
+            INTERSECCIONES EN CONCEPTOS
+            SKOS EN ULTIMA PRACTICA?
+            BUSQUEDAS SPARQL+SKOS
+            -->
+    <!-- CONSULTA NUMERO 13-2 
+        SELECT ?doc
+            WHERE {
+                ?x dc:author Javier
+                ?y dc:keyWord musica
+                ?z dc_keyword sonido
+            } 
+    -->
+
+    <skos:Concept rdf:about="http://example.com/RI#music">
+        <skos:prefLabel xml:lang="en">music</skos:prefLabel>
+        <skos:prefLabel xml:lang="sp">musica</skos:prefLabel>
+        <skos:inScheme rdf:resource="http://example.com/RI"/>
+        <skos:topConceptOf rdf:resource="http://example.com/RI"/>
+    </skos:Concept>
+
+        <skos:Concept rdf:about="http://example.com/RI#rock">
+            <skos:prefLabel xml:lang="en">rock</skos:prefLabel>
+            <skos:prefLabel xml:lang="sp">rock</skos:prefLabel>
+            <skos:inScheme rdf:resource="http://example.com/RI"/>
+            <skos:broader rdf:resource="http://example.com/RI#music"/>
+        </skos:Concept>
+
+        <skos:Concept rdf:about="http://example.com/RI#pop">
+            <skos:prefLabel xml:lang="en">pop</skos:prefLabel>
+            <skos:prefLabel xml:lang="sp">pop</skos:prefLabel>
+            <skos:inScheme rdf:resource="http://example.com/RI"/>
+            <skos:broader rdf:resource="http://example.com/RI#music"/>
+        </skos:Concept>
+
+        <skos:Concept rdf:about="http://example.com/RI#obra_musical">
+            <skos:prefLabel xml:lang="en">music piece</skos:prefLabel>
+            <skos:prefLabel xml:lang="sp">obra musical</skos:prefLabel>
+            <skos:altLabel xml:lang="en">music performance</skos:prefLabel>
+            <skos:altLabel xml:lang="sp">representacion musical</skos:prefLabel>
+            <skos:inScheme rdf:resource="http://example.com/RI"/>
+            <skos:broader rdf:resource="http://example.com/RI#music"/>
+        </skos:Concept>
+
+            <skos:Concept rdf:about="http://example.com/RI#obra_musical#cancion">
+                <skos:prefLabel xml:lang="en">song</skos:prefLabel>
+                <skos:prefLabel xml:lang="sp">cancion</skos:prefLabel>
+                <skos:inScheme rdf:resource="http://example.com/RI"/>
+                <skos:broader rdf:resource="http://example.com/RI#music#obra_musical"/>
+            </skos:Concept>
+
+        <skos:Concept rdf:about="http://example.com/RI#musicologia">
+            <skos:prefLabel xml:lang="en">musicology</skos:prefLabel>
+            <skos:prefLabel xml:lang="sp">musicología</skos:prefLabel>
+            <skos:inScheme rdf:resource="http://example.com/RI"/>
+            <skos:broader rdf:resource="http://example.com/RI#music"/>
+        </skos:Concept>
+
+
+    <skos:Concept rdf:about="http://example.com/RI#sonido">
+        <skos:prefLabel xml:lang="en">sound</skos:prefLabel>
+        <skos:prefLabel xml:lang="sp">sonido</skos:prefLabel>
+        <skos:altLabel xml:lang="en">audio</skos:prefLabel>
+        <skos:inScheme rdf:resource="http://example.com/RI"/>
+        <skos:topConceptOf rdf:resource="http://example.com/RI"/>
+    </skos:Concept>
+
+        <skos:Concept rdf:about="http://example.com/RI#ruido">
+            <skos:prefLabel xml:lang="en">noise</skos:prefLabel>
+            <skos:prefLabel xml:lang="sp">ruido</skos:prefLabel>
+            <skos:inScheme rdf:resource="http://example.com/RI"/>
+            <skos:related rdf:resource="http://example.com/RI#sonido">
+        </skos:Concept>
+
+    <!-- CONSULTA NUMERO 02-4 -->
+
+    <skos:Concept rdf:about="http://example.com/RI#guerra">
+        <skos:prefLabel xml:lang="en">war</skos:prefLabel>
+        <skos:prefLabel xml:lang="sp">guerra</skos:prefLabel>
+        <skos:altLabel xml:lang="sp">conflicto belico</skos:prefLabel>
+        <skos:inScheme rdf:resource="http://example.com/RI"/>
+        <skos:topConceptOf rdf:resource="http://example.com/RI"/>
+    </skos:Concept>
+
+    <skos:Concept rdf:about="http://example.com/RI#ejercito">
+        <skos:prefLabel xml:lang="en">army</skos:prefLabel>
+        <skos:prefLabel xml:lang="sp">ejercito</skos:prefLabel>
+        <skos:inScheme rdf:resource="http://example.com/RI"/>
+        <skos:related rdf:resource="http://example.com/RI#guerra_independencia_espana">
+    </skos:Concept>
+
+            <skos:Concept rdf:about="http://example.com/RI#ejercito#tropa">
+                <skos:prefLabel xml:lang="en">troup</skos:prefLabel>
+                <skos:prefLabel xml:lang="sp">tropa</skos:prefLabel>
+                <skos:inScheme rdf:resource="http://example.com/RI"/>
+                <skos:broader rdf:resource="http://example.com/RI#ejercito">
+            </skos:Concept>
+
+    <!-- CONSULTA NUMERO 09-3 -->
+
+    <skos:Concept rdf:about="http://example.com/RI#energias_renovables">
+        <skos:prefLabel xml:lang="en">renewable energy</skos:prefLabel>
+        <skos:prefLabel xml:lang="sp">energías renovables</skos:prefLabel>
+        <skos:inScheme rdf:resource="http://example.com/RI"/>
+        <skos:topConceptOf rdf:resource="http://example.com/RI"/>
+        <skos:related rdf:resource="http://example.com/RI#energias_renovables">
+    </skos:Concept>
+
+    <skos:Concept rdf:about="http://example.com/RI#energia">
+        <skos:prefLabel xml:lang="en">energy</skos:prefLabel>
+        <skos:prefLabel xml:lang="sp">energía</skos:prefLabel>
+        <skos:inScheme rdf:resource="http://example.com/RI"/>
+        <skos:related rdf:resource="http://example.com/RI#energias_renovables">
+    </skos:Concept>
+
+        <skos:Concept rdf:about="http://example.com/RI#energia#solar">
+            <skos:prefLabel xml:lang="en">solar</skos:prefLabel>
+            <skos:prefLabel xml:lang="sp">solar</skos:prefLabel>
+            <skos:inScheme rdf:resource="http://example.com/RI"/>
+            <skos:broader rdf:resource="http://example.com/RI#energia">
+        </skos:Concept>
+
+        <skos:Concept rdf:about="http://example.com/RI#energia#eolica">
+            <skos:prefLabel xml:lang="en">windpower</skos:prefLabel>
+            <skos:prefLabel xml:lang="sp">eólica</skos:prefLabel>
+            <skos:inScheme rdf:resource="http://example.com/RI"/>
+            <skos:broader rdf:resource="http://example.com/RI#energia">
+        </skos:Concept>
+
+        <skos:Concept rdf:about="http://example.com/RI#energia#electromagnetismo">
+            <skos:prefLabel xml:lang="en">electromagnetism</skos:prefLabel>
+            <skos:prefLabel xml:lang="sp">electromagnetismo</skos:prefLabel>
+            <skos:inScheme rdf:resource="http://example.com/RI"/>
+            <skos:broader rdf:resource="http://example.com/RI#energia">
+        </skos:Concept>
+
+    <skos:Concept rdf:about="http://example.com/RI#renovables">
+        <skos:prefLabel xml:lang="en">renewable</skos:prefLabel>
+        <skos:prefLabel xml:lang="sp">renovables</skos:prefLabel>
+        <skos:inScheme rdf:resource="http://example.com/RI"/>
+    </skos:Concept>
+
+    <skos:Concept rdf:about="http://example.com/RI#eficiencia_energetica">
+        <skos:prefLabel xml:lang="en">energy eficiency</skos:prefLabel>
+        <skos:prefLabel xml:lang="sp">eficiencia energética</skos:prefLabel>
+        <skos:inScheme rdf:resource="http://example.com/RI"/>
+        <skos:related rdf:resource="http://example.com/RI#energias_renovables">
+    </skos:Concept>
+
+    <skos:Concept rdf:about="http://example.com/RI#cambio_climatico">
+        <skos:prefLabel xml:lang="en">climate change</skos:prefLabel>
+        <skos:prefLabel xml:lang="sp">cambio climático</skos:prefLabel>
+        <skos:inScheme rdf:resource="http://example.com/RI"/>
+        <skos:related rdf:resource="http://example.com/RI#energias_renovables">
+    </skos:Concept>
