@@ -8,12 +8,12 @@
         <skos:prefLabel xml:lang="sp">musica</skos:prefLabel>
         <skos:inScheme rdf:resource="http://example.com/RI"/>
         <skos:topConceptOf rdf:resource="http://example.com/RI"/>
-        <skos:narrower rdf:resource="http://example.com/RI#rock">
-        <skos:narrower rdf:resource="http://example.com/RI#musical">
-        <skos:narrower rdf:resource="http://example.com/RI#acustico">
-        <skos:narrower rdf:resource="http://example.com/RI#cancion">
-        <skos:narrower rdf:resource="http://example.com/RI#musico">
-        <skos:narrower rdf:resource="http://example.com/RI#musicologia">
+        <skos:narrower rdf:resource="http://example.com/RI#rock"/>
+        <skos:narrower rdf:resource="http://example.com/RI#musical"/>
+        <skos:narrower rdf:resource="http://example.com/RI#acustico"/>
+        <skos:narrower rdf:resource="http://example.com/RI#cancion"/>
+        <skos:narrower rdf:resource="http://example.com/RI#musico"/>
+        <skos:narrower rdf:resource="http://example.com/RI#musicologia"/>
     </skos:Concept>
 
         <skos:Concept rdf:about="http://example.com/RI#rock">
@@ -67,23 +67,23 @@
         <skos:altLabel xml:lang="en">audio</skos:prefLabel>
         <skos:inScheme rdf:resource="http://example.com/RI"/>
         <skos:topConceptOf rdf:resource="http://example.com/RI"/>
-        <skos:narrower rdf:resource="http://example.com/RI#ruido">
-        <skos:narrower rdf:resource="http://example.com/RI#audio">
-        <skos:narrower rdf:resource="http://example.com/RI#auriculares">
+        <skos:narrower rdf:resource="http://example.com/RI#ruido"/>
+        <skos:narrower rdf:resource="http://example.com/RI#audio"/>
+        <skos:narrower rdf:resource="http://example.com/RI#auriculares"/>
     </skos:Concept>
 
         <skos:Concept rdf:about="http://example.com/RI#ruido">
             <skos:prefLabel xml:lang="en">noise</skos:prefLabel>
             <skos:prefLabel xml:lang="sp">ruido</skos:prefLabel>
             <skos:inScheme rdf:resource="http://example.com/RI"/>
-            <skos:broader rdf:resource="http://example.com/RI#sonido">
+            <skos:broader rdf:resource="http://example.com/RI#sonido"/>
         </skos:Concept>
 
         <skos:Concept rdf:about="http://example.com/RI#audio">
             <skos:prefLabel xml:lang="en">audio</skos:prefLabel>
             <skos:prefLabel xml:lang="sp">audio</skos:prefLabel>
             <skos:inScheme rdf:resource="http://example.com/RI"/>
-            <skos:broader rdf:resource="http://example.com/RI#sonido">
+            <skos:broader rdf:resource="http://example.com/RI#sonido"/>
         </skos:Concept>
 
 
@@ -91,7 +91,7 @@
             <skos:prefLabel xml:lang="en">auriculares</skos:prefLabel>
             <skos:prefLabel xml:lang="sp">auriculares</skos:prefLabel>
             <skos:inScheme rdf:resource="http://example.com/RI"/>
-            <skos:broader rdf:resource="http://example.com/RI#sonido">
+            <skos:broader rdf:resource="http://example.com/RI#sonido"/>
         </skos:Concept>
 
 
@@ -102,30 +102,30 @@
         <skos:prefLabel xml:lang="sp">Guerra de la independencia</skos:prefLabel>
         <skos:inScheme rdf:resource="http://example.com/RI"/>
         <skos:topConceptOf rdf:resource="http://example.com/RI"/>
-        <skos:narrower rdf:resource="http://example.com/RI#guerraCarlista">
-        <skos:narrower rdf:resource="http://example.com/RI#independanceDate">
-        <skos:narrower rdf:resource="http://example.com/RI#ejercito">
+        <skos:narrower rdf:resource="http://example.com/RI#guerraCarlista"/>
+        <skos:narrower rdf:resource="http://example.com/RI#independanceDate"/>
+        <skos:narrower rdf:resource="http://example.com/RI#ejercito"/>
     </skos:Concept>
 
         <skos:Concept rdf:about="http://example.com/RI#guerraCarlista">
             <skos:prefLabel xml:lang="en">1808-1814</skos:prefLabel>
             <skos:prefLabel xml:lang="sp">1808-1814</skos:prefLabel>
             <skos:inScheme rdf:resource="http://example.com/RI"/>
-            <skos:broader rdf:resource="http://example.com/RI#guerraIndependencia">
+            <skos:broader rdf:resource="http://example.com/RI#guerraIndependencia"/>
         </skos:Concept>
 
         <skos:Concept rdf:about="http://example.com/RI#independanceDate">
             <skos:prefLabel xml:lang="en">Carlista war</skos:prefLabel>
             <skos:prefLabel xml:lang="sp">Guerra Carlista</skos:prefLabel>
             <skos:inScheme rdf:resource="http://example.com/RI"/>
-            <skos:broader rdf:resource="http://example.com/RI#guerraIndependencia">
+            <skos:broader rdf:resource="http://example.com/RI#guerraIndependencia"/>
         </skos:Concept>
 
         <skos:Concept rdf:about="http://example.com/RI#ejercito">
             <skos:prefLabel xml:lang="en">army</skos:prefLabel>
             <skos:prefLabel xml:lang="sp">ejercito</skos:prefLabel>
             <skos:inScheme rdf:resource="http://example.com/RI"/>
-            <skos:broader rdf:resource="http://example.com/RI#guerraIndependencia">
+            <skos:broader rdf:resource="http://example.com/RI#guerraIndependencia"/>
         </skos:Concept>
 
     <!-- CONSULTA NUMERO 09-3 -->
@@ -135,63 +135,63 @@
         <skos:prefLabel xml:lang="sp">energÃ­as renovables</skos:prefLabel>
         <skos:inScheme rdf:resource="http://example.com/RI"/>
         <skos:topConceptOf rdf:resource="http://example.com/RI"/>
-        <skos:broader rdf:resource="http://example.com/RI#energias_renovables">
-        <skos:narrower rdf:resource="http://example.com/RI#energia">
-        <skos:narrower rdf:resource="http://example.com/RI#renovables">
-        <skos:narrower rdf:resource="http://example.com/RI#eficienciaEnergetica">
-        <skos:narrower rdf:resource="http://example.com/RI#cambioClimatico">
+        <skos:broader rdf:resource="http://example.com/RI#energias_renovables"/>
+        <skos:narrower rdf:resource="http://example.com/RI#energia"/>
+        <skos:narrower rdf:resource="http://example.com/RI#renovables"/>
+        <skos:narrower rdf:resource="http://example.com/RI#eficienciaEnergetica"/>
+        <skos:narrower rdf:resource="http://example.com/RI#cambioClimatico"/>
     </skos:Concept>
 
     <skos:Concept rdf:about="http://example.com/RI#renovables">
         <skos:prefLabel xml:lang="en">renewable</skos:prefLabel>
         <skos:prefLabel xml:lang="sp">renovables</skos:prefLabel>
         <skos:inScheme rdf:resource="http://example.com/RI"/>
-        <skos:broader rdf:resource="http://example.com/RI#energias_renovables">
+        <skos:broader rdf:resource="http://example.com/RI#energias_renovables"/>
     </skos:Concept>
 
     <skos:Concept rdf:about="http://example.com/RI#eficienciaEnergetica">
         <skos:prefLabel xml:lang="en">energy eficiency</skos:prefLabel>
         <skos:prefLabel xml:lang="sp">eficiencia energÃ©tica</skos:prefLabel>
         <skos:inScheme rdf:resource="http://example.com/RI"/>
-        <skos:broader rdf:resource="http://example.com/RI#energias_renovables">
+        <skos:broader rdf:resource="http://example.com/RI#energias_renovables"/>
     </skos:Concept>
 
     <skos:Concept rdf:about="http://example.com/RI#cambioClimatico">
         <skos:prefLabel xml:lang="en">climate change</skos:prefLabel>
         <skos:prefLabel xml:lang="sp">cambio climÃ¡tico</skos:prefLabel>
         <skos:inScheme rdf:resource="http://example.com/RI"/>
-        <skos:broader rdf:resource="http://example.com/RI#energias_renovables">
+        <skos:broader rdf:resource="http://example.com/RI#energias_renovables"/>
     </skos:Concept>
     
     <skos:Concept rdf:about="http://example.com/RI#energia">
         <skos:prefLabel xml:lang="en">energy</skos:prefLabel>
         <skos:prefLabel xml:lang="sp">energÃ­a</skos:prefLabel>
         <skos:inScheme rdf:resource="http://example.com/RI"/>
-        <skos:broader rdf:resource="http://example.com/RI#energias_renovables">
-        <skos:narrower rdf:resource="http://example.com/RI#energia#solar">
-        <skos:narrower rdf:resource="http://example.com/RI#energia#eolica">
-        <skos:narrower rdf:resource="http://example.com/RI#energia#electromagnetismo">
+        <skos:broader rdf:resource="http://example.com/RI#energias_renovables"/>
+        <skos:narrower rdf:resource="http://example.com/RI#energia#solar"/>
+        <skos:narrower rdf:resource="http://example.com/RI#energia#eolica"/>
+        <skos:narrower rdf:resource="http://example.com/RI#energia#electromagnetismo"/>
     </skos:Concept>
 
         <skos:Concept rdf:about="http://example.com/RI#energia#solar">
             <skos:prefLabel xml:lang="en">solar</skos:prefLabel>
             <skos:prefLabel xml:lang="sp">solar</skos:prefLabel>
             <skos:inScheme rdf:resource="http://example.com/RI"/>
-            <skos:broader rdf:resource="http://example.com/RI#energia">
+            <skos:broader rdf:resource="http://example.com/RI#energia"/>
         </skos:Concept>
 
         <skos:Concept rdf:about="http://example.com/RI#energia#eolica">
             <skos:prefLabel xml:lang="en">windpower</skos:prefLabel>
             <skos:prefLabel xml:lang="sp">eÃ³lica</skos:prefLabel>
             <skos:inScheme rdf:resource="http://example.com/RI"/>
-            <skos:broader rdf:resource="http://example.com/RI#energia">
+            <skos:broader rdf:resource="http://example.com/RI#energia"/>
         </skos:Concept>
 
         <skos:Concept rdf:about="http://example.com/RI#energia#electromagnetismo">
             <skos:prefLabel xml:lang="en">electromagnetism</skos:prefLabel>
             <skos:prefLabel xml:lang="sp">electromagnetismo</skos:prefLabel>
             <skos:inScheme rdf:resource="http://example.com/RI"/>
-            <skos:broader rdf:resource="http://example.com/RI#energia">
+            <skos:broader rdf:resource="http://example.com/RI#energia"/>
         </skos:Concept>
     
 <!-- CONSULTA NUMERO 07-02 -->
@@ -201,29 +201,29 @@
         <skos:prefLabel xml:lang="sp">videojuegos</skos:prefLabel>
         <skos:inScheme rdf:resource="http://example.com/RI"/>
         <skos:topConceptOf rdf:resource="http://example.com/RI"/>
-        <skos:narrower rdf:resource="http://example.com/RI#unity">
-        <skos:narrower rdf:resource="http://example.com/RI#motorgrafico">
+        <skos:narrower rdf:resource="http://example.com/RI#unity"/>
+        <skos:narrower rdf:resource="http://example.com/RI#motorgrafico"/>
     </skos:Concept>
     
         <skos:Concept rdf:about="http://example.com/RI#unity">
             <skos:prefLabel xml:lang="en">Unity</skos:prefLabel>
             <skos:prefLabel xml:lang="sp">Unity</skos:prefLabel>
             <skos:inScheme rdf:resource="http://example.com/RI"/>
-            <skos:broader rdf:resource="http://example.com/RI#videojuegos">
+            <skos:broader rdf:resource="http://example.com/RI#videojuegos"/>
         </skos:Concept>
         
         <skos:Concept rdf:about="http://example.com/RI#motorgrafico">
             <skos:prefLabel xml:lang="sp">motor gráfico</skos:prefLabel>
             <skos:prefLabel xml:lang="en">graphic engine</skos:prefLabel>
             <skos:inScheme rdf:resource="http://example.com/RI"/>
-            <skos:broader rdf:resource="http://example.com/RI#videojuegos">
+            <skos:broader rdf:resource="http://example.com/RI#videojuegos"/>
         </skos:Concept>
         
         <skos:Concept rdf:about="http://example.com/RI#programaciongrafica">
             <skos:prefLabel xml:lang="sp">programación gráfica</skos:prefLabel>
             <skos:prefLabel xml:lang="en">graphic programming</skos:prefLabel>
             <skos:inScheme rdf:resource="http://example.com/RI"/>
-            <skos:broader rdf:resource="http://example.com/RI#videojuegos">
+            <skos:broader rdf:resource="http://example.com/RI#videojuegos"/>
         </skos:Concept>
     
     <skos:Concept rdf:about="http://example.com/RI#diseñopersonajes">
@@ -231,48 +231,47 @@
         <skos:prefLabel xml:lang="sp">diseño de personajes</skos:prefLabel>
         <skos:inScheme rdf:resource="http://example.com/RI"/>
         <skos:topConceptOf rdf:resource="http://example.com/RI"/>
-        <skos:narrower rdf:resource="http://example.com/RI#bots">
+        <skos:narrower rdf:resource="http://example.com/RI#bots"/>
     </skos:Concept>
         
          <skos:Concept rdf:about="http://example.com/RI#bots">
             <skos:prefLabel xml:lang="en">bots</skos:prefLabel>
             <skos:prefLabel xml:lang="sp">bots</skos:prefLabel>
             <skos:inScheme rdf:resource="http://example.com/RI"/>
-            <skos:broader rdf:resource="http://example.com/RI#diseñopersonajes">
+            <skos:broader rdf:resource="http://example.com/RI#diseñopersonajes"/>
         </skos:Concept>
    
     <!-- CONSULTA NUMERO 05-05 -->
-
 
     <skos:Concept rdf:about="http://example.com/RI#edadMedia">
         <skos:prefLabel xml:lang="en">Middle age</skos:prefLabel>
         <skos:prefLabel xml:lang="sp">Edad media</skos:prefLabel>
         <skos:inScheme rdf:resource="http://example.com/RI"/>
         <skos:topConceptOf rdf:resource="http://example.com/RI"/>
-        <skos:narrower rdf:resource="http://example.com/RI#medieval">
-        <skos:narrower rdf:resource="http://example.com/RI#feudal">
-        <skos:narrower rdf:resource="http://example.com/RI#romanica">
+        <skos:narrower rdf:resource="http://example.com/RI#medieval"/>
+        <skos:narrower rdf:resource="http://example.com/RI#feudal"/>
+        <skos:narrower rdf:resource="http://example.com/RI#romanica"/>
     </skos:Concept>
     
         <skos:Concept rdf:about="http://example.com/RI#feudal">
             <skos:prefLabel xml:lang="en">Feudal</skos:prefLabel>
             <skos:prefLabel xml:lang="sp">Feudal</skos:prefLabel>
             <skos:inScheme rdf:resource="http://example.com/RI"/>
-            <skos:broader rdf:resource="http://example.com/RI#edadMedia">
+            <skos:broader rdf:resource="http://example.com/RI#edadMedia"/>
         </skos:Concept>
         
         <skos:Concept rdf:about="http://example.com/RI#romanica">
             <skos:prefLabel xml:lang="sp">Romanica</skos:prefLabel>
             <skos:prefLabel xml:lang="en">Románica</skos:prefLabel>
             <skos:inScheme rdf:resource="http://example.com/RI"/>
-            <skos:broader rdf:resource="http://example.com/RI#edadMedia">
+            <skos:broader rdf:resource="http://example.com/RI#edadMedia"/>
         </skos:Concept>
         
         <skos:Concept rdf:about="http://example.com/RI#medieval">
             <skos:prefLabel xml:lang="sp">Medieval</skos:prefLabel>
             <skos:prefLabel xml:lang="en">Medieval</skos:prefLabel>
             <skos:inScheme rdf:resource="http://example.com/RI"/>
-            <skos:broader rdf:resource="http://example.com/RI#edadMedia">
+            <skos:broader rdf:resource="http://example.com/RI#edadMedia"/>
         </skos:Concept>
         
     <skos:Concept rdf:about="http://example.com/RI#Construccion">
@@ -280,7 +279,7 @@
         <skos:prefLabel xml:lang="sp">Construcion</skos:prefLabel>
         <skos:inScheme rdf:resource="http://example.com/RI"/>
         <skos:topConceptOf rdf:resource="http://example.com/RI"/>
-        <skos:narrower rdf:resource="http://example.com/RI#Edificio">
+        <skos:narrower rdf:resource="http://example.com/RI#Edificio"/>
     </skos:Concept>
     
          <skos:Concept rdf:about="http://example.com/RI#Edificio">
@@ -288,6 +287,6 @@
             <skos:prefLabel xml:lang="sp">Edificio</skos:prefLabel>
             <skos:altLabel xml:lang="sp">Edificios</skos:altLabel>
             <skos:inScheme rdf:resource="http://example.com/RI"/>
-            <skos:broader rdf:resource="http://example.com/RI#Construccion">
+            <skos:broader rdf:resource="http://example.com/RI#Construccion"/>
         </skos:Concept>
        
