@@ -28,6 +28,7 @@ import com.hp.hpl.jena.rdf.model.AnonId;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.util.iterator.Filter;
@@ -40,6 +41,7 @@ public class readDump {
 	private static Boolean finFile = false;
 	private String dumpPath;
 
+	private final static String DMREC="http://www.recInfo.org/dm/";
 	private static List<List<String>> title = new ArrayList<List<String>>();
 	private static List<List<String>> identifier = new ArrayList<List<String>>();
 	private static List<String> language = new ArrayList<String>();
@@ -73,6 +75,13 @@ public class readDump {
 
 		// String skos = "http://www.w3.org/2004/02/skos/core#";
 		model.setNsPrefix("foaf", FOAF.NS);
+		model.setNsPrefix("dmrec", DMREC);
+		
+        Property DMdate = model.createProperty("http://www.recInfo.org/dm/date");
+        Property DMcreator = model.createProperty("http://www.recInfo.org/dm/creator");
+        Property DMpublisher = model.createProperty("http://www.recInfo.org/dm/publisher");
+        Property DMname = model.createProperty("http://www.recInfo.org/dm/name");
+        Property DMkeyword = model.createProperty("http://www.recInfo.org/dm/keyword");
 
 		for (int i = 1; i < title.size(); i++) {
 			if (identifier.get(i) == null) {
@@ -97,11 +106,11 @@ public class readDump {
 			 */
 			Resource org = null;
 			List<Resource> l = model
-					.listResourcesWithProperty(FOAF.name, publi).toList();
+					.listResourcesWithProperty(DMname, publi).toList();
 
 			if (l.isEmpty()) {
-				org = model.createResource().addProperty(FOAF.name, publi)
-						.addProperty(RDF.type, FOAF.Organization);
+				org = model.createResource().addProperty(DMname, publi)
+						.addProperty(RDF.type, "dmrec:organization");
 			} else {
 				org = l.get(0);
 			}
@@ -111,22 +120,25 @@ public class readDump {
 			Resource doc = model
 					// Added URI identificator(0) = URL to Zaguan
 					.createResource(id.get(0)).addProperty(DC.title, tit)
-					.addProperty(DC.publisher, org).addProperty(DC.date, year)
+					.addProperty(DMpublisher, org).addProperty(DMdate, year)
 					.addProperty(DC.language, lang)
 					.addProperty(DC.description, desc);
 			// Identeificacion del segundo identificador
 			if (id.size() >= 2 && id.get(1) != null && !id.get(1).isEmpty()) {
 				String[] splitted = id.get(1).split("-");
 				if (splitted.length >= 3) {
-					String type = " ";
-					for (int x = 0; x <splitted.length-2;x++)
-						type += splitted[x]+" ";
+					String type = " "; 
+					if(splitted.length==3)
+						type=splitted[0];
+					else if (splitted.length==4)
+						type=splitted[1];
 					type.trim();
-					doc.addProperty(DC.type, type);
+					doc.addProperty(RDF.type, "dmrec:"+type);
 					doc.addProperty(DC.identifier, id.get(1));
 				} 
 					doc.addProperty(DC.identifier, id.get(1));
 			}
+			
 			if (id.size() >= 3) {
 				for (int j = 2; j < id.size(); j++) {
 					doc.addProperty(DC.identifier, id.get(j));
@@ -138,17 +150,17 @@ public class readDump {
 			 */
 			for (int j = 0; j < creat.size(); j++) {
 				Resource auth = null;
-				l = model.listResourcesWithProperty(VCARD.FN, creat.get(j))
+				l = model.listResourcesWithProperty(DMname, creat.get(j))
 						.toList();
 
 				if (l.isEmpty()) {
 					auth = model.createResource()
 							.addProperty(VCARD.FN, creat.get(j))
-							.addProperty(RDF.type, FOAF.Person);
+							.addProperty(RDF.type, "dmrec:person");
 				} else {
 					auth = l.get(0);
 				}
-				doc.addProperty(DC.creator, auth);
+				doc.addProperty(DMcreator, auth);
 
 			}
 
