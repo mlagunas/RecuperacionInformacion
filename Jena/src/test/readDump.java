@@ -52,14 +52,6 @@ public class readDump {
 
 	public static void main(String args[]) {
 		new readDump("dump");
-		System.out.println(title.size());
-		System.out.println(language.size());
-		System.out.println(date.size());
-		System.out.println(publisher.size());
-		System.out.println(creator.size());
-		System.out.println(identifier.size());
-		System.out.println(description.size());
-
 		Model model = createRDF();
 		try {
 			model.write(new OutputStreamWriter(new FileOutputStream(new File(
@@ -73,9 +65,8 @@ public class readDump {
 	public static Model createRDF() {
 		Model model = ModelFactory.createDefaultModel();
 
-		// String skos = "http://www.w3.org/2004/02/skos/core#";
-		model.setNsPrefix("foaf", FOAF.NS);
 		model.setNsPrefix("dmrec", DMREC);
+		model.setNsPrefix("skos", SKOS.uri);
 		
         Property DMdate = model.createProperty("http://www.recInfo.org/dm/date");
         Property DMcreator = model.createProperty("http://www.recInfo.org/dm/creator");
@@ -155,7 +146,7 @@ public class readDump {
 
 				if (l.isEmpty()) {
 					auth = model.createResource()
-							.addProperty(VCARD.FN, creat.get(j))
+							.addProperty(DMname, creat.get(j))
 							.addProperty(RDF.type, "dmrec:person");
 				} else {
 					auth = l.get(0);
