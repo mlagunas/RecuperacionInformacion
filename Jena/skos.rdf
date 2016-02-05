@@ -162,6 +162,7 @@
         <skos:inScheme rdf:resource="http://example.com/RI"/>
         <skos:broader rdf:resource="http://example.com/RI#energias_renovables">
     </skos:Concept>
+    
     <skos:Concept rdf:about="http://example.com/RI#energia">
         <skos:prefLabel xml:lang="en">energy</skos:prefLabel>
         <skos:prefLabel xml:lang="sp">energÃ­a</skos:prefLabel>
