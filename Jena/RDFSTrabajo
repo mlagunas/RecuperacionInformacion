@@ -21,18 +21,6 @@ dcterms:identifier
     rdfs:label "Identifier"@en ;
     rdfs:range rdfs:Literal ;
     rdfs:subPropertyOf <http://purl.org/dc/elements/1.1/identifier> .
-     
-dcterms:date
-    dcterms:description "Date may be used to express temporal information at any level of granularity.  Recommended best practice is to use an encoding scheme, such as the W3CDTF profile of ISO 8601 [W3CDTF]."@en ;
-    dcterms:hasVersion <http://dublincore.org/usage/terms/history/#dateT-001> ;
-    dcterms:issued "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
-    dcterms:modified "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
-    a rdf:Property ;
-    rdfs:comment "A point or period of time associated with an event in the lifecycle of the resource."@en ;
-    rdfs:isDefinedBy <http://purl.org/dc/terms/> ;
-    rdfs:label "Date"@en ;
-    rdfs:range rdfs:Literal ;
-    rdfs:subPropertyOf <http://purl.org/dc/elements/1.1/date> .
     
 dcterms:title
     dcterms:hasVersion <http://dublincore.org/usage/terms/history/#titleT-002> ;
@@ -67,6 +55,16 @@ dcterms:language
     rdfs:label "Language"@en ;
     rdfs:range dcterms:LinguisticSystem ;
     rdfs:subPropertyOf <http://purl.org/dc/elements/1.1/language> .
+    
+dmrec:date
+    dcterms:description "Date may be used to express temporal information."@en ;
+    dcterms:issued "2016-02-04"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:issued "2016-02-04"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdf:Property ;
+    rdfs:comment "A point or period of time associated with an event in the lifecycle of the resource."@en ;
+    rdfs:isDefinedBy <http://www.recInfo.org/dm/> ;
+    rdfs:label "Date"@en ;
+    rdfs:range xsd:date .
     
 dmrec:document
     dcterms:description "Documents of Zaguan repository"@en ;
@@ -128,6 +126,17 @@ dmrec:creator
     rdfs:label "Creator"@en ;
     rdfs:domain dmrec:document;
     rdfs:range dmrec:person .
+   
+dmrec:name
+    dcterms:description "Name."@en ;
+    dcterms:issued "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdf:Property ;
+    rdfs:comment "String that represents the name of an agent."@en ;
+    rdfs:isDefinedBy <http://www.recInfo.org/dm/> ;
+    rdfs:label "Name"@en ;
+    rdfs:domain foaf:Agent;
+    rdfs:range rdfs:Literal .
     
 dmrec:person
 	dcterms:description "The Person class represents people. Something is a Person if it is a person."@en ;
@@ -170,10 +179,3 @@ dmrec:keyword
     rdfs:label "Keyword"@en ;
     rdfs:domain dmrec:document;
     rdfs:range skos:Concept .
-    
-
-    
-    
-    
-    
-    
