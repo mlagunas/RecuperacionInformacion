@@ -107,26 +107,26 @@
         <skos:narrower rdf:resource="http://example.com/RI#ejercito">
     </skos:Concept>
 
-    <skos:Concept rdf:about="http://example.com/RI#guerraCarlista">
-        <skos:prefLabel xml:lang="en">1808-1814</skos:prefLabel>
-        <skos:prefLabel xml:lang="sp">1808-1814</skos:prefLabel>
-        <skos:inScheme rdf:resource="http://example.com/RI"/>
-        <skos:broader rdf:resource="http://example.com/RI#guerraIndependencia">
-    </skos:Concept>
+        <skos:Concept rdf:about="http://example.com/RI#guerraCarlista">
+            <skos:prefLabel xml:lang="en">1808-1814</skos:prefLabel>
+            <skos:prefLabel xml:lang="sp">1808-1814</skos:prefLabel>
+            <skos:inScheme rdf:resource="http://example.com/RI"/>
+            <skos:broader rdf:resource="http://example.com/RI#guerraIndependencia">
+        </skos:Concept>
 
-    <skos:Concept rdf:about="http://example.com/RI#independanceDate">
-        <skos:prefLabel xml:lang="en">Carlista war</skos:prefLabel>
-        <skos:prefLabel xml:lang="sp">Guerra Carlista</skos:prefLabel>
-        <skos:inScheme rdf:resource="http://example.com/RI"/>
-        <skos:broader rdf:resource="http://example.com/RI#guerraIndependencia">
-    </skos:Concept>
+        <skos:Concept rdf:about="http://example.com/RI#independanceDate">
+            <skos:prefLabel xml:lang="en">Carlista war</skos:prefLabel>
+            <skos:prefLabel xml:lang="sp">Guerra Carlista</skos:prefLabel>
+            <skos:inScheme rdf:resource="http://example.com/RI"/>
+            <skos:broader rdf:resource="http://example.com/RI#guerraIndependencia">
+        </skos:Concept>
 
-    <skos:Concept rdf:about="http://example.com/RI#ejercito">
-        <skos:prefLabel xml:lang="en">army</skos:prefLabel>
-        <skos:prefLabel xml:lang="sp">ejercito</skos:prefLabel>
-        <skos:inScheme rdf:resource="http://example.com/RI"/>
-        <skos:broader rdf:resource="http://example.com/RI#guerraIndependencia">
-    </skos:Concept>
+        <skos:Concept rdf:about="http://example.com/RI#ejercito">
+            <skos:prefLabel xml:lang="en">army</skos:prefLabel>
+            <skos:prefLabel xml:lang="sp">ejercito</skos:prefLabel>
+            <skos:inScheme rdf:resource="http://example.com/RI"/>
+            <skos:broader rdf:resource="http://example.com/RI#guerraIndependencia">
+        </skos:Concept>
 
     <!-- CONSULTA NUMERO 09-3 -->
 
