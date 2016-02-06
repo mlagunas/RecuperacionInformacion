@@ -45,7 +45,6 @@ public class readDump {
 	private static Boolean finFile = false;
 	private String dumpPath;
 
-	private final static String DMREC = "http://www.recInfo.org/dm/";
 	private static List<List<String>> title = new ArrayList<List<String>>();
 	private static List<List<String>> identifier = new ArrayList<List<String>>();
 	private static List<String> language = new ArrayList<String>();
@@ -53,15 +52,16 @@ public class readDump {
 	private static List<List<String>> creator = new ArrayList<List<String>>();
 	private static List<String> publisher = new ArrayList<String>();
 	private static List<String> date = new ArrayList<String>();
-
-	public static void main(String args[]) {
+	private static List<String> conceptos = new ArrayList<String>();
+	private static int iter=0;
+	
+	public static void main(String args[]) throws FileNotFoundException {
 		new readDump("dump");
-		Model model = createRDF();
 		try {
-			Model m = readXml(new File("skos.rdf"));
-			m.write(System.out);
+			Model m = readXml(new File("skos.rdf"));			
+			Model model = createRDF(m);
+			model.write(new FileOutputStream(new File("trabajo_rdf.rdf")));
 		} catch (ParserConfigurationException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -81,18 +81,11 @@ public class readDump {
 		 */
 	}
 
-	public static Model createRDF() {
+	public static Model createRDF(Model skos) {
 		Model model = ModelFactory.createDefaultModel();
 
-		model.setNsPrefix("dmrec", DMREC);
+		model.setNsPrefix("dmrec", DMREC.uri);
 		model.setNsPrefix("skos", SKOS.uri);
-		
-        Property DMdate = model.createProperty("http://www.recInfo.org/dm/date");
-        Property DMcreator = model.createProperty("http://www.recInfo.org/dm/creator");
-        Property DMpublisher = model.createProperty("http://www.recInfo.org/dm/publisher");
-        Property DMname = model.createProperty("http://www.recInfo.org/dm/name");
-        Property DMkeyword = model.createProperty("http://www.recInfo.org/dm/keyword");
-
 
 		for (int i = 1; i < title.size(); i++) {
 			if (identifier.get(i) == null) {
@@ -116,11 +109,11 @@ public class readDump {
 			 * ORGANIZATION ADDED TO RDF SCHEME
 			 */
 			Resource org = null;
-			List<Resource> l = model.listResourcesWithProperty(DMname, publi)
+			List<Resource> l = model.listResourcesWithProperty(DMREC.DMname, publi)
 					.toList();
 
 			if (l.isEmpty()) {
-				org = model.createResource().addProperty(DMname, publi)
+				org = model.createResource().addProperty(DMREC.DMname, publi)
 						.addProperty(RDF.type, "dmrec:organization");
 			} else {
 				org = l.get(0);
@@ -131,7 +124,7 @@ public class readDump {
 			Resource doc = model
 					// Added URI identificator(0) = URL to Zaguan
 					.createResource(id.get(0)).addProperty(DC.title, tit)
-					.addProperty(DMpublisher, org).addProperty(DMdate, year)
+					.addProperty(DMREC.DMpublisher, org).addProperty(DMREC.DMdate, year)
 					.addProperty(DC.language, lang)
 					.addProperty(DC.description, desc);
 			// Identeificacion del segundo identificador
@@ -161,22 +154,39 @@ public class readDump {
 			 */
 			for (int j = 0; j < creat.size(); j++) {
 				Resource auth = null;
-				l = model.listResourcesWithProperty(DMname, creat.get(j))
+				l = model.listResourcesWithProperty(DMREC.DMname, creat.get(j))
 						.toList();
 
 				if (l.isEmpty()) {
 					auth = model.createResource()
-							.addProperty(DMname, creat.get(j))
+							.addProperty(DMREC.DMname, creat.get(j))
 							.addProperty(RDF.type, "dmrec:person");
 				} else {
 					auth = l.get(0);
 				}
-				doc.addProperty(DMcreator, auth);
-
+				doc.addProperty(DMREC.DMcreator, auth);
 			}
+			
+			/*
+			 * Busca si el documento tiene palabras clave y se asocia a su correspondiente concepto de skos
+			 */
+			for(String s:conceptos){
+				if(desc.toLowerCase().contains(s.toLowerCase()) || tit.toLowerCase().contains(s.toLowerCase())){
+					l = skos.listResourcesWithProperty(SKOS.prefLabel,s+"@sp")
+							.toList();
+					if (!l.isEmpty()) {
+						Resource key=l.get(0);
+						doc.addProperty(DMREC.DMkeyword, key);
+						System.out.println(tit +"\nCointains--> "+s);
+						iter++;
+
+					}
+				}
+			}
+			
 
 		}
-
+		System.out.println(iter);
 		return model;
 
 	}
@@ -391,22 +401,32 @@ public class readDump {
 				NodeList prefLabel = eElement
 						.getElementsByTagName("skos:prefLabel");
 				for (int x = 0, size = prefLabel.getLength(); x < size; x++) {
-					String label = prefLabel.item(x).getTextContent()
+					String lang =prefLabel.item(x).getAttributes()
+					.getNamedItem("xml:lang").getNodeValue();
+					String textLab= prefLabel.item(x).getTextContent();
+					String label = textLab
 							+ "@"
-							+ prefLabel.item(x).getAttributes()
-									.getNamedItem("xml:lang").getNodeValue();
+							+ lang;
 					concept.addProperty(SKOS.prefLabel, label);
+					if(lang.equalsIgnoreCase("sp")){
+						conceptos.add(textLab);
+					}
 				}
 				
 				//Obtenemos las altLabel
 				NodeList altLabel = eElement
 						.getElementsByTagName("skos:altLabel");
 				for (int x = 0, size = altLabel.getLength(); x < size; x++) {
-					String label = altLabel.item(x).getTextContent()
+					String lang=altLabel.item(x).getAttributes()
+					.getNamedItem("xml:lang").getNodeValue();
+					String textLab=altLabel.item(x).getTextContent();
+					String label = textLab
 							+ "@"
-							+ altLabel.item(x).getAttributes()
-									.getNamedItem("xml:lang").getNodeValue();
+							+ lang;
 					concept.addProperty(SKOS.altLabel, label);
+//					if(lang.equalsIgnoreCase("sp")){
+//						conceptos.add(textLab);
+//					}
 				}
 
 				//Obtenemos inScheme
