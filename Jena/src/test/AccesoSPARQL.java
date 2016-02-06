@@ -164,8 +164,11 @@ public class AccesoSPARQL {
 		 queryString = "PREFIX dmrec: <http://www.recInfo.org/dm/>"
 			 		+ " SELECT ?doc WHERE { "
 			 		+ "?doc rdf:type dmrec:documento"
+			 		+ "?skosQ1 skos:prefLabel ?prefLabel.FILTER regex(?prefLabel,'Guerra de la Independencia')"
+			 		+ "?skosQ1 skos:narrower+/skos:prefLabel ?labels1"
 			 		+ "?doc dmrec:keyword ?key"
-			 		+ "?key skos:prefLabel ?label.FILTER regex(?label,'Guerra de Independencia')"
+			 		+ "?keyword skos:prefLabel ?keyLabel"
+			 		+ "FILTER regex(lcase(str(?keyLabel)) = lcase(str(?labels1)))"
 			 		+ "}";
 		 
 		 queryString = "PREFIX dmrec: <http://www.recInfo.org/dm/>"
