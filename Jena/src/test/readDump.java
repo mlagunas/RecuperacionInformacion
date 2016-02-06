@@ -18,10 +18,14 @@ import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.rdf.model.Literal;
@@ -49,23 +53,27 @@ public class readDump {
 	private static List<String> date = new ArrayList<String>();
 
 	public static void main(String args[]) {
-		new readDump("dump");
-		System.out.println(title.size());
-		System.out.println(language.size());
-		System.out.println(date.size());
-		System.out.println(publisher.size());
-		System.out.println(creator.size());
-		System.out.println(identifier.size());
-		System.out.println(description.size());
-
-		Model model = createRDF();
 		try {
-			model.write(new OutputStreamWriter(new FileOutputStream(new File(
-					"trabajo_docs.rdf")), "UTF-8"));
-		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			readXml(new File("skos.rdf"));
+		} catch (ParserConfigurationException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
+
+		/*
+		 * new readDump("dump"); System.out.println(title.size());
+		 * System.out.println(language.size()); System.out.println(date.size());
+		 * System.out.println(publisher.size());
+		 * System.out.println(creator.size());
+		 * System.out.println(identifier.size());
+		 * System.out.println(description.size());
+		 * 
+		 * Model model = createRDF(); try { model.write(new
+		 * OutputStreamWriter(new FileOutputStream(new File(
+		 * "trabajo_docs.rdf")), "UTF-8")); } catch (FileNotFoundException |
+		 * UnsupportedEncodingException e) { // TODO Auto-generated catch block
+		 * e.printStackTrace(); }
+		 */
 	}
 
 	public static Model createRDF() {
@@ -237,6 +245,7 @@ public class readDump {
 							result += line;
 						} else
 							break;
+
 					} else
 						result += line;
 				}
@@ -246,6 +255,7 @@ public class readDump {
 		}
 		if (br.readLine() == null)
 			finFile = true;
+
 		return result;
 	}
 
@@ -334,4 +344,98 @@ public class readDump {
 			return false;
 		}
 	}
+
+	public static void readXml(File fXmlFile)
+			throws ParserConfigurationException {
+
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = null;
+		try {
+			doc = dBuilder.parse(fXmlFile);
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		doc.getDocumentElement().normalize();
+
+		System.out.println("Root element:: "
+				+ doc.getDocumentElement().getNodeName());
+
+		NodeList nList = doc.getElementsByTagName("skos:concept");
+
+		System.out.println("----------------------------");
+
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+
+			Node nNode = nList.item(temp);
+
+			//CONCEPT
+			System.out.println("\n"
+					+ nNode.getNodeName() + " :: "
+					+ nNode.getAttributes().getNamedItem("rdf:about")
+							.getNodeValue());
+
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+				Element eElement = (Element) nNode;
+
+				NodeList prefLabel = eElement
+						.getElementsByTagName("skos:prefLabel");
+				for (int x = 0, size = prefLabel.getLength(); x < size; x++) {
+					System.out.println("prefLabel:: "
+							+ prefLabel.item(x).getTextContent()
+							+ "@"
+							+ prefLabel.item(x).getAttributes()
+									.getNamedItem("xml:lang").getNodeValue());
+				}
+
+				NodeList altLabel = eElement
+						.getElementsByTagName("skos:altLabel");
+				if (altLabel != null && altLabel.item(0) != null)
+
+					for (int x = 0, size = altLabel.getLength(); x < size; x++) {
+						System.out.println("altLabel:: "
+								+ altLabel.item(x).getTextContent()
+								+ "@"
+								+ altLabel.item(x).getAttributes()
+										.getNamedItem("xml:lang")
+										.getNodeValue());
+					}
+
+				NodeList inScheme = eElement
+						.getElementsByTagName("skos:inScheme");
+				for (int x = 0, size = inScheme.getLength(); x < size; x++) {
+					System.out.println("inScheme:: "
+							+ inScheme.item(x).getAttributes()
+									.getNamedItem("rdf:resource")
+									.getNodeValue());
+				}
+
+				NodeList topConceptOf = eElement
+						.getElementsByTagName("skos:topConceptOf");
+				for (int x = 0, size = topConceptOf.getLength(); x < size; x++) {
+					System.out.println("topConceptOf:: "
+							+ topConceptOf.item(x).getAttributes()
+									.getNamedItem("rdf:resource")
+									.getNodeValue());
+				}
+
+				NodeList narrower = eElement
+						.getElementsByTagName("skos:narrower");
+				for (int x = 0, size = narrower.getLength(); x < size; x++) {
+					System.out.println("Narrower:: "
+							+ narrower.item(x).getAttributes()
+									.getNamedItem("rdf:resource")
+									.getNodeValue());
+				}
+
+			}
+		}
+	}
+
 }
