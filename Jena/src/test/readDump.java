@@ -54,7 +54,8 @@ public class readDump {
 
 	public static void main(String args[]) {
 		try {
-			readXml(new File("skos.rdf"));
+			Model m = readXml(new File("skos.rdf"));
+			m.write(System.out);
 		} catch (ParserConfigurationException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -345,7 +346,7 @@ public class readDump {
 		}
 	}
 
-	public static void readXml(File fXmlFile)
+	public static Model readXml(File fXmlFile)
 			throws ParserConfigurationException {
 
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -368,74 +369,75 @@ public class readDump {
 
 		NodeList nList = doc.getElementsByTagName("skos:concept");
 
-		System.out.println("----------------------------");
+		// Cracion del Modelo de SKOS
+		Model m = ModelFactory.createDefaultModel();
+		m.setNsPrefix("SKOS", SKOS.uri);
 
 		for (int temp = 0; temp < nList.getLength(); temp++) {
 
 			Node nNode = nList.item(temp);
-
-			//CONCEPT
-			System.out.println("\n"
-					+ nNode.getNodeName() + " :: "
-					+ nNode.getAttributes().getNamedItem("rdf:about")
-							.getNodeValue());
+			// Obtenemos URI del concept a añadir al modelo
+			String conceptURI = nNode.getAttributes().getNamedItem("rdf:about")
+					.getNodeValue();
+			System.out
+					.println("\n" + nNode.getNodeName() + " :: " + conceptURI);
+			Resource concept = m.createResource(conceptURI);
 
 			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
+				// Iteramos por los elementos que incluyen a concept
 				Element eElement = (Element) nNode;
-
+				
+				//Obtenemos las prefLabel
 				NodeList prefLabel = eElement
 						.getElementsByTagName("skos:prefLabel");
 				for (int x = 0, size = prefLabel.getLength(); x < size; x++) {
-					System.out.println("prefLabel:: "
-							+ prefLabel.item(x).getTextContent()
+					String label = prefLabel.item(x).getTextContent()
 							+ "@"
 							+ prefLabel.item(x).getAttributes()
-									.getNamedItem("xml:lang").getNodeValue());
+									.getNamedItem("xml:lang").getNodeValue();
+					concept.addProperty(SKOS.prefLabel, label);
 				}
-
+				
+				//Obtenemos las altLabel
 				NodeList altLabel = eElement
 						.getElementsByTagName("skos:altLabel");
-				if (altLabel != null && altLabel.item(0) != null)
+				for (int x = 0, size = altLabel.getLength(); x < size; x++) {
+					String label = altLabel.item(x).getTextContent()
+							+ "@"
+							+ altLabel.item(x).getAttributes()
+									.getNamedItem("xml:lang").getNodeValue();
+					concept.addProperty(SKOS.altLabel, label);
+				}
 
-					for (int x = 0, size = altLabel.getLength(); x < size; x++) {
-						System.out.println("altLabel:: "
-								+ altLabel.item(x).getTextContent()
-								+ "@"
-								+ altLabel.item(x).getAttributes()
-										.getNamedItem("xml:lang")
-										.getNodeValue());
-					}
-
+				//Obtenemos inScheme
 				NodeList inScheme = eElement
 						.getElementsByTagName("skos:inScheme");
 				for (int x = 0, size = inScheme.getLength(); x < size; x++) {
-					System.out.println("inScheme:: "
-							+ inScheme.item(x).getAttributes()
-									.getNamedItem("rdf:resource")
-									.getNodeValue());
+					String scheme = inScheme.item(x).getAttributes()
+							.getNamedItem("rdf:resource").getNodeValue();
+					concept.addProperty(SKOS.inScheme, scheme);
 				}
 
+				// Obtenemos topConceptOF
 				NodeList topConceptOf = eElement
 						.getElementsByTagName("skos:topConceptOf");
 				for (int x = 0, size = topConceptOf.getLength(); x < size; x++) {
-					System.out.println("topConceptOf:: "
-							+ topConceptOf.item(x).getAttributes()
-									.getNamedItem("rdf:resource")
-									.getNodeValue());
+					String topC = topConceptOf.item(x).getAttributes()
+							.getNamedItem("rdf:resource").getNodeValue();
+					concept.addProperty(SKOS.topConceptOf, topC);
 				}
 
+				// Obtenemos los narrower
 				NodeList narrower = eElement
 						.getElementsByTagName("skos:narrower");
 				for (int x = 0, size = narrower.getLength(); x < size; x++) {
-					System.out.println("Narrower:: "
-							+ narrower.item(x).getAttributes()
-									.getNamedItem("rdf:resource")
-									.getNodeValue());
+					String narr = narrower.item(x).getAttributes()
+							.getNamedItem("rdf:resource").getNodeValue();
+					concept.addProperty(SKOS.narrower, narr);
 				}
 
 			}
 		}
+		return m;
 	}
-
 }

@@ -24,7 +24,7 @@ public class SKOS {
 	/**
 	 * The namespace of the SKOS vocabulary
 	 */
-	public static final Resource NAMESPACE = m.createResource( uri );
+	public static final Resource NAMESPACE = m.createResource(uri);
 	
 	/* ##########################################################
 	 * Defines SKOS Classes
