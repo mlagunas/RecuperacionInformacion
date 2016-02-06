@@ -18,10 +18,14 @@ import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.rdf.model.AnonId;
@@ -41,7 +45,7 @@ public class readDump {
 	private static Boolean finFile = false;
 	private String dumpPath;
 
-	private final static String DMREC="http://www.recInfo.org/dm/";
+	private final static String DMREC = "http://www.recInfo.org/dm/";
 	private static List<List<String>> title = new ArrayList<List<String>>();
 	private static List<List<String>> identifier = new ArrayList<List<String>>();
 	private static List<String> language = new ArrayList<String>();
@@ -54,12 +58,27 @@ public class readDump {
 		new readDump("dump");
 		Model model = createRDF();
 		try {
-			model.write(new OutputStreamWriter(new FileOutputStream(new File(
-					"trabajo_docs.rdf")), "UTF-8"));
-		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			Model m = readXml(new File("skos.rdf"));
+			m.write(System.out);
+		} catch (ParserConfigurationException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
+
+		/*
+		 * new readDump("dump"); System.out.println(title.size());
+		 * System.out.println(language.size()); System.out.println(date.size());
+		 * System.out.println(publisher.size());
+		 * System.out.println(creator.size());
+		 * System.out.println(identifier.size());
+		 * System.out.println(description.size());
+		 * 
+		 * Model model = createRDF(); try { model.write(new
+		 * OutputStreamWriter(new FileOutputStream(new File(
+		 * "trabajo_docs.rdf")), "UTF-8")); } catch (FileNotFoundException |
+		 * UnsupportedEncodingException e) { // TODO Auto-generated catch block
+		 * e.printStackTrace(); }
+		 */
 	}
 
 	public static Model createRDF() {
@@ -73,6 +92,7 @@ public class readDump {
         Property DMpublisher = model.createProperty("http://www.recInfo.org/dm/publisher");
         Property DMname = model.createProperty("http://www.recInfo.org/dm/name");
         Property DMkeyword = model.createProperty("http://www.recInfo.org/dm/keyword");
+
 
 		for (int i = 1; i < title.size(); i++) {
 			if (identifier.get(i) == null) {
@@ -96,8 +116,8 @@ public class readDump {
 			 * ORGANIZATION ADDED TO RDF SCHEME
 			 */
 			Resource org = null;
-			List<Resource> l = model
-					.listResourcesWithProperty(DMname, publi).toList();
+			List<Resource> l = model.listResourcesWithProperty(DMname, publi)
+					.toList();
 
 			if (l.isEmpty()) {
 				org = model.createResource().addProperty(DMname, publi)
@@ -118,18 +138,18 @@ public class readDump {
 			if (id.size() >= 2 && id.get(1) != null && !id.get(1).isEmpty()) {
 				String[] splitted = id.get(1).split("-");
 				if (splitted.length >= 3) {
-					String type = " "; 
-					if(splitted.length==3)
-						type=splitted[0];
-					else if (splitted.length==4)
-						type=splitted[1];
+					String type = " ";
+					if (splitted.length == 3)
+						type = splitted[0];
+					else if (splitted.length == 4)
+						type = splitted[1];
 					type.trim();
-					doc.addProperty(RDF.type, "dmrec:"+type);
+					doc.addProperty(RDF.type, "dmrec:" + type);
 					doc.addProperty(DC.identifier, id.get(1));
-				} 
-					doc.addProperty(DC.identifier, id.get(1));
+				}
+				doc.addProperty(DC.identifier, id.get(1));
 			}
-			
+
 			if (id.size() >= 3) {
 				for (int j = 2; j < id.size(); j++) {
 					doc.addProperty(DC.identifier, id.get(j));
@@ -324,5 +344,100 @@ public class readDump {
 			ex.printStackTrace();
 			return false;
 		}
+	}
+
+	public static Model readXml(File fXmlFile)
+			throws ParserConfigurationException {
+
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = null;
+		try {
+			doc = dBuilder.parse(fXmlFile);
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		doc.getDocumentElement().normalize();
+
+		System.out.println("Root element:: "
+				+ doc.getDocumentElement().getNodeName());
+
+		NodeList nList = doc.getElementsByTagName("skos:concept");
+
+		// Cracion del Modelo de SKOS
+		Model m = ModelFactory.createDefaultModel();
+		m.setNsPrefix("SKOS", SKOS.uri);
+
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+
+			Node nNode = nList.item(temp);
+			// Obtenemos URI del concept a a�adir al modelo
+			String conceptURI = nNode.getAttributes().getNamedItem("rdf:about")
+					.getNodeValue();
+			System.out
+					.println("\n" + nNode.getNodeName() + " :: " + conceptURI);
+			Resource concept = m.createResource(conceptURI);
+
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+				// Iteramos por los elementos que incluyen a concept
+				Element eElement = (Element) nNode;
+				
+				//Obtenemos las prefLabel
+				NodeList prefLabel = eElement
+						.getElementsByTagName("skos:prefLabel");
+				for (int x = 0, size = prefLabel.getLength(); x < size; x++) {
+					String label = prefLabel.item(x).getTextContent()
+							+ "@"
+							+ prefLabel.item(x).getAttributes()
+									.getNamedItem("xml:lang").getNodeValue();
+					concept.addProperty(SKOS.prefLabel, label);
+				}
+				
+				//Obtenemos las altLabel
+				NodeList altLabel = eElement
+						.getElementsByTagName("skos:altLabel");
+				for (int x = 0, size = altLabel.getLength(); x < size; x++) {
+					String label = altLabel.item(x).getTextContent()
+							+ "@"
+							+ altLabel.item(x).getAttributes()
+									.getNamedItem("xml:lang").getNodeValue();
+					concept.addProperty(SKOS.altLabel, label);
+				}
+
+				//Obtenemos inScheme
+				NodeList inScheme = eElement
+						.getElementsByTagName("skos:inScheme");
+				for (int x = 0, size = inScheme.getLength(); x < size; x++) {
+					String scheme = inScheme.item(x).getAttributes()
+							.getNamedItem("rdf:resource").getNodeValue();
+					concept.addProperty(SKOS.inScheme, scheme);
+				}
+
+				// Obtenemos topConceptOF
+				NodeList topConceptOf = eElement
+						.getElementsByTagName("skos:topConceptOf");
+				for (int x = 0, size = topConceptOf.getLength(); x < size; x++) {
+					String topC = topConceptOf.item(x).getAttributes()
+							.getNamedItem("rdf:resource").getNodeValue();
+					concept.addProperty(SKOS.topConceptOf, topC);
+				}
+
+				// Obtenemos los narrower
+				NodeList narrower = eElement
+						.getElementsByTagName("skos:narrower");
+				for (int x = 0, size = narrower.getLength(); x < size; x++) {
+					String narr = narrower.item(x).getAttributes()
+							.getNamedItem("rdf:resource").getNodeValue();
+					concept.addProperty(SKOS.narrower, narr);
+				}
+
+			}
+		}
+		return m;
 	}
 }

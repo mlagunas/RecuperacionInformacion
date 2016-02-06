@@ -24,10 +24,10 @@ public class DMREC {
 		return uri;
 	}
 
-	public static final Property DMdate = m.createProperty("http://www.recInfo.org/dm/date");
-	public static final Property DMcreator = m.createProperty("http://www.recInfo.org/dm/creator");
-	public static final Property DMpublisher = m.createProperty("http://www.recInfo.org/dm/publisher");
-	public static final Property DMname = m.createProperty("http://www.recInfo.org/dm/name");
-	public static final Property DMkeyword = m.createProperty("http://www.recInfo.org/dm/keyword");
+	public static final Property DMdate = m.createProperty(uri + "date");
+	public static final Property DMcreator = m.createProperty(uri + "creator");
+	public static final Property DMpublisher = m.createProperty(uri + "publisher");
+	public static final Property DMname = m.createProperty(uri + "name");
+	public static final Property DMkeyword = m.createProperty(uri + "keyword");
 
 }

@@ -173,7 +173,7 @@ public class AccesoSPARQL {
 			 		+ "?doc rdf:type dmrec:documento"
 			 		+ "?skosQ1 skos:prefLabel ?prefLabel.FILTER regex(?prefLabel,'Edad Media')"
 			 		+ "?skosQ1 skos:narrower+/skos:prefLabel ?labels1"
-			 		+ "?skosQ2 skos:prefLabel ?prefLabel.FILTER regex(?prefLabel,'construcciones')"
+			 		+ "?skosQ2 skos:prefLabel ?prefLabel.FILTER regex(?prefLabel,'construccion')"
 			 		+ "?skosQ2 skos:narrower+/skos:prefLabel ?labels2"
 			 		+ "?doc dmrec:keyword ?keyword"
 			 		+ "?keyword skos:prefLabel ?keyLabel"
