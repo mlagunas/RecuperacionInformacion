@@ -4,7 +4,7 @@
         <skos:prefLabel xml:lang="en">music</skos:prefLabel>
         <skos:prefLabel xml:lang="sp">musica</skos:prefLabel>
         <skos:inScheme rdf:resource="http://example.com/RI"/>
-        <skos:topconceptOf rdf:resource="http://example.com/RI"/>
+        <skos:topConceptOf rdf:resource="http://example.com/RI"/>
         <skos:narrower rdf:resource="http://example.com/RI#rock"/>
         <skos:narrower rdf:resource="http://example.com/RI#musical"/>
         <skos:narrower rdf:resource="http://example.com/RI#acustico"/>
@@ -63,7 +63,7 @@
         <skos:prefLabel xml:lang="sp">sonido</skos:prefLabel>
         <skos:altLabel xml:lang="en">audio</skos:altLabel>
         <skos:inScheme rdf:resource="http://example.com/RI"/>
-        <skos:topconceptOf rdf:resource="http://example.com/RI"/>
+        <skos:topConceptOf rdf:resource="http://example.com/RI"/>
         <skos:narrower rdf:resource="http://example.com/RI#ruido"/>
         <skos:narrower rdf:resource="http://example.com/RI#audio"/>
         <skos:narrower rdf:resource="http://example.com/RI#auriculares"/>
@@ -98,7 +98,7 @@
         <skos:prefLabel xml:lang="en">Independance war</skos:prefLabel>
         <skos:prefLabel xml:lang="sp">Guerra de la independencia</skos:prefLabel>
         <skos:inScheme rdf:resource="http://example.com/RI"/>
-        <skos:topconceptOf rdf:resource="http://example.com/RI"/>
+        <skos:topConceptOf rdf:resource="http://example.com/RI"/>
         <skos:narrower rdf:resource="http://example.com/RI#guerraCarlista"/>
         <skos:narrower rdf:resource="http://example.com/RI#independanceDate"/>
         <skos:narrower rdf:resource="http://example.com/RI#ejercito"/>
@@ -131,7 +131,7 @@
         <skos:prefLabel xml:lang="en">renewable energy</skos:prefLabel>
         <skos:prefLabel xml:lang="sp">energÃ­as renovables</skos:prefLabel>
         <skos:inScheme rdf:resource="http://example.com/RI"/>
-        <skos:topconceptOf rdf:resource="http://example.com/RI"/>
+        <skos:topConceptOf rdf:resource="http://example.com/RI"/>
         <skos:broader rdf:resource="http://example.com/RI#energias_renovables"/>
         <skos:narrower rdf:resource="http://example.com/RI#energia"/>
         <skos:narrower rdf:resource="http://example.com/RI#renovables"/>
@@ -197,7 +197,7 @@
         <skos:prefLabel xml:lang="en">videogames</skos:prefLabel>
         <skos:prefLabel xml:lang="sp">videojuegos</skos:prefLabel>
         <skos:inScheme rdf:resource="http://example.com/RI"/>
-        <skos:topconceptOf rdf:resource="http://example.com/RI"/>
+        <skos:topConceptOf rdf:resource="http://example.com/RI"/>
         <skos:narrower rdf:resource="http://example.com/RI#unity"/>
         <skos:narrower rdf:resource="http://example.com/RI#motorgrafico"/>
     </skos:concept>
@@ -227,7 +227,7 @@
         <skos:prefLabel xml:lang="en">characters design</skos:prefLabel>
         <skos:prefLabel xml:lang="sp">diseño de personajes</skos:prefLabel>
         <skos:inScheme rdf:resource="http://example.com/RI"/>
-        <skos:topconceptOf rdf:resource="http://example.com/RI"/>
+        <skos:topConceptOf rdf:resource="http://example.com/RI"/>
         <skos:narrower rdf:resource="http://example.com/RI#bots"/>
     </skos:concept>
         
@@ -244,7 +244,7 @@
         <skos:prefLabel xml:lang="en">Middle age</skos:prefLabel>
         <skos:prefLabel xml:lang="sp">Edad media</skos:prefLabel>
         <skos:inScheme rdf:resource="http://example.com/RI"/>
-        <skos:topconceptOf rdf:resource="http://example.com/RI"/>
+        <skos:topConceptOf rdf:resource="http://example.com/RI"/>
         <skos:narrower rdf:resource="http://example.com/RI#medieval"/>
         <skos:narrower rdf:resource="http://example.com/RI#feudal"/>
         <skos:narrower rdf:resource="http://example.com/RI#romanica"/>
@@ -275,7 +275,7 @@
         <skos:prefLabel xml:lang="en">Construction</skos:prefLabel>
         <skos:prefLabel xml:lang="sp">Construcion</skos:prefLabel>
         <skos:inScheme rdf:resource="http://example.com/RI"/>
-        <skos:topconceptOf rdf:resource="http://example.com/RI"/>
+        <skos:topConceptOf rdf:resource="http://example.com/RI"/>
         <skos:narrower rdf:resource="http://example.com/RI#Edificio"/>
     </skos:concept>
     
