@@ -39,7 +39,7 @@ public class readDump {
 	private static Boolean finFile = false;
 	private String dumpPath;
 
-	private final static String DMREC="http://www.recInfo.org/dm/";
+	private final static String DMREC = "http://www.recInfo.org/dm/";
 	private static List<List<String>> title = new ArrayList<List<String>>();
 	private static List<List<String>> identifier = new ArrayList<List<String>>();
 	private static List<String> language = new ArrayList<String>();
@@ -74,12 +74,17 @@ public class readDump {
 		// String skos = "http://www.w3.org/2004/02/skos/core#";
 		model.setNsPrefix("foaf", FOAF.NS);
 		model.setNsPrefix("dmrec", DMREC);
-		
-        Property DMdate = model.createProperty("http://www.recInfo.org/dm/date");
-        Property DMcreator = model.createProperty("http://www.recInfo.org/dm/creator");
-        Property DMpublisher = model.createProperty("http://www.recInfo.org/dm/publisher");
-        Property DMname = model.createProperty("http://www.recInfo.org/dm/name");
-        Property DMkeyword = model.createProperty("http://www.recInfo.org/dm/keyword");
+
+		Property DMdate = model
+				.createProperty("http://www.recInfo.org/dm/date");
+		Property DMcreator = model
+				.createProperty("http://www.recInfo.org/dm/creator");
+		Property DMpublisher = model
+				.createProperty("http://www.recInfo.org/dm/publisher");
+		Property DMname = model
+				.createProperty("http://www.recInfo.org/dm/name");
+		Property DMkeyword = model
+				.createProperty("http://www.recInfo.org/dm/keyword");
 
 		for (int i = 1; i < title.size(); i++) {
 			if (identifier.get(i) == null) {
@@ -103,8 +108,8 @@ public class readDump {
 			 * ORGANIZATION ADDED TO RDF SCHEME
 			 */
 			Resource org = null;
-			List<Resource> l = model
-					.listResourcesWithProperty(DMname, publi).toList();
+			List<Resource> l = model.listResourcesWithProperty(DMname, publi)
+					.toList();
 
 			if (l.isEmpty()) {
 				org = model.createResource().addProperty(DMname, publi)
@@ -125,18 +130,18 @@ public class readDump {
 			if (id.size() >= 2 && id.get(1) != null && !id.get(1).isEmpty()) {
 				String[] splitted = id.get(1).split("-");
 				if (splitted.length >= 3) {
-					String type = " "; 
-					if(splitted.length==3)
-						type=splitted[0];
-					else if (splitted.length==4)
-						type=splitted[1];
+					String type = " ";
+					if (splitted.length == 3)
+						type = splitted[0];
+					else if (splitted.length == 4)
+						type = splitted[1];
 					type.trim();
-					doc.addProperty(RDF.type, "dmrec:"+type);
+					doc.addProperty(RDF.type, "dmrec:" + type);
 					doc.addProperty(DC.identifier, id.get(1));
-				} 
-					doc.addProperty(DC.identifier, id.get(1));
+				}
+				doc.addProperty(DC.identifier, id.get(1));
 			}
-			
+
 			if (id.size() >= 3) {
 				for (int j = 2; j < id.size(); j++) {
 					doc.addProperty(DC.identifier, id.get(j));
@@ -232,7 +237,6 @@ public class readDump {
 							result += line;
 						} else
 							break;
-
 					} else
 						result += line;
 				}
@@ -242,7 +246,6 @@ public class readDump {
 		}
 		if (br.readLine() == null)
 			finFile = true;
-
 		return result;
 	}
 
