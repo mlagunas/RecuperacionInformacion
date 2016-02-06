@@ -15,7 +15,7 @@ import com.hp.hpl.jena.util.FileManager;
 public class AccesoSPARQL {
 
 	/**
-	 * ejecución de consultas sparql
+	 * ejecuciï¿½n de consultas sparql
 	 */
 	public static void main(String args[]) {
 		
@@ -121,6 +121,65 @@ public class AccesoSPARQL {
 		
 		System.out.println("----------------------------------------");
 		
+		 queryString = "PREFIX dmrec: <http://www.recInfo.org/dm/>"
+			 		+ " SELECT ?doc WHERE { "
+			 		+ "?doc rdf:type dmrec:document"
+			 		+ "?doc dmrec:creator ?autor"
+			 		+ "?autor dmrec:name ?name.FILTER regex(?name, 'Javier')"
+			 		+ "?skosQ1 skos:prefLabel ?prefLabel.FILTER regex(?prefLabel,'musica')"
+			 		+ "?skosQ1 skos:narrower+/skos:prefLabel ?labels1"
+			 		+ "?skosQ2 skos:prefLabel ?prefLabel.FILTER regex(?prefLabel,'sonido')"
+			 		+ "?skosQ2 skos:narrower+/skos:prefLabel ?labels2"
+			 		+ "?doc dmrec:keyword ?keyword"
+			 		+ "?keyword skos:prefLabel ?keyLabel"
+			 		+ "FILTER regex(lcase(str(?keyLabel)) = lcase(str(?labels1)) || "
+			 		+ "lcase(str(?keyLabel)) = lcase(str(?keyLabel)))"
+			 		+ "}";
+
+		 queryString = "PREFIX dmrec: <http://www.recInfo.org/dm/>"
+			 		+ " SELECT ?doc WHERE { "
+			 		+ "?doc rdf:type dmrec:TESIS"
+			 		+ "?doc dmrec:date ?date.FILTER((?date > 2010) && (?date < 2015))"
+			 		+ "?skosQ1 skos:prefLabel ?prefLabel.FILTER regex(?prefLabel,'energias renovables')"
+			 		+ "?skosQ1 skos:narrower+/skos:prefLabel ?labels1"
+			 		+ "?doc dmrec:keyword ?key"
+			 		+ "?keyword skos:prefLabel ?keyLabel"
+			 		+ "FILTER regex(lcase(str(?keyLabel)) = lcase(str(?labels1)))"
+			 		+ "}";
+		 
+		 queryString = "PREFIX dmrec: <http://www.recInfo.org/dm/>"
+			 		+ " SELECT ?doc WHERE { "
+			 		+ "?doc rdf:type dmrec:documento"
+			 		+ "?doc dmrec:date ?date.FILTER(?date > 2010)"
+			 		+ "?skosQ1 skos:prefLabel ?prefLabel.FILTER regex(?prefLabel,'videojuegos')"
+			 		+ "?skosQ1 skos:narrower+/skos:prefLabel ?labels1"
+			 		+ "?skosQ2 skos:prefLabel ?prefLabel.FILTER regex(?prefLabel,'diseÃ±o de personajes')"
+			 		+ "?skosQ2 skos:narrower+/skos:prefLabel ?labels2"
+			 		+ "?doc dmrec:keyword ?keyword"
+			 		+ "?keyword skos:prefLabel ?keyLabel"
+			 		+ "FILTER regex(lcase(str(?keyLabel)) = lcase(str(?labels1)) || "
+			 		+ "lcase(str(?keyLabel)) = lcase(str(?keyLabel)))"
+			 		+ "}";
+		 
+		 queryString = "PREFIX dmrec: <http://www.recInfo.org/dm/>"
+			 		+ " SELECT ?doc WHERE { "
+			 		+ "?doc rdf:type dmrec:documento"
+			 		+ "?doc dmrec:keyword ?key"
+			 		+ "?key skos:prefLabel ?label.FILTER regex(?label,'Guerra de Independencia')"
+			 		+ "}";
+		 
+		 queryString = "PREFIX dmrec: <http://www.recInfo.org/dm/>"
+			 		+ " SELECT ?doc WHERE { "
+			 		+ "?doc rdf:type dmrec:documento"
+			 		+ "?skosQ1 skos:prefLabel ?prefLabel.FILTER regex(?prefLabel,'Edad Media')"
+			 		+ "?skosQ1 skos:narrower+/skos:prefLabel ?labels1"
+			 		+ "?skosQ2 skos:prefLabel ?prefLabel.FILTER regex(?prefLabel,'construcciones')"
+			 		+ "?skosQ2 skos:narrower+/skos:prefLabel ?labels2"
+			 		+ "?doc dmrec:keyword ?keyword"
+			 		+ "?keyword skos:prefLabel ?keyLabel"
+			 		+ "FILTER regex(lcase(str(?keyLabel)) = lcase(str(?labels1)) || "
+			 		+ "lcase(str(?keyLabel)) = lcase(str(?keyLabel)))"
+			 		+ "}";
 		
 	}
 	

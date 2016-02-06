@@ -7,7 +7,7 @@
 
 <http://purl.org/dc/terms/>
     dcterms:modified "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
-    dcterms:publisher <ttp://www.recInfo.org/dm/aboutdmrec#DMREC> ;
+    dcterms:publisher <http://www.recInfo.org/dm/aboutdmrec#DMREC> ;
     dcterms:title "Recuperacion de Información Trabajo - Terms"@spa .
    
 dcterms:identifier
