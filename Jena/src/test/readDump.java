@@ -28,12 +28,14 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
+import com.hp.hpl.jena.rdf.model.AnonId;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+import com.hp.hpl.jena.util.iterator.Filter;
 import com.hp.hpl.jena.vocabulary.DC;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.VCARD;
@@ -53,6 +55,8 @@ public class readDump {
 	private static List<String> date = new ArrayList<String>();
 
 	public static void main(String args[]) {
+		new readDump("dump");
+		Model model = createRDF();
 		try {
 			Model m = readXml(new File("skos.rdf"));
 			m.write(System.out);
@@ -80,20 +84,15 @@ public class readDump {
 	public static Model createRDF() {
 		Model model = ModelFactory.createDefaultModel();
 
-		// String skos = "http://www.w3.org/2004/02/skos/core#";
-		model.setNsPrefix("foaf", FOAF.NS);
 		model.setNsPrefix("dmrec", DMREC);
+		model.setNsPrefix("skos", SKOS.uri);
+		
+        Property DMdate = model.createProperty("http://www.recInfo.org/dm/date");
+        Property DMcreator = model.createProperty("http://www.recInfo.org/dm/creator");
+        Property DMpublisher = model.createProperty("http://www.recInfo.org/dm/publisher");
+        Property DMname = model.createProperty("http://www.recInfo.org/dm/name");
+        Property DMkeyword = model.createProperty("http://www.recInfo.org/dm/keyword");
 
-		Property DMdate = model
-				.createProperty("http://www.recInfo.org/dm/date");
-		Property DMcreator = model
-				.createProperty("http://www.recInfo.org/dm/creator");
-		Property DMpublisher = model
-				.createProperty("http://www.recInfo.org/dm/publisher");
-		Property DMname = model
-				.createProperty("http://www.recInfo.org/dm/name");
-		Property DMkeyword = model
-				.createProperty("http://www.recInfo.org/dm/keyword");
 
 		for (int i = 1; i < title.size(); i++) {
 			if (identifier.get(i) == null) {
@@ -167,7 +166,7 @@ public class readDump {
 
 				if (l.isEmpty()) {
 					auth = model.createResource()
-							.addProperty(VCARD.FN, creat.get(j))
+							.addProperty(DMname, creat.get(j))
 							.addProperty(RDF.type, "dmrec:person");
 				} else {
 					auth = l.get(0);
@@ -288,6 +287,7 @@ public class readDump {
 		}
 	}
 
+	
 	/**
 	 * 
 	 * 
@@ -376,7 +376,7 @@ public class readDump {
 		for (int temp = 0; temp < nList.getLength(); temp++) {
 
 			Node nNode = nList.item(temp);
-			// Obtenemos URI del concept a añadir al modelo
+			// Obtenemos URI del concept a aï¿½adir al modelo
 			String conceptURI = nNode.getAttributes().getNamedItem("rdf:about")
 					.getNodeValue();
 			System.out
