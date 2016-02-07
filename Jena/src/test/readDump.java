@@ -424,7 +424,6 @@ public class readDump {
 			Resource concept = m.createResource(conceptURI);
 			m.add(concept, RDF.type, SKOS.Concept);
 
-			concept.addProperty(RDF.type, conceptClass);
 			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 				// Iteramos por los elementos que incluyen a concept
 				Element eElement = (Element) nNode;
