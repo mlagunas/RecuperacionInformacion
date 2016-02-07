@@ -28,17 +28,12 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.hp.hpl.jena.rdf.model.AnonId;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.util.iterator.Filter;
 import com.hp.hpl.jena.vocabulary.DC;
 import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.VCARD;
 
 public class readDump {
 
@@ -53,12 +48,13 @@ public class readDump {
 	private static List<String> publisher = new ArrayList<String>();
 	private static List<String> date = new ArrayList<String>();
 	private static List<String> conceptos = new ArrayList<String>();
-	private static int iter=0;
-	
+	private static int iter = 0;
+
 	public static void main(String args[]) throws FileNotFoundException {
 		new readDump("dump");
 		try {
-			Model m = readXml(new File("skos.rdf"));			
+			Model m = readXml(new File("skos.rdf"));
+			m.write(System.out, "N3");
 			Model model = createRDF(m);
 			model.write(new FileOutputStream(new File("trabajo_rdf.rdf")));
 		} catch (ParserConfigurationException e1) {
@@ -109,8 +105,8 @@ public class readDump {
 			 * ORGANIZATION ADDED TO RDF SCHEME
 			 */
 			Resource org = null;
-			List<Resource> l = model.listResourcesWithProperty(DMREC.DMname, publi)
-					.toList();
+			List<Resource> l = model.listResourcesWithProperty(DMREC.DMname,
+					publi).toList();
 
 			if (l.isEmpty()) {
 				org = model.createResource().addProperty(DMREC.DMname, publi)
@@ -124,7 +120,8 @@ public class readDump {
 			Resource doc = model
 					// Added URI identificator(0) = URL to Zaguan
 					.createResource(id.get(0)).addProperty(DC.title, tit)
-					.addProperty(DMREC.DMpublisher, org).addProperty(DMREC.DMdate, year)
+					.addProperty(DMREC.DMpublisher, org)
+					.addProperty(DMREC.DMdate, year)
 					.addProperty(DC.language, lang)
 					.addProperty(DC.description, desc);
 			// Identeificacion del segundo identificador
@@ -166,24 +163,25 @@ public class readDump {
 				}
 				doc.addProperty(DMREC.DMcreator, auth);
 			}
-			
+
 			/*
-			 * Busca si el documento tiene palabras clave y se asocia a su correspondiente concepto de skos
+			 * Busca si el documento tiene palabras clave y se asocia a su
+			 * correspondiente concepto de skos
 			 */
-			for(String s:conceptos){
-				if(desc.toLowerCase().contains(s.toLowerCase()) || tit.toLowerCase().contains(s.toLowerCase())){
-					l = skos.listResourcesWithProperty(SKOS.prefLabel,s+"@sp")
-							.toList();
+			for (String s : conceptos) {
+				if (desc.toLowerCase().contains(s.toLowerCase())
+						|| tit.toLowerCase().contains(s.toLowerCase())) {
+					l = skos.listResourcesWithProperty(SKOS.prefLabel,
+							s + "@sp").toList();
 					if (!l.isEmpty()) {
-						Resource key=l.get(0);
+						Resource key = l.get(0);
 						doc.addProperty(DMREC.DMkeyword, key);
-						System.out.println(tit +"\nCointains--> "+s);
+						//System.out.println(tit + "\nCointains--> " + s);
 						iter++;
 
 					}
 				}
 			}
-			
 
 		}
 		System.out.println(iter);
@@ -297,7 +295,6 @@ public class readDump {
 		}
 	}
 
-	
 	/**
 	 * 
 	 * 
@@ -381,7 +378,7 @@ public class readDump {
 
 		// Cracion del Modelo de SKOS
 		Model m = ModelFactory.createDefaultModel();
-		m.setNsPrefix("SKOS", SKOS.uri);
+		//m.setNsPrefix("SKOS", SKOS.uri);
 
 		for (int temp = 0; temp < nList.getLength(); temp++) {
 
@@ -389,47 +386,39 @@ public class readDump {
 			// Obtenemos URI del concept a a�adir al modelo
 			String conceptURI = nNode.getAttributes().getNamedItem("rdf:about")
 					.getNodeValue();
-			System.out
-					.println("\n" + nNode.getNodeName() + " :: " + conceptURI);
 			Resource concept = m.createResource(conceptURI);
+			m.add(concept, RDF.type, SKOS.Concept);
 
 			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 				// Iteramos por los elementos que incluyen a concept
 				Element eElement = (Element) nNode;
-				
-				//Obtenemos las prefLabel
+
+				// Obtenemos las prefLabel
 				NodeList prefLabel = eElement
 						.getElementsByTagName("skos:prefLabel");
 				for (int x = 0, size = prefLabel.getLength(); x < size; x++) {
-					String lang =prefLabel.item(x).getAttributes()
-					.getNamedItem("xml:lang").getNodeValue();
-					String textLab= prefLabel.item(x).getTextContent();
-					String label = textLab
-							+ "@"
-							+ lang;
-					concept.addProperty(SKOS.prefLabel, label);
-					if(lang.equalsIgnoreCase("sp")){
+					String lang = prefLabel.item(x).getAttributes()
+							.getNamedItem("xml:lang").getNodeValue();
+					String textLab = prefLabel.item(x).getTextContent();
+					String label = textLab + "@" + lang;
+					concept.addLiteral(SKOS.prefLabel, label);
+					if (lang.equalsIgnoreCase("sp")) {
 						conceptos.add(textLab);
 					}
 				}
-				
-				//Obtenemos las altLabel
+
+				// Obtenemos las altLabel
 				NodeList altLabel = eElement
 						.getElementsByTagName("skos:altLabel");
 				for (int x = 0, size = altLabel.getLength(); x < size; x++) {
-					String lang=altLabel.item(x).getAttributes()
-					.getNamedItem("xml:lang").getNodeValue();
-					String textLab=altLabel.item(x).getTextContent();
-					String label = textLab
-							+ "@"
-							+ lang;
-					concept.addProperty(SKOS.altLabel, label);
-//					if(lang.equalsIgnoreCase("sp")){
-//						conceptos.add(textLab);
-//					}
+					String lang = altLabel.item(x).getAttributes()
+							.getNamedItem("xml:lang").getNodeValue();
+					String textLab = altLabel.item(x).getTextContent();
+					String label = textLab + "@" + lang;
+					concept.addLiteral(SKOS.altLabel, label);
 				}
 
-				//Obtenemos inScheme
+				// Obtenemos inScheme
 				NodeList inScheme = eElement
 						.getElementsByTagName("skos:inScheme");
 				for (int x = 0, size = inScheme.getLength(); x < size; x++) {

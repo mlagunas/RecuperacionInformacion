@@ -55,7 +55,7 @@ public class Evaluation {
 			recuperados.addAll(recu.get(need));
 		}
 		// numRelevantesRecuperados
-		double nRR = cuentaDeIntersección(relevantes, recuperados);
+		double nRR = cuentaDeInterseccion(relevantes, recuperados);
 
 		// Recuperados
 		double docR = recuperados.size(); // doc Recuperados
@@ -80,7 +80,7 @@ public class Evaluation {
 			recuperados.addAll(recu.get(need));
 		}
 		// num Relevantes Recuperados
-		double nRR = cuentaDeIntersección(relevantes, recuperados);
+		double nRR = cuentaDeInterseccion(relevantes, recuperados);
 		double nR = relevantes.size();// num Relevantes
 		return nRR / nR;
 	}
@@ -116,7 +116,7 @@ public class Evaluation {
 		else{
 			krecuperados=recuperados.subList(0, k);
 		}
-		double nR = cuentaDeIntersección(relevantes,krecuperados);// Numero
+		double nR = cuentaDeInterseccion(relevantes,krecuperados);// Numero
 		// de
 		// relevantes
 		// en
@@ -144,7 +144,7 @@ public class Evaluation {
 			recuperados.addAll(recu.get(need));
 		}
 		// Numero de relevantes encoleccion [0,..,k]
-		double nR = cuentaDeIntersección(relevantes, recuperados.subList(0, k));
+		double nR = cuentaDeInterseccion(relevantes, recuperados.subList(0, k));
 		int nRTotal = relevantes.size();// num Relevantes
 		return round(nR / nRTotal, 3);
 	}
@@ -174,10 +174,10 @@ public class Evaluation {
 				precisionFinal += kPrecision(i + 1, need, rel, recu);
 			}
 		}
-		if (cuentaDeIntersección(relevantes, recuperados)==0){
+		if (cuentaDeInterseccion(relevantes, recuperados)==0){
 			return 0;
 		}else{
-			return (precisionFinal / cuentaDeIntersección(relevantes, recuperados));
+			return (precisionFinal / cuentaDeInterseccion(relevantes, recuperados));
 		}
 	}
 
@@ -343,7 +343,7 @@ public class Evaluation {
 		}
 	}
 
-	private static double cuentaDeIntersección(List<String> rel,
+	private static double cuentaDeInterseccion(List<String> rel,
 			List<String> recu) {
 		double count = 0;
 		for (String id : rel) {
