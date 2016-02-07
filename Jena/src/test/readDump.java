@@ -441,15 +441,6 @@ public class readDump {
 					concept.addProperty(SKOS.topConceptOf, topC);
 				}
 
-				// Obtenemos los broader
-				NodeList broader = eElement
-						.getElementsByTagName("skos:broader");
-				for (int x = 0, size = broader.getLength(); x < size; x++) {
-					String bro = broader.item(x).getAttributes()
-							.getNamedItem("rdf:resource").getNodeValue();
-					concept.addProperty(SKOS.broader, bro);
-				}
-
 				// Obtenemos los narrower
 				NodeList narrower = eElement
 						.getElementsByTagName("skos:narrower");
