@@ -9,8 +9,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,17 +26,13 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.hp.hpl.jena.rdf.model.AnonId;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.util.iterator.Filter;
 import com.hp.hpl.jena.vocabulary.DC;
 import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.VCARD;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class readDump {
 
@@ -57,10 +51,13 @@ public class readDump {
 	
 	public static void main(String args[]) throws FileNotFoundException {
 		new readDump("dump");
+		System.out.println(title.size());
 		try {
 			Model m = readXml(new File("skos.rdf"));			
 			Model model = createRDF(m);
 			model.write(new FileOutputStream(new File("trabajo_rdf.rdf")));
+			m.write(new FileOutputStream(new File("trabajo_skos.rdf")));
+
 		} catch (ParserConfigurationException e1) {
 			e1.printStackTrace();
 		}
@@ -86,6 +83,20 @@ public class readDump {
 
 		model.setNsPrefix("dmrec", DMREC.uri);
 		model.setNsPrefix("skos", SKOS.uri);
+		
+		final Resource document = model.createResource(DMREC.uri+"document");
+        final Resource TFG = model.createResource(DMREC.uri+"TFG");
+        final Resource TESIS = model.createResource(DMREC.uri+"TESIS");
+        final Resource PFC = model.createResource(DMREC.uri+"PFC");
+        final Resource TFM = model.createResource(DMREC.uri+"TFM");
+        
+        TFG.addProperty(RDFS.subClassOf, document);
+        TFM.addProperty(RDFS.subClassOf, document);
+        TESIS.addProperty(RDFS.subClassOf, document);
+        PFC.addProperty(RDFS.subClassOf, document);
+
+		final Resource person = model.createResource(DMREC.uri+"person");
+		final Resource organization = model.createResource(DMREC.uri+"organization");
 
 		for (int i = 1; i < title.size(); i++) {
 			if (identifier.get(i) == null) {
@@ -113,8 +124,8 @@ public class readDump {
 					.toList();
 
 			if (l.isEmpty()) {
-				org = model.createResource().addProperty(DMREC.DMname, publi)
-						.addProperty(RDF.type, "dmrec:organization");
+				org = model.createResource(DMREC.uri+publi.replaceAll("\\p{Z}","")).addProperty(DMREC.DMname, publi)
+						.addProperty(RDF.type, organization);
 			} else {
 				org = l.get(0);
 			}
@@ -137,7 +148,22 @@ public class readDump {
 					else if (splitted.length == 4)
 						type = splitted[1];
 					type.trim();
-					doc.addProperty(RDF.type, "dmrec:" + type);
+					switch(type){
+					case "TFG":
+						doc.addProperty(RDF.type, TFG);
+						break;
+					case "TFM":
+						doc.addProperty(RDF.type, TFM);
+						break;
+					case "PFC":
+						doc.addProperty(RDF.type, PFC);
+						break;
+					case "TESIS":
+						doc.addProperty(RDF.type, TESIS);
+						break;
+					default:
+						break;
+					}
 					doc.addProperty(DC.identifier, id.get(1));
 				}
 				doc.addProperty(DC.identifier, id.get(1));
@@ -158,9 +184,9 @@ public class readDump {
 						.toList();
 
 				if (l.isEmpty()) {
-					auth = model.createResource()
+					auth = model.createResource(DMREC.uri+creat.get(j).replaceAll("\\p{Z}",""))
 							.addProperty(DMREC.DMname, creat.get(j))
-							.addProperty(RDF.type, "dmrec:person");
+							.addProperty(RDF.type, person);
 				} else {
 					auth = l.get(0);
 				}
@@ -177,7 +203,7 @@ public class readDump {
 					if (!l.isEmpty()) {
 						Resource key=l.get(0);
 						doc.addProperty(DMREC.DMkeyword, key);
-						System.out.println(tit +"\nCointains--> "+s);
+						//System.out.println(tit +"\nCointains--> "+s);
 						iter++;
 
 					}
@@ -381,7 +407,8 @@ public class readDump {
 
 		// Cracion del Modelo de SKOS
 		Model m = ModelFactory.createDefaultModel();
-		m.setNsPrefix("SKOS", SKOS.uri);
+		m.setNsPrefix("skos", SKOS.uri);
+		final Resource conceptClass = m.createResource(SKOS.uri+"concept");
 
 		for (int temp = 0; temp < nList.getLength(); temp++) {
 
@@ -389,10 +416,10 @@ public class readDump {
 			// Obtenemos URI del concept a a�adir al modelo
 			String conceptURI = nNode.getAttributes().getNamedItem("rdf:about")
 					.getNodeValue();
-			System.out
-					.println("\n" + nNode.getNodeName() + " :: " + conceptURI);
+			//System.out.println("\n" + nNode.getNodeName() + " :: " + conceptURI);
 			Resource concept = m.createResource(conceptURI);
 
+			concept.addProperty(RDF.type, conceptClass);
 			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 				// Iteramos por los elementos que incluyen a concept
 				Element eElement = (Element) nNode;
