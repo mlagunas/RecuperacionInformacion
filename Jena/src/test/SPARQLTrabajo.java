@@ -1,6 +1,10 @@
 package test;
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -23,21 +27,23 @@ public class SPARQLTrabajo {
 		Model model = FileManager.get().loadModel("trabajo_rdf.rdf");
 		Model skos = FileManager.get().loadModel("trabajo_skos.rdf");
 		model.add(skos);
-
+		
 		System.out.println("----------------------------------------");
 
-		
-		
-		 String queryString = "PREFIX dmrec: <http://www.recInfo.org/dm/> "
+		 String queryString = 
+				 	  
+				 	"PREFIX dmrec: <http://www.recInfo.org/dm/> "
 		 			+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
 		 			+ "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>  "
 		 			+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>  "
-			 		+ "SELECT ?prefLabel WHERE {  "
+			 		
+		 			+ "SELECT ?narrower WHERE {  "
 			 		+ "?skosQ1 rdf:type skos:concept ."
-			 		+ "?skosQ1 skos:prefLabel ?label "
-			 		+ "FILTER regex (?lLabel,'musica@sp','i')  "
-			 		+"?skosQ1 skos:narrower+/skos:prefLabel ?prefLabel "
-			 		+ "FILTER regex (?prefLabel,'cancion','i')  "
+			 		+ "?skosQ1 skos:prefLabel ?label . "
+			 		
+			 		+ "?skosQ1 skos:narrower+ ?narrower ."
+			 		//+ "?narrower skos:prefLabel ?prefLabel "
+			 		//+ "FILTER regex (?prefLabel,'cancion','i')  "
 			 		+ " }";
 		 String aqueryString = "PREFIX dmrec: <http://www.recInfo.org/dm/> "
 		 			+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
@@ -73,10 +79,9 @@ public class SPARQLTrabajo {
 		    ResultSet results = qexec.execSelect() ;
 		    for ( ; results.hasNext() ; )
 		    {
-		      QuerySolution soln = results.nextSolution() ;
-		       Literal z = soln.getLiteral("prefLabel"); 
-		      
-		      System.out.println(z.toString());
+		    	QuerySolution soln = results.nextSolution() ;
+		    	Literal z = soln.getLiteral("narrower"); 
+		    	System.out.println(z.toString());
 		    }
 		    System.out.println("RESULTS = "+results.getRowNumber());
 		  } finally { qexec.close() ; }

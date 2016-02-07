@@ -124,7 +124,7 @@
         <skos:prefLabel xml:lang="sp">Guerra de la independencia</skos:prefLabel>
         <skos:inScheme rdf:resource="http://example.com/RI"/>
         <skos:topConceptOf rdf:resource="http://example.com/RI"/>
-        <skos:narrower rdf:resource="http://example.com/guerraCarlista/RI"/>
+        <skos:narrower rdf:resource="http://example.com/RI/guerraCarlista"/>
         <skos:narrower rdf:resource="http://example.com/RI/independanceDate"/>
         <skos:narrower rdf:resource="http://example.com/RI/ejercito"/>
     </skos:concept>
@@ -235,7 +235,7 @@
         </skos:concept>
         
         <skos:concept rdf:about="http://example.com/RI/motorgrafico">
-            <skos:prefLabel xml:lang="sp">motor gráfico</skos:prefLabel>
+            <skos:prefLabel xml:lang="sp">motor grafico</skos:prefLabel>
             <skos:prefLabel xml:lang="en">graphic engine</skos:prefLabel>
             <skos:inScheme rdf:resource="http://example.com/RI"/>
             <skos:broader rdf:resource="http://example.com/RI/videojuegos"/>

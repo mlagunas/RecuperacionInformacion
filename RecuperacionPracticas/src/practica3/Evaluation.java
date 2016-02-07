@@ -80,7 +80,7 @@ public class Evaluation {
 			HashMap<String, List<String>> recu) {
 
 		// numRelevantesRecuperados
-		double nRR = cuentaDeIntersección(rel.get(need), recu.get(need));
+		double nRR = cuentaDeInterseccion(rel.get(need), recu.get(need));
 
 		// Recuperados
 		double docR = recu.get(need).size(); // doc Recuperados
@@ -99,7 +99,7 @@ public class Evaluation {
 			HashMap<String, List<String>> recu) {
 
 		// num Relevantes Recuperados
-		double nRR = cuentaDeIntersección(rel.get(need), recu.get(need));
+		double nRR = cuentaDeInterseccion(rel.get(need), recu.get(need));
 		double nR = rel.get(need).size();// num Relevantes
 		return nRR / nR;
 	}
@@ -130,7 +130,7 @@ public class Evaluation {
 			HashMap<String, List<String>> rel,
 			HashMap<String, List<String>> recu) {
 
-		double nR = cuentaDeIntersección(rel.get(need),
+		double nR = cuentaDeInterseccion(rel.get(need),
 				recu.get(need).subList(0, k));// Numero de
 												// relevantes
 												// en
@@ -153,7 +153,7 @@ public class Evaluation {
 			HashMap<String, List<String>> rel,
 			HashMap<String, List<String>> recu) {
 
-		double nR = cuentaDeIntersección(rel.get(need), (List<String>) recu
+		double nR = cuentaDeInterseccion(rel.get(need), (List<String>) recu
 				.get(need).subList(0, k));// Numero de
 											// relevantes
 											// en
@@ -182,7 +182,7 @@ public class Evaluation {
 				precisionFinal += kPrecision(i + 1, need, rel, recu);
 			}
 		}
-		return (precisionFinal / cuentaDeIntersección(rel.get(need),
+		return (precisionFinal / cuentaDeInterseccion(rel.get(need),
 				recu.get(need)));
 	}
 
@@ -245,7 +245,7 @@ public class Evaluation {
 
 	/**
 	 * Metodo encargado de dadas dos direcciones de ficheros rellenar
-	 * respectivos HashMap con su información a cerca de los ficheros
+	 * respectivos HashMap con su informaciï¿½n a cerca de los ficheros
 	 */
 	private void readFiles() {
 		try {
@@ -319,7 +319,7 @@ public class Evaluation {
 	 * @param recu
 	 * @return
 	 */
-	private static double cuentaDeIntersección(List<String> rel,
+	private static double cuentaDeInterseccion(List<String> rel,
 			List<String> recu) {
 		double count = 0;
 		for (String id : rel) {
@@ -331,7 +331,7 @@ public class Evaluation {
 	}
 
 	/**
-	 * Metodo que recibe un número de necesidad o -1 en caso de hacer referencia
+	 * Metodo que recibe un nï¿½mero de necesidad o -1 en caso de hacer referencia
 	 * a todas las necesidades y muestra por pantalla sus resultados con las
 	 * diferentes medidas de evaluacion
 	 * 
