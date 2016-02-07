@@ -1,0 +1,181 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dmrec: <http://www.recInfo.org/dm/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+<http://purl.org/dc/terms/>
+    dcterms:modified "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:publisher <http://www.recInfo.org/dm/aboutdmrec#DMREC> ;
+    dcterms:title "Recuperacion de Información Trabajo - Terms"@spa .
+   
+dcterms:identifier
+    dcterms:description "Recommended best practice is to identify the resource by means of a string conforming to a formal identification system. "@en ;
+    dcterms:hasVersion <http://dublincore.org/usage/terms/history/#identifierT-001> ;
+    dcterms:issued "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdf:Property ;
+    rdfs:comment "An unambiguous reference to the resource within a given context."@en ;
+    rdfs:isDefinedBy <http://purl.org/dc/terms/> ;
+    rdfs:label "Identifier"@en ;
+    rdfs:range rdfs:Literal ;
+    rdfs:subPropertyOf <http://purl.org/dc/elements/1.1/identifier> .
+    
+dcterms:title
+    dcterms:hasVersion <http://dublincore.org/usage/terms/history/#titleT-002> ;
+    dcterms:issued "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2010-10-11"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdf:Property ;
+    rdfs:comment "A name given to the resource."@en ;
+    rdfs:isDefinedBy <http://purl.org/dc/terms/> ;
+    rdfs:label "Title"@en ;
+    rdfs:range rdfs:Literal ;
+    rdfs:subPropertyOf <http://purl.org/dc/elements/1.1/title> .
+
+dcterms:description
+    dcterms:description "Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."@en ;
+    dcterms:hasVersion <http://dublincore.org/usage/terms/history/#descriptionT-001> ;
+    dcterms:issued "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdf:Property ;
+    rdfs:comment "An account of the resource."@en ;
+    rdfs:isDefinedBy <http://purl.org/dc/terms/> ;
+    rdfs:label "Description"@en ;
+    rdfs:subPropertyOf <http://purl.org/dc/elements/1.1/description> .
+
+dcterms:language
+    dcterms:description "Recommended best practice is to use a controlled vocabulary such as RFC 4646 [RFC4646]."@en ;
+    dcterms:hasVersion <http://dublincore.org/usage/terms/history/#languageT-001> ;
+    dcterms:issued "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdf:Property ;
+    rdfs:comment "A language of the resource."@en ;
+    rdfs:isDefinedBy <http://purl.org/dc/terms/> ;
+    rdfs:label "Language"@en ;
+    rdfs:range dcterms:LinguisticSystem ;
+    rdfs:subPropertyOf <http://purl.org/dc/elements/1.1/language> .
+    
+dmrec:date
+    dcterms:description "Date may be used to express temporal information."@en ;
+    dcterms:issued "2016-02-04"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:issued "2016-02-04"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdf:Property ;
+    rdfs:comment "A point or period of time associated with an event in the lifecycle of the resource."@en ;
+    rdfs:isDefinedBy <http://www.recInfo.org/dm/> ;
+    rdfs:label "Date"@en ;
+    rdfs:range xsd:date .
+    
+dmrec:document
+    dcterms:description "Documents of Zaguan repository"@en ;
+    dcterms:issued "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdfs:Class ;
+    rdfs:comment "Documents."@en ;
+    rdfs:isDefinedBy <http://www.recInfo.org/dm/> ;
+    rdfs:label "Document Class"@en ;
+    rdfs:subClassOf rdfs:Class . 
+    
+dmrec:TFG
+    dcterms:description "Trabajo Fin de Grado"@spa ;
+    dcterms:issued "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdfs:Class ;
+    rdfs:comment "TFG."@en ;
+    rdfs:isDefinedBy <http://www.recInfo.org/dm/> ;
+    rdfs:label "TFG Clas s"@en ;
+    rdfs:subClassOf dmrec:document .
+  
+dmrec:PFC
+    dcterms:description "Proyecto Fin de Carrera"@spa ;
+    dcterms:issued "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdfs:Class ;
+    rdfs:comment "PFC."@en ;
+    rdfs:isDefinedBy <http://www.recInfo.org/dm/> ;
+    rdfs:label "PFC Class"@en ;
+    rdfs:subClassOf dmrec:document .
+    
+dmrec:TESIS
+    dcterms:description "Tesis doctoral"@spa ;
+    dcterms:issued "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdfs:Class ;
+    rdfs:comment "TESIS."@en ;
+    rdfs:isDefinedBy <http://www.recInfo.org/dm/> ;
+    rdfs:label "TESIS Class"@en ;
+    rdfs:subClassOf dmrec:document .
+    
+dmrec:TFM
+    dcterms:description "Trabajo Fin de Master"@spa ;
+    dcterms:issued "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdfs:Class ;
+    rdfs:comment "TFM."@en ;
+    rdfs:isDefinedBy <http://www.recInfo.org/dm/> ;
+    rdfs:label "TFM Class"@en ;
+    rdfs:subClassOf dmrec:document .
+
+dmrec:creator
+    dcterms:description "Examples of a Creator include a person."@en ;
+    dcterms:issued "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdf:Property ;
+    rdfs:comment "An entity primarily responsible for making the resource."@en ;
+    rdfs:isDefinedBy <http://www.recInfo.org/dm/> ;
+    rdfs:label "Creator"@en ;
+    rdfs:domain dmrec:document;
+    rdfs:range dmrec:person .
+   
+dmrec:name
+    dcterms:description "Name."@en ;
+    dcterms:issued "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdf:Property ;
+    rdfs:comment "String that represents the name of an agent."@en ;
+    rdfs:isDefinedBy <http://www.recInfo.org/dm/> ;
+    rdfs:label "Name"@en ;
+    rdfs:domain foaf:Agent;
+    rdfs:range rdfs:Literal .
+    
+dmrec:person
+	dcterms:description "The Person class represents people. Something is a Person if it is a person."@en ;
+    dcterms:issued "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdf:Class;
+    rdfs:comment "Person."@en ;
+    rdfs:isDefinedBy <http://www.recInfo.org/dm/> ;
+    rdfs:label "Person"@en ;
+    rdfs:subClassOf foaf:Agent .
+    
+dmrec:publisher
+    dcterms:description "Examples of a Publisher include a person, an organization, or a service."@en ;
+    dcterms:issued "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdf:Property ;
+    rdfs:comment "An entity responsible for making the resource available."@en ;
+    rdfs:isDefinedBy <http://www.recInfo.org/dm/> ;
+    rdfs:label "Publisher"@en ;
+    rdfs:domain dmrec:document;
+    rdfs:range dmrec:organization .
+
+dmrec:organization
+	dcterms:description "The Organization class represents a kind of Agent corresponding to social instititutions such as companies, societies etc."@en ;
+    dcterms:issued "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdf:Class;
+    rdfs:comment "Organization."@en ;
+    rdfs:isDefinedBy <http://www.recInfo.org/dm/> ;
+    rdfs:label "Organization"@en ;
+    rdfs:subClassOf foaf:Agent .
+	
+dmrec:keyword
+    dcterms:description "Keyword of the document."@en ;
+    dcterms:issued "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2016-01-07"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdf:Property ;
+    rdfs:comment "Keyword related with the queries of the project work."@en ;
+    rdfs:isDefinedBy <http://www.recInfo.org/dm/> ;
+    rdfs:label "Keyword"@en ;
+    rdfs:domain dmrec:document;
+    rdfs:range skos:Concept .
