@@ -1,287 +1,259 @@
 <rdf:RDF
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:SKOS="http://www.w3.org/2004/02/skos/core#" > 
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#" > 
   <rdf:Description rdf:about="http://example.com/RI/energias_renovables">
-    <SKOS:narrower rdf:resource="http://example.com/RI/energia"/>
-    <SKOS:narrower rdf:resource="http://example.com/RI/eficienciaEnergetica"/>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">renewable energy@en</SKOS:prefLabel>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:topConceptOf>http://example.com/RI</SKOS:topConceptOf>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">energias renovables@sp</SKOS:prefLabel>
-    <SKOS:narrower rdf:resource="http://example.com/RI/renovables"/>
+    <skos:narrower rdf:resource="http://example.com/RI/energia"/>
+    <skos:narrower rdf:resource="http://example.com/RI/eficienciaEnergetica"/>
+    <skos:narrower rdf:resource="http://example.com/RI/renovables"/>
+    <skos:narrower rdf:resource="http://example.com/RI/cambioClimatico"/>
+    <skos:topConceptOf>http://example.com/RI</skos:topConceptOf>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">energias renovables@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">renewable energy@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-    <SKOS:broader>http://example.com/RI/energias_renovables</SKOS:broader>
-    <SKOS:narrower rdf:resource="http://example.com/RI/cambioClimatico"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/musico">
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musicos@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musicians@en</SKOS:prefLabel>
-    <SKOS:broader>http://example.com/RI/music</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musico@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musician@en</SKOS:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musicos@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musicians@en</skos:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musico@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musician@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/ruido">
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ruido@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">noise@en</SKOS:prefLabel>
-    <SKOS:broader>http://example.com/RI/sonido</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">audio@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">audio@en</SKOS:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ruido@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">noise@en</skos:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">audio@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">audio@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/programaciongrafica">
-    <SKOS:broader>http://example.com/RI/videojuegos</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">graphic programming@en</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">programacion grafica@sp</SKOS:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">graphic programming@en</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">programacion grafica@sp</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/cancion">
-    <SKOS:broader>http://example.com/RI/music</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">cancion@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">song@en</SKOS:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">cancion@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">song@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/energia/eolica">
-    <SKOS:broader>http://example.com/RI/energia</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">eolica@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">windpower@en</SKOS:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">eolica@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">windpower@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/musica">
-    <SKOS:narrower rdf:resource="http://example.com/RI/musico"/>
-    <SKOS:narrower rdf:resource="http://example.com/RI/cancion"/>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musica@sp</SKOS:prefLabel>
-    <SKOS:narrower rdf:resource="http://example.com/RI/musical"/>
+    <skos:narrower rdf:resource="http://example.com/RI/musico"/>
+    <skos:narrower rdf:resource="http://example.com/RI/cancion"/>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musica@sp</skos:prefLabel>
+    <skos:narrower rdf:resource="http://example.com/RI/musical"/>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-    <SKOS:narrower rdf:resource="http://example.com/RI/acustico"/>
-    <SKOS:narrower rdf:resource="http://example.com/RI/rock"/>
-    <SKOS:narrower rdf:resource="http://example.com/RI/musicologia"/>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">music@en</SKOS:prefLabel>
-    <SKOS:topConceptOf>http://example.com/RI</SKOS:topConceptOf>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
+    <skos:narrower rdf:resource="http://example.com/RI/acustico"/>
+    <skos:narrower rdf:resource="http://example.com/RI/rock"/>
+    <skos:narrower rdf:resource="http://example.com/RI/musicologia"/>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">music@en</skos:prefLabel>
+    <skos:topConceptOf>http://example.com/RI</skos:topConceptOf>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/feudal">
-    <SKOS:broader>http://example.com/RI/edadMedia</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Feudal@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Feudal@en</SKOS:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Feudal@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Feudal@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/guerraIndependencia">
-    <SKOS:narrower rdf:resource="http://example.com/RI/guerraCarlista"/>
-    <SKOS:narrower rdf:resource="http://example.com/RI/ejercito"/>
-    <SKOS:narrower rdf:resource="http://example.com/RI/independanceDate"/>
-    <SKOS:topConceptOf>http://example.com/RI</SKOS:topConceptOf>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Guerra de la independencia@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Independance war@en</SKOS:prefLabel>
+    <skos:narrower rdf:resource="http://example.com/RI/guerraCarlista"/>
+    <skos:narrower rdf:resource="http://example.com/RI/ejercito"/>
+    <skos:narrower rdf:resource="http://example.com/RI/independanceDate"/>
+    <skos:topConceptOf>http://example.com/RI</skos:topConceptOf>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Guerra de la independencia@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Independance war@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/guerraCarlista">
-    <SKOS:broader>http://example.com/RI/guerraIndependencia</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1808-1814@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1808-1814@en</SKOS:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1808-1814@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1808-1814@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/energia/electromagnetismo">
-    <SKOS:broader>http://example.com/RI/energia</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">electromagnetismo@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">electromagnetism@en</SKOS:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">electromagnetismo@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">electromagnetism@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/renovables">
-    <SKOS:broader>http://example.com/RI/energias_renovables</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">renovables@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">renewable@en</SKOS:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">renovables@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">renewable@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/unity">
-    <SKOS:broader>http://example.com/RI/videojuegos</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Unity@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Unity@en</SKOS:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Unity@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Unity@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/audio">
-    <SKOS:broader>http://example.com/RI/sonido</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">audio@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">audio@en</SKOS:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">audio@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">audio@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/cambioClimatico">
-    <SKOS:broader>http://example.com/RI/energias_renovables</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">cambio climatico@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">climate change@en</SKOS:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">cambio climatico@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">climate change@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/videojuegos">
-    <SKOS:narrower rdf:resource="http://example.com/RI/unity"/>
-    <SKOS:narrower rdf:resource="http://example.com/RI/motorgrafico"/>
-    <SKOS:topConceptOf>http://example.com/RI</SKOS:topConceptOf>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">videojuegos@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">videogames@en</SKOS:prefLabel>
+    <skos:narrower rdf:resource="http://example.com/RI/unity"/>
+    <skos:narrower rdf:resource="http://example.com/RI/motorgrafico"/>
+    <skos:topConceptOf>http://example.com/RI</skos:topConceptOf>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">videojuegos@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">videogames@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/bots">
-    <SKOS:broader>http://example.com/RI/diseñopersonajes</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">bots@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">bots@en</SKOS:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">bots@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">bots@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/ejercito">
-    <SKOS:broader>http://example.com/RI/guerraIndependencia</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ejercito@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">army@en</SKOS:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ejercito@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">army@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/auriculares">
-    <SKOS:broader>http://example.com/RI/sonido</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">auriculares@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">auriculares@en</SKOS:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">auriculares@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">auriculares@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/independanceDate">
-    <SKOS:broader>http://example.com/RI/guerraIndependencia</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Guerra Carlista@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Carlista war@en</SKOS:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Guerra Carlista@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Carlista war@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/diseñopersonajes">
-    <SKOS:narrower rdf:resource="http://example.com/RI/bots"/>
-    <SKOS:topConceptOf>http://example.com/RI</SKOS:topConceptOf>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">diseño de personajes@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">characters design@en</SKOS:prefLabel>
+    <skos:narrower rdf:resource="http://example.com/RI/bots"/>
+    <skos:topConceptOf>http://example.com/RI</skos:topConceptOf>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">diseño de personajes@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">characters design@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/energia/solar">
-    <SKOS:broader>http://example.com/RI/energia</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">solar@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">solar@en</SKOS:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">solar@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">solar@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/edadMedia">
-    <SKOS:narrower rdf:resource="http://example.com/RI/medieval"/>
-    <SKOS:narrower rdf:resource="http://example.com/RI/romanica"/>
-    <SKOS:narrower rdf:resource="http://example.com/RI/feudal"/>
-    <SKOS:topConceptOf>http://example.com/RI</SKOS:topConceptOf>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Edad media@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Middle age@en</SKOS:prefLabel>
+    <skos:narrower rdf:resource="http://example.com/RI/medieval"/>
+    <skos:narrower rdf:resource="http://example.com/RI/romanica"/>
+    <skos:narrower rdf:resource="http://example.com/RI/feudal"/>
+    <skos:topConceptOf>http://example.com/RI</skos:topConceptOf>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Edad media@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Middle age@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/sonido">
-    <SKOS:narrower rdf:resource="http://example.com/RI/audio"/>
-    <SKOS:narrower rdf:resource="http://example.com/RI/ruido"/>
-    <SKOS:narrower rdf:resource="http://example.com/RI/auriculares"/>
-    <SKOS:topConceptOf>http://example.com/RI</SKOS:topConceptOf>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sonido@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sound@en</SKOS:prefLabel>
+    <skos:narrower rdf:resource="http://example.com/RI/audio"/>
+    <skos:narrower rdf:resource="http://example.com/RI/ruido"/>
+    <skos:narrower rdf:resource="http://example.com/RI/auriculares"/>
+    <skos:topConceptOf>http://example.com/RI</skos:topConceptOf>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sonido@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sound@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/romanica">
-    <SKOS:broader>http://example.com/RI/edadMedia</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Romanica@en</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Romanica@sp</SKOS:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Romanica@en</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Romanica@sp</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/medieval">
-    <SKOS:broader>http://example.com/RI/edadMedia</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Medieval@en</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Medieval@sp</SKOS:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Medieval@en</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Medieval@sp</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/Edificio">
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Edificios@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Buildings@en</SKOS:prefLabel>
-    <SKOS:broader>http://example.com/RI/Construccion</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Edificio@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Building@en</SKOS:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Edificios@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Buildings@en</skos:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Edificio@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Building@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/musical">
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musicales@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musicals@en</SKOS:prefLabel>
-    <SKOS:broader>http://example.com/RI/music</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:altLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musicales@sp</SKOS:altLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musical@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musical@en</SKOS:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musicales@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musicals@en</skos:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:altLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musicales@sp</skos:altLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musical@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musical@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/musicologia">
-    <SKOS:broader>http://example.com/RI/music</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musicología@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musicology@en</SKOS:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musicología@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">musicology@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/energia">
-    <SKOS:narrower rdf:resource="http://example.com/RI/energia/electromagnetismo"/>
-    <SKOS:narrower rdf:resource="http://example.com/RI/energia/eolica"/>
-    <SKOS:narrower rdf:resource="http://example.com/RI/energia/solar"/>
-    <SKOS:broader>http://example.com/RI/energias_renovables</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">energia@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">energy@en</SKOS:prefLabel>
+    <skos:narrower rdf:resource="http://example.com/RI/energia/electromagnetismo"/>
+    <skos:narrower rdf:resource="http://example.com/RI/energia/eolica"/>
+    <skos:narrower rdf:resource="http://example.com/RI/energia/solar"/>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">energia@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">energy@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/acustico">
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">acusticos@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">acustics@en</SKOS:prefLabel>
-    <SKOS:broader>http://example.com/RI/music</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">acustico@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">acustic@en</SKOS:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">acusticos@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">acustics@en</skos:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">acustico@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">acustic@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/rock">
-    <SKOS:broader>http://example.com/RI/music</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">rock@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">rock@en</SKOS:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">rock@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">rock@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/eficienciaEnergetica">
-    <SKOS:broader>http://example.com/RI/energias_renovables</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">eficiencia energetica@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">energy eficiency@en</SKOS:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">eficiencia energetica@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">energy eficiency@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/Construccion">
-    <SKOS:narrower rdf:resource="http://example.com/RI/Edificio"/>
-    <SKOS:topConceptOf>http://example.com/RI</SKOS:topConceptOf>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Construccion@sp</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Construction@en</SKOS:prefLabel>
+    <skos:narrower rdf:resource="http://example.com/RI/Edificio"/>
+    <skos:topConceptOf>http://example.com/RI</skos:topConceptOf>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Construccion@sp</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Construction@en</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.com/RI/motorgrafico">
-    <SKOS:broader>http://example.com/RI/videojuegos</SKOS:broader>
-    <SKOS:inScheme>http://example.com/RI</SKOS:inScheme>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">graphic engine@en</SKOS:prefLabel>
-    <SKOS:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">motor grafico@sp</SKOS:prefLabel>
+    <skos:inScheme>http://example.com/RI</skos:inScheme>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">graphic engine@en</skos:prefLabel>
+    <skos:prefLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">motor grafico@sp</skos:prefLabel>
     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
   </rdf:Description>
 </rdf:RDF>
