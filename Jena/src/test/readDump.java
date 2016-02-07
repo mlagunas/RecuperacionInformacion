@@ -13,7 +13,10 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -54,7 +57,7 @@ public class readDump {
 		new readDump("dump");
 		try {
 			Model m = readXml(new File("skos.rdf"));
-			m.write(System.out, "N3");
+			m.write(new FileOutputStream(new File("skos_rdf.rdf")));
 			Model model = createRDF(m);
 			model.write(new FileOutputStream(new File("trabajo_rdf.rdf")));
 		} catch (ParserConfigurationException e1) {
@@ -176,7 +179,7 @@ public class readDump {
 					if (!l.isEmpty()) {
 						Resource key = l.get(0);
 						doc.addProperty(DMREC.DMkeyword, key);
-						//System.out.println(tit + "\nCointains--> " + s);
+						// System.out.println(tit + "\nCointains--> " + s);
 						iter++;
 
 					}
@@ -378,7 +381,9 @@ public class readDump {
 
 		// Cracion del Modelo de SKOS
 		Model m = ModelFactory.createDefaultModel();
-		//m.setNsPrefix("SKOS", SKOS.uri);
+		m.setNsPrefix("SKOS", SKOS.uri);
+		ArrayList<Resource> skosConcepts = new ArrayList<Resource>();
+		HashMap<String, Resource> skosNarrowers = new HashMap<String, Resource>();
 
 		for (int temp = 0; temp < nList.getLength(); temp++) {
 
@@ -436,16 +441,41 @@ public class readDump {
 					concept.addProperty(SKOS.topConceptOf, topC);
 				}
 
+				// Obtenemos los broader
+				NodeList broader = eElement
+						.getElementsByTagName("skos:broader");
+				for (int x = 0, size = broader.getLength(); x < size; x++) {
+					String bro = broader.item(x).getAttributes()
+							.getNamedItem("rdf:resource").getNodeValue();
+					concept.addProperty(SKOS.broader, bro);
+				}
+
 				// Obtenemos los narrower
 				NodeList narrower = eElement
 						.getElementsByTagName("skos:narrower");
 				for (int x = 0, size = narrower.getLength(); x < size; x++) {
 					String narr = narrower.item(x).getAttributes()
 							.getNamedItem("rdf:resource").getNodeValue();
-					concept.addProperty(SKOS.narrower, narr);
+					skosNarrowers.put(narr, concept);
 				}
-
 			}
+			skosConcepts.add(concept);
+		}
+
+		Iterator<Map.Entry<String, Resource>> it = skosNarrowers.entrySet()
+				.iterator();
+		while (it.hasNext()) {
+			Map.Entry<String, Resource> pair = (Map.Entry<String, Resource>) it
+					.next();
+			if (skosConcepts.contains(pair.getValue())) {
+				for (Resource concept : skosConcepts) {
+					if (concept.getURI().equals(pair.getKey())) {
+						pair.getValue().addProperty(SKOS.narrower, concept);
+						break;
+					}
+				}
+			}
+			it.remove();
 		}
 		return m;
 	}
