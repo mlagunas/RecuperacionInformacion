@@ -39,7 +39,6 @@ import com.hp.hpl.jena.vocabulary.DC;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
-
 public class SemanticGenerator {
 
 	private static Boolean finFile = false;
@@ -73,43 +72,43 @@ public class SemanticGenerator {
 			}
 		}
 
-		if (docsPath == null) {
+		if (docsPath == null || skosPath == null || docsPath == null) {
 			System.err.println("Usage: " + usage);
 			System.exit(1);
 		}
 
 		new SemanticGenerator(docsPath);
 		try {
-			Model m = readXml(new File("skos.rdf"));
+			Model m = readXml(new File(skosPath));
 			Model model = createRDF(m);
+			model.add(m);
 			model.write(new FileOutputStream(new File(rdfPath)));
-			m.write(new FileOutputStream(new File("grupo02_skos.rdf")));
-
 		} catch (ParserConfigurationException e1) {
 			e1.printStackTrace();
 		}
 	}
 
 	public static Model createRDF(Model skos) {
-		
+
 		Model model = ModelFactory.createDefaultModel();
 
 		model.setNsPrefix("dmrec", DMREC.uri);
 		model.setNsPrefix("skos", SKOS.uri);
-		
-		final Resource document = model.createResource(DMREC.uri+"document");
-        final Resource TFG = model.createResource(DMREC.uri+"TFG");
-        final Resource TESIS = model.createResource(DMREC.uri+"TESIS");
-        final Resource PFC = model.createResource(DMREC.uri+"PFC");
-        final Resource TFM = model.createResource(DMREC.uri+"TFM");
-        
-        TFG.addProperty(RDFS.subClassOf, document);
-        TFM.addProperty(RDFS.subClassOf, document);
-        TESIS.addProperty(RDFS.subClassOf, document);
-        PFC.addProperty(RDFS.subClassOf, document);
 
-		final Resource person = model.createResource(DMREC.uri+"person");
-		final Resource organization = model.createResource(DMREC.uri+"organization");
+		final Resource document = model.createResource(DMREC.uri + "document");
+		final Resource TFG = model.createResource(DMREC.uri + "TFG");
+		final Resource TESIS = model.createResource(DMREC.uri + "TESIS");
+		final Resource PFC = model.createResource(DMREC.uri + "PFC");
+		final Resource TFM = model.createResource(DMREC.uri + "TFM");
+
+		TFG.addProperty(RDFS.subClassOf, document);
+		TFM.addProperty(RDFS.subClassOf, document);
+		TESIS.addProperty(RDFS.subClassOf, document);
+		PFC.addProperty(RDFS.subClassOf, document);
+
+		final Resource person = model.createResource(DMREC.uri + "person");
+		final Resource organization = model.createResource(DMREC.uri
+				+ "organization");
 
 		for (int i = 1; i < title.size(); i++) {
 			if (identifier.get(i) == null) {
@@ -137,7 +136,10 @@ public class SemanticGenerator {
 					publi).toList();
 
 			if (l.isEmpty()) {
-				org = model.createResource(DMREC.uri+publi.replaceAll("\\p{Z}","")).addProperty(DMREC.DMname, publi)
+				org = model
+						.createResource(
+								DMREC.uri + publi.replaceAll("\\p{Z}", ""))
+						.addProperty(DMREC.DMname, publi)
 						.addProperty(RDF.type, organization);
 			} else {
 				org = l.get(0);
@@ -162,7 +164,7 @@ public class SemanticGenerator {
 					else if (splitted.length == 4)
 						type = splitted[1];
 					type.trim();
-					switch(type){
+					switch (type) {
 					case "TFG":
 						doc.addProperty(RDF.type, TFG);
 						break;
@@ -198,7 +200,11 @@ public class SemanticGenerator {
 						.toList();
 
 				if (l.isEmpty()) {
-					auth = model.createResource(DMREC.uri+creat.get(j).replaceAll("\\p{Z}",""))
+					auth = model
+							.createResource(
+									DMREC.uri
+											+ creat.get(j).replaceAll("\\p{Z}",
+													""))
 							.addProperty(DMREC.DMname, creat.get(j))
 							.addProperty(RDF.type, person);
 				} else {
@@ -214,7 +220,8 @@ public class SemanticGenerator {
 			for (String s : conceptos) {
 				if (desc.toLowerCase().contains(s.toLowerCase())
 						|| tit.toLowerCase().contains(s.toLowerCase())) {
-					l = skos.listResourcesWithProperty(SKOS.prefLabel,s).toList();
+					l = skos.listResourcesWithProperty(SKOS.prefLabel, s)
+							.toList();
 					if (!l.isEmpty()) {
 						Resource key = l.get(0);
 						doc.addProperty(DMREC.DMkeyword, key);
@@ -358,7 +365,7 @@ public class SemanticGenerator {
 
 			ArrayList<String> aux = new ArrayList<String>();
 			Boolean added = false;
-			
+
 			for (int k = 0; k < conditionList.getLength(); ++k) {
 				Element condition = (Element) conditionList.item(k);
 				if (condition != null && condition.getFirstChild() != null) {
@@ -414,7 +421,7 @@ public class SemanticGenerator {
 		// Cracion del Modelo de SKOS
 		Model m = ModelFactory.createDefaultModel();
 
-		m.setNsPrefix("skos", SKOS.uri);		
+		m.setNsPrefix("skos", SKOS.uri);
 		ArrayList<Resource> skosConcepts = new ArrayList<Resource>();
 		HashMap<String, Resource> skosNarrowers = new HashMap<String, Resource>();
 
@@ -424,7 +431,8 @@ public class SemanticGenerator {
 			// Obtenemos URI del concept a a�adir al modelo
 			String conceptURI = nNode.getAttributes().getNamedItem("rdf:about")
 					.getNodeValue();
-			//System.out.println("\n" + nNode.getNodeName() + " :: " + conceptURI);
+			// System.out.println("\n" + nNode.getNodeName() + " :: " +
+			// conceptURI);
 			Resource concept = m.createResource(conceptURI);
 			m.add(concept, RDF.type, SKOS.Concept);
 
@@ -439,11 +447,11 @@ public class SemanticGenerator {
 					String lang = prefLabel.item(x).getAttributes()
 							.getNamedItem("xml:lang").getNodeValue();
 					String textLab = prefLabel.item(x).getTextContent();
-					if(lang.equalsIgnoreCase("sp")){
+					if (lang.equalsIgnoreCase("sp")) {
 						concept.addLiteral(SKOS.prefLabel, textLab);
 						conceptos.add(textLab);
 					}
-					
+
 				}
 
 				// Obtenemos las altLabel

@@ -17,7 +17,7 @@ public class Evaluation {
 
 	// Path a los ficheros que usamos
 	private static final String QRELS = "src/zaguanRels.txt";
-	private static final String RESULT = "src/res01.txt";
+	private static final String RESULT = "resultado.txt";
 
 	private static final double beta = 1;
 
