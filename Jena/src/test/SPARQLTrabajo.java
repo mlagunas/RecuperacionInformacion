@@ -39,9 +39,11 @@ public class SPARQLTrabajo {
 			 		
 		 			+ "SELECT ?narrower WHERE {  "
 			 		+ "?skosQ1 rdf:type skos:concept ."
-			 		+ "?skosQ1 skos:prefLabel ?label . "
-			 		
-			 		+ "?skosQ1 skos:narrower+ ?narrower ."
+			 		+ "?skosQ1 skos:prefLabel ?label . " 		
+			 		+ "?skosQ1 skos:narrower ?narrower ."
+			 		+ "?narrower skos:prefLabel ?prefLabel"
+			 		+ ""
+			 		+ ""
 			 		//+ "?narrower skos:prefLabel ?prefLabel "
 			 		//+ "FILTER regex (?prefLabel,'cancion','i')  "
 			 		+ " }";
